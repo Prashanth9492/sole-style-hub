@@ -1,19 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, ShoppingBag, Heart, User, Menu, X } from 'lucide-react';
+import { Search, ShoppingBag, Heart, User, Menu, X, ChevronDown } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+
+const footwearTypes = [
+  { name: 'Boots', slug: 'boots' },
+  { name: 'Casual Shoes', slug: 'casual' },
+  { name: 'Flip Flops & Slippers', slug: 'flip-flops' },
+  { name: 'Formal Shoes', slug: 'formal' },
+  { name: 'Sandals', slug: 'sandals' },
+  { name: 'Sneakers', slug: 'sneakers' },
+  { name: 'Sports Shoes', slug: 'sports' },
+];
 
 const navLinks = [
   { name: 'New', href: '/new' },
-  { name: 'Men', href: '/category/men' },
-  { name: 'Women', href: '/category/women' },
-  { name: 'Kids', href: '/category/kids' },
+  { name: 'Men', href: '/category/men', hasDropdown: true },
+  { name: 'Women', href: '/category/women', hasDropdown: true },
+  { name: 'Kids', href: '/category/kids', hasDropdown: true },
 ];
 
 export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { totalItems } = useCart();
   const location = useLocation();
 
@@ -46,15 +57,62 @@ export const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center gap-8">
               {navLinks.map((link) => (
-                <Link
+                <div
                   key={link.name}
-                  to={link.href}
-                  className={`nav-link ${
-                    location.pathname === link.href ? 'text-foreground' : ''
-                  }`}
+                  className="relative"
+                  onMouseEnter={() => link.hasDropdown && setActiveDropdown(link.name)}
+                  onMouseLeave={() => setActiveDropdown(null)}
                 >
-                  {link.name}
-                </Link>
+                  <Link
+                    to={link.href}
+                    className={`nav-link flex items-center gap-1 ${
+                      location.pathname === link.href ? 'text-foreground' : ''
+                    }`}
+                  >
+                    {link.name}
+                    {link.hasDropdown && (
+                      <ChevronDown
+                        className="w-4 h-4 transition-transform duration-200"
+                        style={{
+                          transform: activeDropdown === link.name ? 'rotate(180deg)' : 'rotate(0deg)',
+                        }}
+                      />
+                    )}
+                  </Link>
+
+                  {/* Dropdown Menu */}
+                  {link.hasDropdown && (
+                    <AnimatePresence>
+                      {activeDropdown === link.name && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 10 }}
+                          transition={{ duration: 0.2 }}
+                          className="absolute top-full left-0 mt-2 w-56 bg-background border border-border rounded-xl shadow-xl overflow-hidden z-50"
+                        >
+                          <div className="py-2">
+                            {footwearTypes.map((type, index) => (
+                              <Link
+                                key={type.slug}
+                                to={`/category/${link.name.toLowerCase()}/${type.slug}`}
+                                className="block px-4 py-2.5 text-sm hover:bg-secondary transition-colors"
+                              >
+                                <motion.div
+                                  initial={{ opacity: 0, x: -10 }}
+                                  animate={{ opacity: 1, x: 0 }}
+                                  transition={{ delay: index * 0.05 }}
+                                >
+                                  {type.name}
+                                </motion.div>
+                              </Link>
+                            ))}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  )}
+                </div>
               ))}
             </nav>
 
@@ -137,6 +195,19 @@ export const Header = () => {
                       >
                         {link.name}
                       </Link>
+                      {link.hasDropdown && (
+                        <div className="ml-4 mt-2 space-y-2">
+                          {footwearTypes.map((type) => (
+                            <Link
+                              key={type.slug}
+                              to={`/category/${link.name.toLowerCase()}/${type.slug}`}
+                              className="block py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                            >
+                              {type.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
                     </motion.div>
                   ))}
                 </nav>

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, ShoppingBag } from 'lucide-react';
 import { Product } from '@/data/products';
+import { useCart } from '@/contexts/CartContext';
+import { toast } from 'sonner';
 
 interface ProductCardProps {
   product: Product;
@@ -12,10 +14,28 @@ interface ProductCardProps {
 export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
+  const { addToCart } = useCart();
 
   const discount = product.discountPrice
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
     : 0;
+
+  const handleQuickAdd = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Get first available size and color
+    const defaultSize = product.sizes[0];
+    const defaultColor = product.colors[0]?.name;
+    
+    if (!defaultSize || !defaultColor) {
+      toast.error('Product options not available');
+      return;
+    }
+    
+    addToCart(product, defaultSize, defaultColor);
+    toast.success(`Added ${product.name} to cart!`);
+  };
 
   return (
     <motion.div
@@ -70,10 +90,7 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               className="absolute bottom-4 left-4 right-4"
             >
               <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  // Quick add to cart logic
-                }}
+                onClick={handleQuickAdd}
                 className="w-full py-3 bg-background/95 backdrop-blur-sm rounded-full font-medium text-sm flex items-center justify-center gap-2 hover:bg-background transition-colors"
               >
                 <ShoppingBag className="w-4 h-4" />

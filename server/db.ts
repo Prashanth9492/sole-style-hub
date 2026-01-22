@@ -1,8 +1,5 @@
 import { MongoClient, Db } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || '';
-const dbName = 'sole-style-hub';
-
 let client: MongoClient | null = null;
 let db: Db | null = null;
 
@@ -12,6 +9,17 @@ export async function connectToDatabase() {
   }
 
   try {
+    const uri = process.env.MONGODB_URI;
+    const dbName = 'sole-style-hub';
+    
+    if (!uri) {
+      throw new Error('MONGODB_URI is not defined in environment variables');
+    }
+    
+    if (!uri.startsWith('mongodb://') && !uri.startsWith('mongodb+srv://')) {
+      throw new Error(`Invalid MongoDB URI format: "${uri}". Must start with "mongodb://" or "mongodb+srv://"`);
+    }
+    
     client = new MongoClient(uri);
     await client.connect();
     console.log('✅ Connected to MongoDB');

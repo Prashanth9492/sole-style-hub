@@ -1,11 +1,71 @@
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { ProductCard } from '@/components/product/ProductCard';
-import { getFeaturedProducts } from '@/data/products';
 
 export const FeaturedProducts = () => {
-  const products = getFeaturedProducts();
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${apiUrl}/products?isBestseller=true`);
+      if (response.ok) {
+        const data = await response.json();
+        // Map API data to expected format
+        const mappedProducts = data.slice(0, 8).map((p: any) => ({
+          id: p._id,
+          name: p.name,
+          brand: p.brand,
+          category: p.category,
+          subCategory: p.subCategory,
+          price: p.price,
+          discountPrice: p.discountPrice,
+          sizes: p.sizes,
+          colors: p.colors,
+          stock: p.stock,
+          images: p.images,
+          description: p.description,
+          rating: 4.5,
+          reviews: 0,
+          inStock: p.inStock,
+          isNew: p.isNew,
+          isBestseller: p.isBestseller,
+        }));
+        setProducts(mappedProducts);
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="py-20 lg:py-32 bg-secondary/30">
+        <div className="container-premium section-padding">
+          <p className="text-center text-gray-500">Loading products...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <section className="py-20 lg:py-32 bg-secondary/30">
+        <div className="container-premium section-padding">
+          <p className="text-center text-gray-500">No products available yet.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 lg:py-32 bg-secondary/30">

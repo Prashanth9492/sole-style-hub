@@ -1,28 +1,115 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, ShoppingBag, Truck, RefreshCw, Star, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ProductCard } from '@/components/product/ProductCard';
-import { getProductById, products } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import { toast } from 'sonner';
 
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
-  const product = getProductById(id || '');
   const { addToCart } = useCart();
 
+  const [product, setProduct] = useState<any>(null);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
+  useEffect(() => {
+    if (id) {
+      fetchProduct(id);
+    }
+  }, [id]);
+
+  const fetchProduct = async (productId: string) => {
+    try {
+      setLoading(true);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${apiUrl}/products/${productId}`);
+      if (response.ok) {
+        const data = await response.json();
+        const mappedProduct = {
+          id: data._id,
+          name: data.name,
+          brand: data.brand,
+          category: data.category,
+          subCategory: data.subCategory,
+          price: data.price,
+          discountPrice: data.discountPrice,
+          sizes: data.sizes,
+          colors: data.colors,
+          stock: data.stock,
+          images: data.images,
+          description: data.description,
+          rating: 4.5,
+          reviews: 0,
+          inStock: data.inStock,
+          isNew: data.isNew,
+          isBestseller: data.isBestseller,
+        };
+        setProduct(mappedProduct);
+        
+        // Fetch related products
+        const relatedResponse = await fetch(`${apiUrl}/products?category=${data.category}`);
+        if (relatedResponse.ok) {
+          const relatedData = await relatedResponse.json();
+          const mappedRelated = relatedData
+            .filter((p: any) => p._id !== productId)
+            .slice(0, 4)
+            .map((p: any) => ({
+              id: p._id,
+              name: p.name,
+              brand: p.brand,
+              category: p.category,
+              subCategory: p.subCategory,
+              price: p.price,
+              discountPrice: p.discountPrice,
+              sizes: p.sizes,
+              colors: p.colors,
+              stock: p.stock,
+              images: p.images,
+              description: p.description,
+              rating: 4.5,
+              reviews: 0,
+              inStock: p.inStock,
+              isNew: p.isNew,
+              isBestseller: p.isBestseller,
+            }));
+          setRelatedProducts(mappedRelated);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching product:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <div className="flex items-center justify-center h-96">
+          <p className="text-gray-500">Loading product...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p>Product not found</p>
+      <div className="min-h-screen">
+        <Header />
+        <div className="flex items-center justify-center h-96">
+          <p className="text-gray-500">Product not found</p>
+        </div>
+        <Footer />
       </div>
     );
   }
@@ -35,10 +122,6 @@ const ProductPage = () => {
     addToCart(product, selectedSize, selectedColor);
     toast.success('Added to cart!');
   };
-
-  const relatedProducts = products
-    .filter((p) => p.category === product.category && p.id !== product.id)
-    .slice(0, 4);
 
   const discount = product.discountPrice
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
