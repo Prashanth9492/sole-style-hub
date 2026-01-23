@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Heart, ShoppingBag } from 'lucide-react';
 import { Product } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 import { toast } from 'sonner';
 
 interface ProductCardProps {
@@ -13,8 +14,9 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isWishlisted, setIsWishlisted] = useState(false);
   const { addToCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const isWishlisted = isInWishlist(product.id);
 
   const discount = product.discountPrice
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
@@ -71,7 +73,13 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               <button
                 onClick={(e) => {
                   e.preventDefault();
-                  setIsWishlisted(!isWishlisted);
+                  e.stopPropagation();
+                  toggleWishlist(product);
+                  toast.success(
+                    isWishlisted 
+                      ? `Removed ${product.name} from wishlist` 
+                      : `Added ${product.name} to wishlist!`
+                  );
                 }}
                 className="p-2 bg-background/90 backdrop-blur-sm rounded-full hover:bg-background transition-colors"
               >

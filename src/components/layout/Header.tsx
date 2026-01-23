@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingBag, Heart, User, Menu, X, ChevronDown } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
+import { useWishlist } from '@/contexts/WishlistContext';
+import { useSearch } from '@/contexts/SearchContext';
 
 const footwearTypes = [
   { name: 'Boots', slug: 'boots' },
@@ -25,8 +27,12 @@ export const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [searchInput, setSearchInput] = useState('');
   const { totalItems } = useCart();
+  const { wishlistItems } = useWishlist();
+  const { isSearchOpen, setIsSearchOpen, setSearchQuery } = useSearch();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,6 +46,16 @@ export const Header = () => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      setSearchQuery(searchInput);
+      setIsSearchOpen(false);
+      navigate(`/search?q=${encodeURIComponent(searchInput)}`);
+      setSearchInput('');
+    }
+  };
+
   return (
     <>
       <header
@@ -48,15 +64,17 @@ export const Header = () => {
         }`}
       >
         <div className="container-premium section-padding">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+          <div className="grid grid-cols-3 items-center h-16 lg:h-20 gap-4">
             {/* Logo */}
             <Link to="/" className="flex items-center">
               <span className="text-xl lg:text-2xl font-bold tracking-tight">STRIDE</span>
             </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-8">
-              {navLinks.map((link) => (
+            {/* Center Section - Navigation or Search */}
+            <div className="hidden lg:flex items-center justify-center">
+              {!isSearchOpen ? (
+                <nav className="flex items-center gap-8">
+                  {navLinks.map((link) => (
                 <div
                   key={link.name}
                   className="relative"
@@ -114,16 +132,65 @@ export const Header = () => {
                   )}
                 </div>
               ))}
-            </nav>
+                </nav>
+              ) : (
+                <AnimatePresence>
+                  <motion.div
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{ width: 'auto', opacity: 1 }}
+                    exit={{ width: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    className="overflow-hidden w-full max-w-xl"
+                  >
+                    <form onSubmit={handleSearch} className="flex items-center gap-2">
+                      <div className="relative flex-1">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <input
+                          type="text"
+                          value={searchInput}
+                          onChange={(e) => setSearchInput(e.target.value)}
+                          placeholder="Search for shoes, sneakers, boots..."
+                          className="w-full pl-10 pr-4 py-2 bg-secondary rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-foreground"
+                          autoFocus
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsSearchOpen(false);
+                          setSearchInput('');
+                        }}
+                        className="p-2 hover:bg-secondary rounded-full transition-colors"
+                      >
+                        <X className="w-5 h-5" />
+                      </button>
+                    </form>
+                  </motion.div>
+                </AnimatePresence>
+              )}
+            </div>
 
-            {/* Actions */}
-            <div className="flex items-center gap-2 lg:gap-4">
-              <button className="p-2 hover:bg-secondary rounded-full transition-colors">
-                <Search className="w-5 h-5" />
-              </button>
-              <button className="p-2 hover:bg-secondary rounded-full transition-colors hidden sm:flex">
+            {/* Actions - Right side */}
+            <div className="flex items-center gap-2 lg:gap-4 justify-end">
+              {!isSearchOpen && (
+                <button 
+                  onClick={() => setIsSearchOpen(true)}
+                  className="p-2 hover:bg-secondary rounded-full transition-colors"
+                >
+                  <Search className="w-5 h-5" />
+                </button>
+              )}
+              <Link
+                to="/wishlist"
+                className="p-2 hover:bg-secondary rounded-full transition-colors hidden sm:flex relative"
+              >
                 <Heart className="w-5 h-5" />
-              </button>
+                {wishlistItems.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-foreground text-background rounded-full text-xs flex items-center justify-center font-medium">
+                    {wishlistItems.length}
+                  </span>
+                )}
+              </Link>
               <Link
                 to="/cart"
                 className="p-2 hover:bg-secondary rounded-full transition-colors relative"
