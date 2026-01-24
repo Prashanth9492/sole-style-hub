@@ -24,8 +24,13 @@ import {
 const ProductManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState('all');
+  const [selectedSubCategory, setSelectedSubCategory] = useState('all');
+  const [showMoreFilters, setShowMoreFilters] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const subCategories = ['boots', 'casual', 'flip-flops', 'formal', 'sandals', 'sneakers', 'sports'];
 
   useEffect(() => {
     fetchProducts();
@@ -67,10 +72,29 @@ const ProductManagement = () => {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+    const matchesSearch = product.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          product.brand?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          product.subCategory?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesCategory = selectedCategory === 'all' || 
+                            product.category?.toLowerCase() === selectedCategory.toLowerCase();
+    const matchesSubCategory = selectedSubCategory === 'all' ||
+                               product.subCategory?.toLowerCase() === selectedSubCategory.toLowerCase();
+    const matchesStatus = selectedStatus === 'all' ||
+                          (selectedStatus === 'inStock' && product.inStock) ||
+                          (selectedStatus === 'outOfStock' && !product.inStock) ||
+                          (selectedStatus === 'new' && product.isNew) ||
+                          (selectedStatus === 'bestseller' && product.isBestseller);
+    return matchesSearch && matchesCategory && matchesSubCategory && matchesStatus;
   });
+
+  const clearFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('all');
+    setSelectedSubCategory('all');
+    setSelectedStatus('all');
+  };
+
+  const hasActiveFilters = selectedCategory !== 'all' || selectedSubCategory !== 'all' || selectedStatus !== 'all' || searchQuery !== '';
 
   if (loading) {
     return (
@@ -124,30 +148,83 @@ const ProductManagement = () => {
 
       {/* Filters */}
       <Card className="p-4">
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <Input
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Input
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="all">All Categories</option>
+              <option value="men">Men</option>
+              <option value="women">Women</option>
+              <option value="kids">Kids</option>
+            </select>
+            <Button 
+              variant={showMoreFilters ? "default" : "outline"} 
+              className="gap-2"
+              onClick={() => setShowMoreFilters(!showMoreFilters)}
+            >
+              <Filter className="w-4 h-4" />
+              More Filters
+            </Button>
+            {hasActiveFilters && (
+              <Button variant="ghost" onClick={clearFilters} className="text-red-600 hover:text-red-700">
+                Clear All
+              </Button>
+            )}
           </div>
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="all">All Categories</option>
-            <option value="Men">Men</option>
-            <option value="Women">Women</option>
-            <option value="Kids">Kids</option>
-          </select>
-          <Button variant="outline" className="gap-2">
-            <Filter className="w-4 h-4" />
-            More Filters
-          </Button>
+
+          {/* More Filters Section */}
+          {showMoreFilters && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="pt-4 border-t border-gray-200"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Sub Category</label>
+                  <select
+                    value={selectedSubCategory}
+                    onChange={(e) => setSelectedSubCategory(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 capitalize"
+                  >
+                    <option value="all">All Sub Categories</option>
+                    {subCategories.map((sub) => (
+                      <option key={sub} value={sub} className="capitalize">
+                        {sub.charAt(0).toUpperCase() + sub.slice(1).replace('-', ' ')}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                  <select
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="inStock">In Stock</option>
+                    <option value="outOfStock">Out of Stock</option>
+                    <option value="new">New Arrivals</option>
+                    <option value="bestseller">Bestsellers</option>
+                  </select>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
       </Card>
 

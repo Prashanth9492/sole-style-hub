@@ -8,7 +8,7 @@ const router = Router();
 router.get('/', async (req: Request, res: Response) => {
   try {
     const db = await getDatabase();
-    const { category, subcategory, search, inStock, isNew, isBestseller } = req.query;
+    const { category, subcategory, search, inStock, isNew, isBestseller, sort, limit } = req.query;
     
     const query: any = {};
     
@@ -25,11 +25,47 @@ router.get('/', async (req: Request, res: Response) => {
       ];
     }
     
-    const products = await db.collection('products').find(query).toArray();
+    let cursor = db.collection('products').find(query);
+    
+    // Sort by createdAt (newest first) by default or as specified
+    if (sort === 'newest') {
+      cursor = cursor.sort({ createdAt: -1 });
+    } else if (sort === 'oldest') {
+      cursor = cursor.sort({ createdAt: 1 });
+    } else if (sort === 'price-low') {
+      cursor = cursor.sort({ price: 1 });
+    } else if (sort === 'price-high') {
+      cursor = cursor.sort({ price: -1 });
+    }
+    
+    // Limit results if specified
+    if (limit) {
+      cursor = cursor.limit(parseInt(limit as string));
+    }
+    
+    const products = await cursor.toArray();
     res.json(products);
   } catch (error) {
     console.error('Error fetching products:', error);
     res.status(500).json({ error: 'Failed to fetch products' });
+  }
+});
+
+// Get new arrivals - 20 most recently added products
+router.get('/new-arrivals', async (req: Request, res: Response) => {
+  try {
+    const db = await getDatabase();
+    
+    const products = await db.collection('products')
+      .find({})
+      .sort({ createdAt: -1 }) // Newest first
+      .limit(20) // Only 20 products
+      .toArray();
+    
+    res.json(products);
+  } catch (error) {
+    console.error('Error fetching new arrivals:', error);
+    res.status(500).json({ error: 'Failed to fetch new arrivals' });
   }
 });
 

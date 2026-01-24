@@ -5,13 +5,14 @@ import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ProductCard } from '@/components/product/ProductCard';
+import { Star, TrendingUp, Clock, Zap } from 'lucide-react';
 
 const sortOptions = [
-  { label: 'Featured', value: 'featured' },
-  { label: 'Price: Low to High', value: 'price-asc' },
-  { label: 'Price: High to Low', value: 'price-desc' },
-  { label: 'Newest', value: 'newest' },
-  { label: 'Best Rated', value: 'rating' },
+  { label: 'Featured', value: 'featured', icon: Zap },
+  { label: 'Price: Low to High', value: 'price-asc', icon: TrendingUp },
+  { label: 'Price: High to Low', value: 'price-desc', icon: TrendingUp },
+  { label: 'Newest', value: 'newest', icon: Clock },
+  { label: 'Best Rated', value: 'rating', icon: Star },
 ];
 
 const subcategoryDescriptions: Record<string, Record<string, { title: string; description: string }>> = {
@@ -194,8 +195,11 @@ const CategoryPage = () => {
         return (b.discountPrice || b.price) - (a.discountPrice || a.price);
       case 'rating':
         return b.rating - a.rating;
+      case 'newest':
+        return (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0);
+      case 'featured':
       default:
-        return 0;
+        return (b.isBestseller ? 1 : 0) - (a.isBestseller ? 1 : 0);
     }
   });
 

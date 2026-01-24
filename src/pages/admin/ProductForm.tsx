@@ -136,6 +136,12 @@ const ProductForm = () => {
     }));
   };
 
+  const handleMultipleImageUpload = (images: { url: string; publicId: string }[]) => {
+    // Images are already added one by one via handleImageUpload callback
+    // This callback can be used for batch processing if needed
+    console.log(`Successfully uploaded ${images.length} images`);
+  };
+
   const handleRemoveImage = (index: number) => {
     setFormData((prev) => ({
       ...prev,
@@ -408,28 +414,40 @@ const ProductForm = () => {
           <div className="space-y-4">
             <ImageUpload
               onUploadComplete={handleImageUpload}
+              onMultipleUploadComplete={handleMultipleImageUpload}
               folder="products"
               maxSize={5}
+              multiple={true}
             />
 
             {formData.images.length > 0 && (
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {formData.images.map((image, index) => (
-                  <div key={index} className="relative group">
-                    <img
-                      src={image}
-                      alt={`Product ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-lg border"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className="absolute top-2 right-2 p-1 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
+              <div>
+                <p className="text-sm font-medium text-gray-700 mb-3">
+                  Uploaded Images ({formData.images.length})
+                </p>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                  {formData.images.map((image, index) => (
+                    <div key={index} className="relative group aspect-square">
+                      <img
+                        src={image}
+                        alt={`Product ${index + 1}`}
+                        className="w-full h-full object-cover rounded-lg border"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                      {index === 0 && (
+                        <span className="absolute bottom-2 left-2 text-xs bg-black/70 text-white px-2 py-1 rounded">
+                          Main
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>

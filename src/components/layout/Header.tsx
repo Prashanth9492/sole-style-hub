@@ -12,7 +12,8 @@ import {
   Sparkles,
   Users,
   UserCircle2,
-  Baby
+  Baby,
+  Home
 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -29,6 +30,7 @@ const footwearTypes = [
 ];
 
 const navLinks = [
+  { name: 'Home', href: '/', icon: Home },
   { name: 'New', href: '/new', icon: Sparkles },
   { name: 'Men', href: '/category/men', hasDropdown: true, icon: Users },
   { name: 'Women', href: '/category/women', hasDropdown: true, icon: UserCircle2 },

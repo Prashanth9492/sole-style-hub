@@ -66,15 +66,15 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-4 md:space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-gray-600 mt-1">Welcome back! Here's what's happening today.</p>
+        <h1 className="text-2xl md:text-3xl font-bold">Dashboard</h1>
+        <p className="text-sm md:text-base text-gray-600 mt-1">Welcome back! Here's what's happening today.</p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
@@ -84,7 +84,7 @@ const AdminDashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Card className="p-6">
+              <Card className="p-4 md:p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600">{stat.name}</p>
@@ -105,9 +105,9 @@ const AdminDashboard = () => {
         })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Recent Products */}
-        <Card className="lg:col-span-2 p-6">
+        <Card className="lg:col-span-2 p-4 md:p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold">Recent Products</h2>
             <Link to="/admin/products" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
@@ -155,7 +155,7 @@ const AdminDashboard = () => {
         </Card>
 
         {/* Top Products by Category */}
-        <Card className="p-6">
+        <Card className="p-4 md:p-6">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold">Categories</h2>
             <Link to="/admin/products" className="text-sm text-blue-600 hover:text-blue-700 font-medium">
@@ -188,14 +188,14 @@ const AdminDashboard = () => {
       </div>
 
       {/* Quick Actions */}
-      <Card className="p-6">
-        <h2 className="text-xl font-bold mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <Card className="p-4 md:p-6">
+        <h2 className="text-lg md:text-xl font-bold mb-3 md:mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
           <Link
             to="/admin/products/new"
-            className="flex items-center gap-3 p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group"
+            className="flex items-center gap-3 p-3 md:p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group"
           >
-            <Package className="w-8 h-8 text-blue-600" />
+            <Package className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
             <div>
               <p className="font-medium text-blue-900">Add New Product</p>
               <p className="text-sm text-blue-600">Create a new product listing</p>
@@ -205,9 +205,9 @@ const AdminDashboard = () => {
 
           <Link
             to="/admin/orders"
-            className="flex items-center gap-3 p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
+            className="flex items-center gap-3 p-3 md:p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
           >
-            <ShoppingCart className="w-8 h-8 text-green-600" />
+            <ShoppingCart className="w-6 h-6 md:w-8 md:h-8 text-green-600" />
             <div>
               <p className="font-medium text-green-900">Manage Orders</p>
               <p className="text-sm text-green-600">View and process orders</p>
@@ -217,9 +217,9 @@ const AdminDashboard = () => {
 
           <Link
             to="/admin/analytics"
-            className="flex items-center gap-3 p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group"
+            className="flex items-center gap-3 p-3 md:p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group"
           >
-            <TrendingUp className="w-8 h-8 text-purple-600" />
+            <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-purple-600" />
             <div>
               <p className="font-medium text-purple-900">View Analytics</p>
               <p className="text-sm text-purple-600">Check store performance</p>
