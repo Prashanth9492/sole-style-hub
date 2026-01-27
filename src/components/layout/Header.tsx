@@ -13,11 +13,24 @@ import {
   Users,
   UserCircle2,
   Baby,
-  Home
+  Home,
+  LogOut,
+  Settings
 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { useSearch } from '@/contexts/SearchContext';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 
 const footwearTypes = [
   { name: 'Boots', slug: 'boots', icon: '👢' },
@@ -45,8 +58,28 @@ export const Header = () => {
   const { totalItems } = useCart();
   const { wishlistItems } = useWishlist();
   const { isSearchOpen, setIsSearchOpen, setSearchQuery } = useSearch();
+  const { user, logout, loading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) return 'U';
+    return name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -229,9 +262,52 @@ export const Header = () => {
                   </motion.span>
                 )}
               </Link>
-              <button className="p-2 hover:bg-secondary rounded-full transition-colors hidden sm:flex">
-                <User className="w-5 h-5" />
-              </button>
+              
+              {/* User Menu */}
+              {!loading && (
+                user ? (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <button className="p-1 hover:bg-secondary rounded-full transition-colors hidden sm:flex">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
+                          <AvatarFallback className="text-xs">
+                            {getInitials(user.displayName || user.email)}
+                          </AvatarFallback>
+                        </Avatar>
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-56">
+                      <DropdownMenuLabel className="font-normal">
+                        <div className="flex flex-col space-y-1">
+                          <p className="text-sm font-medium">{user.displayName || 'User'}</p>
+                          <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                        </div>
+                      </DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem asChild>
+                        <Link to="/account" className="cursor-pointer">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Account Settings
+                        </Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Sign Out
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                ) : (
+                  <Link to="/signin" className="hidden sm:flex">
+                    <Button variant="ghost" size="sm" className="gap-2">
+                      <User className="w-4 h-4" />
+                      Sign In
+                    </Button>
+                  </Link>
+                )
+              )}
+              
               <button
                 className="p-2 hover:bg-secondary rounded-full transition-colors lg:hidden"
                 onClick={() => setIsMobileMenuOpen(true)}
@@ -310,13 +386,52 @@ export const Header = () => {
                       <Heart className="w-5 h-5" />
                       Wishlist
                     </Link>
-                    <Link
-                      to="/account"
-                      className="flex items-center gap-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <User className="w-5 h-5" />
-                      Account
-                    </Link>
+                    {user ? (
+                      <>
+                        <div className="flex items-center gap-3 py-2">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
+                            <AvatarFallback className="text-xs">
+                              {getInitials(user.displayName || user.email)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col">
+                            <span className="text-sm font-medium">{user.displayName || 'User'}</span>
+                            <span className="text-xs text-muted-foreground">{user.email}</span>
+                          </div>
+                        </div>
+                        <Link
+                          to="/account"
+                          className="flex items-center gap-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          <Settings className="w-5 h-5" />
+                          Account Settings
+                        </Link>
+                        <button
+                          onClick={handleLogout}
+                          className="flex items-center gap-3 py-2 text-red-600 hover:text-red-700 transition-colors"
+                        >
+                          <LogOut className="w-5 h-5" />
+                          Sign Out
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <Link
+                          to="/signin"
+                          className="flex items-center gap-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
+                        >
+                          <User className="w-5 h-5" />
+                          Sign In
+                        </Link>
+                        <Link
+                          to="/signup"
+                          className="flex items-center justify-center py-2.5 bg-foreground text-background rounded-lg font-medium hover:opacity-90 transition-opacity"
+                        >
+                          Create Account
+                        </Link>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
