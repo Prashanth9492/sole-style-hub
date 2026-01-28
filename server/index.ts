@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { connectToDatabase, getDatabase } from './db';
 import productsRouter from './routes/products';
 import cloudinaryRouter from './routes/cloudinary';
+import heroSlidesRouter from './routes/heroSlides';
 
 // Get directory name in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -39,6 +40,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 // API Routes
 app.use('/api/products', productsRouter);
 app.use('/api/cloudinary', cloudinaryRouter);
+app.use('/api/hero-slides', heroSlidesRouter);
 
 // Start server
 app.listen(PORT, () => {

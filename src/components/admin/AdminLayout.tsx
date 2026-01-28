@@ -13,11 +13,13 @@ import {
   BarChart3,
   Tag,
   Image as ImageIcon,
+  Layers,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const adminNavLinks = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Hero Slides', href: '/admin/hero', icon: Layers },
   { name: 'Products', href: '/admin/products', icon: Package },
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Categories', href: '/admin/categories', icon: Tag },

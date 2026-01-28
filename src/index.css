@@ -296,4 +296,73 @@
   .stagger-3 { animation-delay: 0.3s; }
   .stagger-4 { animation-delay: 0.4s; }
   .stagger-5 { animation-delay: 0.5s; }
+
+  /* Premium Cinematic Shoe Animations */
+  .shoe-entrance {
+    animation: shoeEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes shoeEntrance {
+    0% {
+      opacity: 0;
+      transform: translateX(200px) scale(0.3) rotateY(25deg) rotateX(15deg);
+      filter: blur(12px);
+    }
+    40% {
+      opacity: 0.7;
+      transform: translateX(50px) scale(0.7) rotateY(10deg) rotateX(5deg);
+      filter: blur(4px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1) rotateY(0) rotateX(0);
+      filter: blur(0);
+    }
+  }
+
+  /* Premium floating effect for hero shoe */
+  .shoe-float {
+    animation: shoeFloat 5s ease-in-out infinite;
+  }
+
+  @keyframes shoeFloat {
+    0%, 100% {
+      transform: translateY(0) rotateZ(-1.5deg) rotateY(-3deg);
+    }
+    50% {
+      transform: translateY(-15px) rotateZ(1.5deg) rotateY(3deg);
+    }
+  }
+
+  /* Growing shadow animation */
+  .shadow-grow {
+    animation: shadowGrow 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes shadowGrow {
+    0% {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.2) translateY(80px);
+    }
+    100% {
+      opacity: 0.6;
+      transform: translateX(-50%) scale(1) translateY(0);
+    }
+  }
+
+  /* Cinematic spotlight pulse */
+  .spotlight-pulse {
+    animation: spotlightPulse 4s ease-in-out infinite;
+  }
+
+  @keyframes spotlightPulse {
+    0%, 100% {
+      opacity: 0.4;
+      transform: scale(0.95);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.05);
+    }
+  }
 }

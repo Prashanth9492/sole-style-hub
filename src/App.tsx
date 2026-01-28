@@ -22,6 +22,7 @@ import { AdminLayout } from "./components/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProductManagement from "./pages/admin/ProductManagement";
 import ProductForm from "./pages/admin/ProductForm";
+import HeroManagement from "./pages/admin/HeroManagement";
 
 const queryClient = new QueryClient();
 
@@ -53,6 +54,7 @@ const App = () => (
                   {/* Admin Routes */}
                   <Route path="/admin" element={<AdminLayout />}>
                     <Route index element={<AdminDashboard />} />
+                    <Route path="hero" element={<HeroManagement />} />
                     <Route path="products" element={<ProductManagement />} />
                     <Route path="products/new" element={<ProductForm />} />
                     <Route path="products/edit/:id" element={<ProductForm />} />

@@ -15,11 +15,17 @@ router.post('/upload', async (req, res) => {
       return res.status(400).json({ error: 'Image data is required' });
     }
 
-    const result = await uploadImage(image, folder || 'products');
+    // Sanitize folder name (replace dashes with underscores for Cloudinary)
+    const sanitizedFolder = (folder || 'products').replace(/-/g, '_');
+    
+    const result = await uploadImage(image, sanitizedFolder);
     res.json(result);
-  } catch (error) {
+  } catch (error: any) {
     console.error('Upload error:', error);
-    res.status(500).json({ error: 'Failed to upload image' });
+    res.status(500).json({ 
+      error: 'Failed to upload image',
+      message: error?.message || 'Unknown error'
+    });
   }
 });
 
