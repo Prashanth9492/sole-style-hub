@@ -26,8 +26,6 @@ interface HeroSlide {
   name: string;
   tagline: string;
   description: string;
-  price: number;
-  originalPrice: number;
   image: string;
   color: string;
   accentColor: string;
@@ -40,8 +38,6 @@ const defaultSlide: HeroSlide = {
   name: '',
   tagline: '',
   description: '',
-  price: 0,
-  originalPrice: 0,
   image: '',
   color: '',
   accentColor: '#f97316',
@@ -288,16 +284,6 @@ const HeroManagement = () => {
                         <h3 className="font-semibold text-lg truncate">{slide.name || 'Untitled'}</h3>
                         <p className="text-sm text-gray-500">{slide.tagline}</p>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm font-medium text-gray-600 mr-2">
-                          ${slide.price}
-                        </span>
-                        {slide.originalPrice > slide.price && (
-                          <span className="text-xs text-gray-400 line-through">
-                            ${slide.originalPrice}
-                          </span>
-                        )}
-                      </div>
                     </div>
                     <p className="text-sm text-gray-600 mt-2 line-clamp-2">{slide.description}</p>
                     <div className="flex items-center gap-2 mt-3">
@@ -461,33 +447,6 @@ const HeroManagement = () => {
                     rows={3}
                     required
                   />
-                </div>
-
-                {/* Pricing */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="price">Sale Price ($) *</Label>
-                    <Input
-                      id="price"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={formData.price}
-                      onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="originalPrice">Original Price ($)</Label>
-                    <Input
-                      id="originalPrice"
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value={formData.originalPrice}
-                      onChange={(e) => setFormData(prev => ({ ...prev, originalPrice: Number(e.target.value) }))}
-                    />
-                  </div>
                 </div>
 
                 {/* Color Name */}

@@ -275,58 +275,80 @@ export const HeroSection = () => {
                 variants={textVariants}
                 transition={{ duration: 0.5 }}
               >
-                {/* Brand Badge */}
-                <motion.span
-                  className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 border border-white/10 backdrop-blur-sm rounded-full text-xs font-medium text-white/70 mb-6 tracking-widest uppercase"
+                {/* Decorative Line */}
+                <motion.div 
+                  className="hidden lg:flex items-center gap-4 mb-8"
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
                 >
-                  New Collection 2024
-                </motion.span>
-
-                {/* Tagline */}
-                <h2 className="text-lg md:text-xl text-white/50 font-light tracking-wide mb-2">
-                  {currentShoe.tagline}
-                </h2>
-
-                {/* Product Name */}
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-4 tracking-tight">
-                  {currentShoe.name}
-                </h1>
-
-                {/* Color Variant */}
-                <div className="flex items-center justify-center lg:justify-start gap-2 mb-6">
-                  <div
-                    className="w-3 h-3 rounded-full ring-2 ring-white/20 ring-offset-2 ring-offset-gray-900"
+                  <div 
+                    className="w-12 h-[2px] rounded-full"
                     style={{ backgroundColor: currentShoe.accentColor }}
                   />
-                  <span className="text-sm text-white/60 font-medium">
-                    {currentShoe.color}
+                  <span className="text-xs font-semibold tracking-[0.3em] uppercase text-white/40">
+                    Premium Collection
                   </span>
+                </motion.div>
+
+                {/* Product Name with Gradient */}
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 tracking-tight leading-[0.9]">
+                  <span className="block">{currentShoe.name.split(' ')[0]}</span>
+                  <span 
+                    className="block bg-clip-text text-transparent bg-gradient-to-r"
+                    style={{ 
+                      backgroundImage: `linear-gradient(135deg, ${currentShoe.accentColor}, ${currentShoe.accentColor}80, white)` 
+                    }}
+                  >
+                    {currentShoe.name.split(' ').slice(1).join(' ') || currentShoe.name}
+                  </span>
+                </h1>
+
+                {/* Animated Underline */}
+                <motion.div 
+                  className="w-24 h-1 rounded-full mb-8 mx-auto lg:mx-0"
+                  style={{ backgroundColor: currentShoe.accentColor }}
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ delay: 0.3, duration: 0.6 }}
+                />
+
+                {/* Description with Icon */}
+                <div className="flex items-start gap-4 max-w-lg mx-auto lg:mx-0 mb-10">
+                  <div 
+                    className="hidden md:flex w-10 h-10 rounded-xl items-center justify-center flex-shrink-0 mt-1"
+                    style={{ backgroundColor: `${currentShoe.accentColor}20` }}
+                  >
+                    <svg className="w-5 h-5" style={{ color: currentShoe.accentColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <p className="text-base md:text-lg text-white/60 leading-relaxed">
+                    {currentShoe.description}
+                  </p>
                 </div>
 
-                {/* Description */}
-                <p className="text-base md:text-lg text-white/50 max-w-md mx-auto lg:mx-0 mb-8 leading-relaxed">
-                  {currentShoe.description}
-                </p>
-
-                {/* Price */}
-                <div className="flex items-baseline justify-center lg:justify-start gap-3 mb-8">
-                  <span className="text-4xl md:text-5xl font-bold text-white">
-                    ${currentShoe.price}
-                  </span>
-                  <span className="text-xl text-white/40 line-through">
-                    ${currentShoe.originalPrice}
-                  </span>
-                  <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded-md">
-                    SAVE ${currentShoe.originalPrice - currentShoe.price}
-                  </span>
-                </div>
+                {/* Feature Pills */}
+                {/* <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-10">
+                  {['Premium Quality', 'Free Shipping', 'Easy Returns'].map((feature, idx) => (
+                    <motion.span
+                      key={feature}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.4 + idx * 0.1 }}
+                      className="px-4 py-2 rounded-full text-xs font-medium text-white/70 border border-white/10 bg-white/5 backdrop-blur-sm"
+                    >
+                      {feature}
+                    </motion.span>
+                  ))}
+                </div> */}
 
                 {/* CTA Buttons */}
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-10">
                   <Link to="/category/men">
                     <motion.button
-                      className="group relative px-8 py-4 bg-white text-gray-900 rounded-full font-bold text-base overflow-hidden shadow-2xl shadow-white/10"
-                      whileHover={{ scale: 1.03 }}
+                      className="group relative px-10 py-5 bg-white text-gray-900 rounded-full font-bold text-base overflow-hidden shadow-2xl shadow-white/20"
+                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                     >
                       <span className="relative z-10 flex items-center gap-2">
@@ -344,14 +366,43 @@ export const HeroSection = () => {
 
                   <Link to="/new">
                     <motion.button
-                      className="px-8 py-4 rounded-full font-semibold text-white border border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/30 transition-all duration-300"
-                      whileHover={{ scale: 1.03 }}
+                      className="group px-10 py-5 rounded-full font-semibold text-white border border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/40 transition-all duration-300 flex items-center gap-2"
+                      whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                     >
                       Explore More
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </motion.button>
                   </Link>
                 </div>
+
+                {/* Stats Row */}
+                {/* <motion.div 
+                  className="flex items-center justify-center lg:justify-start gap-8 pt-8 border-t border-white/10"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl md:text-3xl font-bold text-white">50K+</div>
+                    <div className="text-xs text-white/40 uppercase tracking-wider">Happy Customers</div>
+                  </div>
+                  <div className="w-px h-12 bg-white/10" />
+                  <div className="text-center lg:text-left">
+                    <div className="text-2xl md:text-3xl font-bold text-white">4.9</div>
+                    <div className="text-xs text-white/40 uppercase tracking-wider flex items-center gap-1">
+                      <span>Rating</span>
+                      <svg className="w-3 h-3 text-yellow-400 fill-current" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div className="w-px h-12 bg-white/10 hidden md:block" />
+                  <div className="text-center lg:text-left hidden md:block">
+                    <div className="text-2xl md:text-3xl font-bold text-white">100%</div>
+                    <div className="text-xs text-white/40 uppercase tracking-wider">Authentic</div>
+                  </div>
+                </motion.div> */}
               </motion.div>
             </AnimatePresence>
           </div>
@@ -436,7 +487,7 @@ export const HeroSection = () => {
                 <motion.img
                   src={currentShoe.image}
                   alt={currentShoe.name}
-                  className="relative w-[320px] md:w-[420px] lg:w-[520px]"
+                  className="relative w-[380px] md:w-[500px] lg:w-[650px]"
                   style={{
                     filter: `drop-shadow(0 50px 100px ${currentShoe.accentColor}60) drop-shadow(0 25px 50px rgba(0,0,0,0.5))`,
                     transformStyle: 'preserve-3d',
@@ -514,14 +565,14 @@ export const HeroSection = () => {
           </div>
 
           {/* Quick Stats */}
-          <div className="hidden md:flex items-center gap-8 text-white/60">
+          {/* <div className="hidden md:flex items-center gap-8 text-white/60">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
               <span className="text-sm">Free Shipping</span>
             </div>
             <div className="text-sm">30-Day Returns</div>
             <div className="text-sm">Secure Checkout</div>
-          </div>
+          </div> */}
         </div>
       </div>
 
