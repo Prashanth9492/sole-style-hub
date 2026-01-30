@@ -11,21 +11,18 @@ const categories = [
     id: 'men',
     name: 'Men',
     subtitle: 'Premium Collection',
-    count: '500+ styles',
     image: menCategory,
   },
   {
     id: 'women',
     name: 'Women',
     subtitle: 'Elegant Designs',
-    count: '650+ styles',
     image: womenCategory,
   },
   {
     id: 'kids',
     name: 'Kids',
     subtitle: 'Comfortable & Fun',
-    count: '300+ styles',
     image: kidsCategory,
   },
 ];
@@ -44,19 +41,33 @@ export const CategorySection = () => {
   };
 
   return (
-    <section className="py-20 lg:py-32 bg-gradient-to-b from-background to-secondary/10">
+    <section className="py-16 lg:py-20 bg-gradient-to-b from-background to-secondary/10">
       <div className="container-premium section-padding">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+          initial={{ opacity: 0, x: -100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
           className="text-center mb-16"
         >
-          <h2 className="heading-section mb-4">Shop by Category</h2>
-          <p className="text-body max-w-md mx-auto">
+          <motion.h2 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="heading-section mb-4"
+          >
+            Shop by Category
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-body max-w-md mx-auto"
+          >
             Find the perfect pair for everyone in the family
-          </p>
+          </motion.p>
         </motion.div>
 
         <div className="flex flex-wrap justify-center gap-12 lg:gap-20">
@@ -73,7 +84,7 @@ export const CategorySection = () => {
                 {/* Circle Container */}
                 <div className="relative">
                   {/* Heart Icon */}
-                  <button
+                  {/* <button
                     onClick={(e) => toggleWishlist(category.id, e)}
                     className="absolute -top-2 -right-2 z-20 p-2.5 bg-white dark:bg-gray-800 rounded-full shadow-lg hover:scale-110 transition-all duration-300 border border-gray-100 dark:border-gray-700"
                   >
@@ -84,7 +95,7 @@ export const CategorySection = () => {
                           : 'text-gray-500 dark:text-gray-400 group-hover:text-red-400'
                       }`}
                     />
-                  </button>
+                  </button> */}
 
                   {/* Circle Image */}
                   <div className="w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-full overflow-hidden shadow-xl group-hover:shadow-2xl transition-all duration-500 border-4 border-white dark:border-gray-800 ring-2 ring-gray-100 dark:ring-gray-700 group-hover:ring-primary/50 group-hover:ring-4">
@@ -116,7 +127,7 @@ export const CategorySection = () => {
                     {category.subtitle}
                   </p>
                   <p className="text-xs text-muted-foreground/70 font-medium">
-                    {category.count}
+                   
                   </p>
                 </div>
               </Link>

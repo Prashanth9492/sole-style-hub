@@ -124,6 +124,16 @@ const ProductPage = () => {
     toast.success('Added to cart!');
   };
 
+  const handleBuyNow = () => {
+    if (!selectedSize || !selectedColor) {
+      toast.error('Please select size and color');
+      return;
+    }
+    addToCart(product, selectedSize, selectedColor);
+    // Navigate to cart page
+    window.location.href = '/cart';
+  };
+
   const discount = product.discountPrice
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
     : 0;
@@ -322,32 +332,40 @@ const ProductPage = () => {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-4 mb-8">
+              <div className="space-y-3 mb-8">
+                <div className="flex gap-4">
+                  <button
+                    onClick={handleAddToCart}
+                    className="flex-1 btn-primary inline-flex items-center justify-center gap-2"
+                  >
+                    <ShoppingBag className="w-5 h-5" />
+                    Add to Cart
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (product) {
+                        toggleWishlist(product);
+                        toast.success(
+                          isInWishlist(product.id)
+                            ? `Removed ${product.name} from wishlist`
+                            : `Added ${product.name} to wishlist!`
+                        );
+                      }
+                    }}
+                    className={`p-4 rounded-full border-2 transition-all ${
+                      product && isInWishlist(product.id)
+                        ? 'border-foreground bg-foreground text-background'
+                        : 'border-border hover:border-foreground'
+                    }`}
+                  >
+                    <Heart className={`w-5 h-5 ${product && isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                  </button>
+                </div>
                 <button
-                  onClick={handleAddToCart}
-                  className="flex-1 btn-primary inline-flex items-center justify-center gap-2"
+                  onClick={handleBuyNow}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 rounded-full font-semibold transition-all duration-300 hover:shadow-lg hover:scale-[1.02]"
                 >
-                  <ShoppingBag className="w-5 h-5" />
-                  Add to Cart
-                </button>
-                <button
-                  onClick={() => {
-                    if (product) {
-                      toggleWishlist(product);
-                      toast.success(
-                        isInWishlist(product.id)
-                          ? `Removed ${product.name} from wishlist`
-                          : `Added ${product.name} to wishlist!`
-                      );
-                    }
-                  }}
-                  className={`p-4 rounded-full border-2 transition-all ${
-                    product && isInWishlist(product.id)
-                      ? 'border-foreground bg-foreground text-background'
-                      : 'border-border hover:border-foreground'
-                  }`}
-                >
-                  <Heart className={`w-5 h-5 ${product && isInWishlist(product.id) ? 'fill-current' : ''}`} />
+                  Buy Now
                 </button>
               </div>
 

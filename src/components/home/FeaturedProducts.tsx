@@ -59,23 +59,24 @@ export const FeaturedProducts = () => {
 
   if (products.length === 0) {
     return (
-      <section className="py-20 lg:py-32 bg-secondary/30">
-        <div className="container-premium section-padding">
-          <p className="text-center text-gray-500">No products available yet.</p>
-        </div>
-      </section>
+      // <section className="py-20 lg:py-32 bg-secondary/30">
+      //   <div className="container-premium section-padding">
+      //     <p className="text-center text-gray-500">No products adrtfgyvbhunjkmvailable yet.</p>
+      //   </div>
+      // </section> null return if no products
+      null
     );
   }
 
   return (
-    <section className="py-20 lg:py-32 bg-secondary/30">
+    <section className="py-16 lg:py-20 bg-secondary/30">
       <div className="container-premium section-padding">
         <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, x: -80 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <h2 className="heading-section mb-2">Featured Collection</h2>
             <p className="text-body">Our most loved styles this season</p>
