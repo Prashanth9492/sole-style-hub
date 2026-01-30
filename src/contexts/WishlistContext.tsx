@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '@/data/products';
+import { useAuth } from './AuthContext';
 
 interface WishlistContextType {
   wishlistItems: Product[];
@@ -12,14 +13,32 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [wishlistItems, setWishlistItems] = useState<Product[]>(() => {
-    const saved = localStorage.getItem('wishlist');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { user } = useAuth();
+  const [wishlistItems, setWishlistItems] = useState<Product[]>([]);
 
+  // Get the storage key based on user ID
+  const getStorageKey = () => {
+    return user ? `wishlist_${user.uid}` : 'wishlist_guest';
+  };
+
+  // Load wishlist when user changes
   useEffect(() => {
-    localStorage.setItem('wishlist', JSON.stringify(wishlistItems));
-  }, [wishlistItems]);
+    const saved = localStorage.getItem(getStorageKey());
+    setWishlistItems(saved ? JSON.parse(saved) : []);
+  }, [user]);
+
+  // Save wishlist whenever items change
+  useEffect(() => {
+    localStorage.setItem(getStorageKey(), JSON.stringify(wishlistItems));
+  }, [wishlistItems, user]);
+
+  // Clear all wishlist data on logout
+  useEffect(() => {
+    if (!user) {
+      // When user logs out, clear the wishlist
+      setWishlistItems([]);
+    }
+  }, [user]);
 
   const addToWishlist = (product: Product) => {
     setWishlistItems((prev) => {

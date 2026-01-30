@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '@/data/products';
+import { useAuth } from './AuthContext';
 
 interface CartItem {
   product: Product;
@@ -21,14 +22,32 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('cart');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const { user } = useAuth();
+  const [items, setItems] = useState<CartItem[]>([]);
 
+  // Get the storage key based on user ID
+  const getStorageKey = () => {
+    return user ? `cart_${user.uid}` : 'cart_guest';
+  };
+
+  // Load cart when user changes
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(items));
-  }, [items]);
+    const saved = localStorage.getItem(getStorageKey());
+    setItems(saved ? JSON.parse(saved) : []);
+  }, [user]);
+
+  // Save cart whenever items change
+  useEffect(() => {
+    localStorage.setItem(getStorageKey(), JSON.stringify(items));
+  }, [items, user]);
+
+  // Clear all cart data on logout
+  useEffect(() => {
+    if (!user) {
+      // When user logs out, clear the cart
+      setItems([]);
+    }
+  }, [user]);
 
   const addToCart = (product: Product, size: number, color: string) => {
     setItems((prev) => {
