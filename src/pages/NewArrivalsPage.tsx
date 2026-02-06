@@ -44,7 +44,12 @@ const NewArrivalsPage = () => {
       
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        // Map MongoDB _id to id for consistent navigation
+        const mappedProducts = data.map((product: any) => ({
+          ...product,
+          id: product._id || product.id,
+        }));
+        setProducts(mappedProducts);
       }
     } catch (error) {
       console.error('Error fetching new arrivals:', error);
@@ -82,7 +87,7 @@ const NewArrivalsPage = () => {
 
           {/* Products Grid */}
           {!loading && products.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+            <div className="grid grid-cols-2 gap-4 lg:gap-6">
               {products.map((product, index) => (
                 <ProductCard 
                   key={product._id || product.id} 

@@ -16,6 +16,7 @@ import SearchPage from "./pages/SearchPage";
 import NewArrivalsPage from "./pages/NewArrivalsPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
+import AccountSettings from "./pages/AccountSettings";
 import NotFound from "./pages/NotFound";
 import SignInPage from "./pages/auth/SignInPage";
 import SignUpPage from "./pages/auth/SignUpPage";
@@ -55,17 +56,13 @@ const App = () => (
                   <Route path="/new" element={<NewArrivalsPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/orders/:orderId" element={<OrderDetailsPage />} />
-                  
-                  {/* Auth Routes */}
+                  <Route path="/account" element={<AccountSettings />} />
                   <Route path="/signin" element={<SignInPage />} />
                   <Route path="/signup" element={<SignUpPage />} />
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-                  
-                  {/* Admin Login */}
                   <Route path="/admin/login" element={<AdminLogin />} />
                   <Route path="/admin/setup" element={<AdminSetup />} />
                   
-                  {/* Admin Routes */}
                   <Route path="/admin" element={<AdminLayout />}>
                     <Route index element={<AdminDashboard />} />
                     <Route path="dashboard" element={<AdminDashboard />} />
@@ -79,7 +76,6 @@ const App = () => (
                     <Route path="analytics" element={<AnalyticsDashboard />} />
                   </Route>
                   
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>

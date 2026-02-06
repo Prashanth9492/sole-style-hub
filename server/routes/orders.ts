@@ -201,7 +201,7 @@ router.get('/admin/orders/:id', authenticateAdmin, async (req: Request, res: Res
 router.patch('/admin/orders/:id/status', authenticateAdmin, async (req: Request, res: Response) => {
   try {
     const db = await getDatabase();
-    const orderId = new ObjectId(req.params.id);
+    const orderId = new ObjectId(req.params.id as string);
     const { status, comment, trackingNumber } = req.body;
 
     if (!Object.values(OrderStatus).includes(status)) {
@@ -210,14 +210,7 @@ router.patch('/admin/orders/:id/status', authenticateAdmin, async (req: Request,
 
     const updateData: any = {
       orderStatus: status,
-      updatedAt: new Date(),
-      $push: {
-        statusHistory: {
-          status,
-          timestamp: new Date(),
-          comment: comment || `Order status updated to ${status}`
-        }
-      }
+      updatedAt: new Date()
     };
 
     if (trackingNumber) {
@@ -237,7 +230,16 @@ router.patch('/admin/orders/:id/status', authenticateAdmin, async (req: Request,
 
     const result = await db.collection(collectionName).findOneAndUpdate(
       { _id: orderId },
-      { $set: updateData },
+      { 
+        $set: updateData,
+        $push: {
+          statusHistory: {
+            status,
+            timestamp: new Date(),
+            comment: comment || `Order status updated to ${status}`
+          }
+        }
+      },
       { returnDocument: 'after' }
     );
 

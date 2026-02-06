@@ -39,6 +39,8 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
     toast.success(`Added ${product.name} to cart!`);
   };
 
+  const productId = product._id || product.id;
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -48,7 +50,7 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link to={`/product/${product.id}`} className="block">
+      <Link to={`/product/${productId}`} className="block">
         <div className="product-card">
           {/* Image Container */}
           <div className="relative aspect-square bg-secondary overflow-hidden">

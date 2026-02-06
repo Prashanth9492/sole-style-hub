@@ -126,9 +126,8 @@ export const Header = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'glass shadow-sm' : 'bg-background/95 backdrop-blur-sm'
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'glass shadow-sm' : 'bg-background'
+          }`}
       >
         <div className="container-premium section-padding">
           <div className="flex items-center justify-between h-16 lg:h-20 gap-4">
@@ -368,6 +367,22 @@ export const Header = () => {
                 </button>
               </div>
 
+              {/* Mobile Search */}
+              <div className="px-6 pb-4 flex-shrink-0">
+                <form onSubmit={handleSearch} className="w-full">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <input
+                      type="text"
+                      value={searchInput}
+                      onChange={(e) => setSearchInput(e.target.value)}
+                      placeholder="Search for shoes..."
+                      className="w-full pl-10 pr-4 py-2.5 bg-secondary border border-border/50 rounded-full text-sm focus:outline-none focus:border-foreground/50 transition-all duration-200"
+                    />
+                  </div>
+                </form>
+              </div>
+
               {/* Scrollable Navigation */}
               <div className="flex-1 overflow-y-auto">
                 <nav className="flex flex-col">
@@ -380,19 +395,10 @@ export const Header = () => {
                     >
                       <Link
                         to={link.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className={`flex items-center justify-between px-6 py-4 hover:bg-secondary/50 transition-colors border-b border-border/30 ${
-                          location.pathname === link.href ? 'bg-primary/10 border-l-4 border-l-primary' : ''
-                        }`}
+                        className="flex items-center justify-between px-6 py-4 hover:bg-secondary/50 transition-colors border-b border-border/30"
                       >
-                        <span className={`text-base font-normal ${
-                          location.pathname === link.href ? 'text-primary font-medium' : ''
-                        }`}>
-                          {link.name}
-                        </span>
-                        <ChevronRight className={`w-5 h-5 ${
-                          location.pathname === link.href ? 'text-primary' : 'text-muted-foreground'
-                        }`} />
+                        <span className="text-base font-normal">{link.name}</span>
+                        <ChevronRight className="w-5 h-5 text-muted-foreground" />
                       </Link>
                       {link.hasDropdown && (
                         <div className="bg-secondary/20">
@@ -400,7 +406,6 @@ export const Header = () => {
                             <Link
                               key={type.slug}
                               to={`/category/${link.name.toLowerCase()}/${type.slug}`}
-                              onClick={() => setIsMobileMenuOpen(false)}
                               className="flex items-center justify-between px-6 py-3 pl-12 hover:bg-secondary/50 transition-colors border-b border-border/20"
                             >
                               <span className="text-sm text-muted-foreground">{type.name}</span>
@@ -479,6 +484,70 @@ export const Header = () => {
               </div>
             </motion.div>
           </>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Search Overlay */}
+      <AnimatePresence>
+        {isSearchOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-background z-50 lg:hidden"
+          >
+            <div className="container-premium section-padding h-full flex flex-col">
+              <div className="flex items-center justify-between h-16 gap-4">
+                <button
+                  onClick={() => {
+                    setIsSearchOpen(false);
+                    setSearchInput('');
+                  }}
+                  className="p-2 hover:bg-secondary rounded-full transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <span className="text-sm font-medium">Search</span>
+                <div className="w-9" /> {/* Spacer for centering */}
+              </div>
+              
+              <div className="pt-4">
+                <form onSubmit={handleSearch} className="w-full">
+                  <div className="relative">
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+                    <input
+                      type="text"
+                      value={searchInput}
+                      onChange={(e) => setSearchInput(e.target.value)}
+                      placeholder="Search for shoes, sneakers, boots..."
+                      className="w-full pl-12 pr-4 py-4 bg-secondary border border-border/50 rounded-2xl text-base focus:outline-none focus:border-foreground/50 transition-all duration-200"
+                      autoFocus
+                    />
+                  </div>
+                </form>
+                
+                <div className="mt-6">
+                  <p className="text-xs text-muted-foreground uppercase tracking-wide font-semibold mb-3">Popular Searches</p>
+                  <div className="flex flex-wrap gap-2">
+                    {['Sneakers', 'Running Shoes', 'Boots', 'Sandals', 'Formal Shoes'].map((term) => (
+                      <button
+                        key={term}
+                        onClick={() => {
+                          setSearchInput(term);
+                          setSearchQuery(term);
+                          setIsSearchOpen(false);
+                          navigate(`/search?q=${encodeURIComponent(term)}`);
+                        }}
+                        className="px-4 py-2 bg-secondary hover:bg-accent rounded-full text-sm transition-colors"
+                      >
+                        {term}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         )}
       </AnimatePresence>
 

@@ -35,7 +35,7 @@ const ProductPage = () => {
       if (response.ok) {
         const data = await response.json();
         const mappedProduct = {
-          id: data._id,
+          id: data._id || data.id,
           name: data.name,
           brand: data.brand,
           category: data.category,
@@ -60,10 +60,10 @@ const ProductPage = () => {
         if (relatedResponse.ok) {
           const relatedData = await relatedResponse.json();
           const mappedRelated = relatedData
-            .filter((p: any) => p._id !== productId)
+            .filter((p: any) => (p._id || p.id) !== productId)
             .slice(0, 4)
             .map((p: any) => ({
-              id: p._id,
+              id: p._id || p.id,
               name: p.name,
               brand: p.brand,
               category: p.category,
@@ -83,9 +83,36 @@ const ProductPage = () => {
             }));
           setRelatedProducts(mappedRelated);
         }
+      } else {
+        // Fallback to static data if API product not found
+        const { products: staticProducts } = await import('@/data/products');
+        const staticProduct = staticProducts.find(p => p.id === productId || p.id === parseInt(productId));
+        if (staticProduct) {
+          setProduct(staticProduct);
+          // Get related products from static data
+          const related = staticProducts
+            .filter(p => p.category === staticProduct.category && p.id !== staticProduct.id)
+            .slice(0, 4);
+          setRelatedProducts(related);
+        }
       }
     } catch (error) {
       console.error('Error fetching product:', error);
+      // Fallback to static data on error
+      try {
+        const { products: staticProducts } = await import('@/data/products');
+        const staticProduct = staticProducts.find(p => p.id === productId || p.id === parseInt(productId));
+        if (staticProduct) {
+          setProduct(staticProduct);
+          // Get related products from static data
+          const related = staticProducts
+            .filter(p => p.category === staticProduct.category && p.id !== staticProduct.id)
+            .slice(0, 4);
+          setRelatedProducts(related);
+        }
+      } catch (fallbackError) {
+        console.error('Error loading static product data:', fallbackError);
+      }
     } finally {
       setLoading(false);
     }

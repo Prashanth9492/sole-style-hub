@@ -35,7 +35,12 @@ const SearchPage = () => {
       
       if (response.ok) {
         const data = await response.json();
-        setProducts(data);
+        // Map MongoDB _id to id for consistent navigation
+        const mappedProducts = data.map((product: any) => ({
+          ...product,
+          id: product._id || product.id,
+        }));
+        setProducts(mappedProducts);
       } else {
         // Fallback to static data if API fails
         const { products: staticProducts } = await import('@/data/products');
@@ -234,9 +239,9 @@ const SearchPage = () => {
               </div>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 gap-4 md:gap-6">
               {filteredProducts.map((product, index) => (
-                <ProductCard key={product.id} product={product} index={index} />
+                <ProductCard key={product.id || product._id} product={product} index={index} />
               ))}
             </div>
           )}

@@ -170,7 +170,7 @@ const OrderDetailsPage: React.FC = () => {
         <div className="container mx-auto px-4 py-16 text-center">
           <h2 className="text-2xl font-bold mb-4">Order Not Found</h2>
           <p className="text-gray-600 mb-8">We couldn't find the order you're looking for.</p>
-          <Link to="/orders">
+          <Link to="/account?tab=orders">
             <Button>View All Orders</Button>
           </Link>
         </div>
@@ -184,7 +184,7 @@ const OrderDetailsPage: React.FC = () => {
       <Header />
       <div className="container mx-auto px-4 py-8 max-w-5xl">
         {/* Back Button */}
-        <Link to="/orders" className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6">
+        <Link to="/account?tab=orders" className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Orders
         </Link>
