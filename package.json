@@ -12,7 +12,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "server": "tsx server/index.ts",
-    "server:watch": "nodemon --watch server --ext ts --exec tsx server/index.ts"
+    "server:watch": "nodemon --watch server --ext ts --exec tsx server/index.ts",
+    "setup-admin": "tsx server/setup-admin.ts",
+    "test-razorpay": "tsx server/test-razorpay.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -63,6 +65,7 @@
     "lucide-react": "^0.462.0",
     "mongodb": "^7.0.0",
     "next-themes": "^0.3.0",
+    "razorpay": "^2.9.6",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",

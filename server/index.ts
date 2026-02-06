@@ -3,10 +3,19 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cookieParser from 'cookie-parser';
 import { connectToDatabase, getDatabase } from './db';
 import productsRouter from './routes/products';
 import cloudinaryRouter from './routes/cloudinary';
 import heroSlidesRouter from './routes/heroSlides';
+import ordersRouter from './routes/orders';
+import categoriesRouter from './routes/categories';
+import usersRouter from './routes/users';
+import addressesRouter from './routes/addresses';
+import adminRouter from './routes/admin';
+import analyticsRouter from './routes/analytics';
+import paymentRouter from './routes/payment';
+import reviewsRouter from './routes/reviews';
 
 // Get directory name in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -28,6 +37,7 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json({ limit: '50mb' })); // Increased limit for image uploads
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(cookieParser());
 
 // Connect to MongoDB
 connectToDatabase().catch(console.error);
@@ -41,6 +51,14 @@ app.get('/api/health', (req: Request, res: Response) => {
 app.use('/api/products', productsRouter);
 app.use('/api/cloudinary', cloudinaryRouter);
 app.use('/api/hero-slides', heroSlidesRouter);
+app.use('/api', ordersRouter);
+app.use('/api', categoriesRouter);
+app.use('/api', usersRouter);
+app.use('/api', addressesRouter);
+app.use('/api', adminRouter);
+app.use('/api', analyticsRouter);
+app.use('/api', paymentRouter);
+app.use('/api', reviewsRouter);
 
 // Start server
 app.listen(PORT, () => {

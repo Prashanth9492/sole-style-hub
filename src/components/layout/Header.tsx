@@ -9,13 +9,21 @@ import {
   Menu, 
   X, 
   ChevronDown,
+  ChevronRight,
   Sparkles,
   Users,
   UserCircle2,
   Baby,
   Home,
   LogOut,
-  Settings
+  Settings,
+  Facebook,
+  Twitter,
+  Instagram,
+  Youtube,
+  Linkedin,
+  Package,
+  Mail
 } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -93,6 +101,18 @@ export const Header = () => {
     setIsMobileMenuOpen(false);
   }, [location]);
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchInput.trim()) {
@@ -106,8 +126,9 @@ export const Header = () => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'glass shadow-sm' : 'bg-background'
-          }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          isScrolled ? 'glass shadow-sm' : 'bg-background/95 backdrop-blur-sm'
+        }`}
       >
         <div className="container-premium section-padding">
           <div className="flex items-center justify-between h-16 lg:h-20 gap-4">
@@ -335,104 +356,125 @@ export const Header = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-80 bg-background z-50 shadow-xl lg:hidden"
+              className="fixed top-0 right-0 bottom-0 w-80 bg-background z-50 shadow-xl lg:hidden flex flex-col"
             >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-8">
-                  <span className="text-xl font-bold">Menu</span>
-                  <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 hover:bg-secondary rounded-full"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                <nav className="flex flex-col gap-4">
+              {/* Header */}
+              <div className="flex items-start p-6 pb-4 flex-shrink-0">
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-0 hover:opacity-70 transition-opacity"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Scrollable Navigation */}
+              <div className="flex-1 overflow-y-auto">
+                <nav className="flex flex-col">
                   {navLinks.map((link, index) => (
                     <motion.div
                       key={link.name}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ delay: index * 0.05 }}
                     >
                       <Link
                         to={link.href}
-                        className="block py-3 text-lg font-medium hover:text-muted-foreground transition-colors"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center justify-between px-6 py-4 hover:bg-secondary/50 transition-colors border-b border-border/30 ${
+                          location.pathname === link.href ? 'bg-primary/10 border-l-4 border-l-primary' : ''
+                        }`}
                       >
-                        {link.name}
+                        <span className={`text-base font-normal ${
+                          location.pathname === link.href ? 'text-primary font-medium' : ''
+                        }`}>
+                          {link.name}
+                        </span>
+                        <ChevronRight className={`w-5 h-5 ${
+                          location.pathname === link.href ? 'text-primary' : 'text-muted-foreground'
+                        }`} />
                       </Link>
                       {link.hasDropdown && (
-                        <div className="ml-4 mt-2 space-y-2">
+                        <div className="bg-secondary/20">
                           {footwearTypes.map((type) => (
                             <Link
                               key={type.slug}
                               to={`/category/${link.name.toLowerCase()}/${type.slug}`}
-                              className="block py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                              onClick={() => setIsMobileMenuOpen(false)}
+                              className="flex items-center justify-between px-6 py-3 pl-12 hover:bg-secondary/50 transition-colors border-b border-border/20"
                             >
-                              {type.name}
+                              <span className="text-sm text-muted-foreground">{type.name}</span>
+                              <ChevronRight className="w-4 h-4 text-muted-foreground" />
                             </Link>
                           ))}
                         </div>
                       )}
                     </motion.div>
                   ))}
+                  
+
                 </nav>
-                <div className="mt-8 pt-8 border-t border-border">
-                  <div className="flex flex-col gap-4">
-                    <Link
-                      to="/wishlist"
-                      className="flex items-center gap-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      <Heart className="w-5 h-5" />
-                      Wishlist
-                    </Link>
-                    {user ? (
-                      <>
-                        <div className="flex items-center gap-3 py-2">
-                          <Avatar className="h-8 w-8">
+              </div>
+
+              {/* Bottom Section - Quick Navigation Icons */}
+              <div className="flex-shrink-0 border-t border-border bg-gradient-to-b from-background to-secondary/20">
+                {user && (
+                  <div className="flex items-center gap-3 px-6 py-4 border-b border-border/30 bg-background/50">
+                    <Avatar className="h-12 w-12 flex-shrink-0 ring-2 ring-primary/20">
+                      <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
+                      <AvatarFallback className="text-sm bg-gradient-to-br from-primary/80 to-primary text-primary-foreground font-semibold">
+                        {getInitials(user.displayName || user.email)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-semibold truncate">{user.displayName || 'User'}</span>
+                      <span className="text-xs text-muted-foreground truncate">{user.email}</span>
+                    </div>
+                  </div>
+                )}
+                
+                {/* Navigation Icons */}
+                <div className="flex items-center justify-around px-4 py-6">
+                  <Link to="/wishlist" className="flex flex-col items-center gap-1.5 group">
+                    <div className="p-2.5 rounded-full bg-pink-500/10 group-hover:bg-pink-500/20 transition-all duration-200">
+                      <Heart className="w-5 h-5 text-pink-600 group-hover:scale-110 transition-transform" />
+                    </div>
+                  </Link>
+                  <Link to="/account" className="flex flex-col items-center gap-1.5 group">
+                    <div className="p-2.5 rounded-full bg-blue-500/10 group-hover:bg-blue-500/20 transition-all duration-200">
+                      <User className="w-5 h-5 text-blue-600 group-hover:scale-110 transition-transform" />
+                    </div>
+                  </Link>
+                  <Link to="/account?tab=orders" className="flex flex-col items-center gap-1.5 group">
+                    <div className="p-2.5 rounded-full bg-green-500/10 group-hover:bg-green-500/20 transition-all duration-200">
+                      <Package className="w-5 h-5 text-green-600 group-hover:scale-110 transition-transform" />
+                    </div>
+                  </Link>
+                  {user ? (
+                    <>
+                      <Link to="/account" className="flex flex-col items-center gap-1.5 group">
+                        <div className="ring-2 ring-primary/30 rounded-full group-hover:ring-primary/50 transition-all duration-200">
+                          <Avatar className="h-9 w-9">
                             <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
-                            <AvatarFallback className="text-xs">
+                            <AvatarFallback className="text-xs bg-gradient-to-br from-purple-500 to-primary text-white">
                               {getInitials(user.displayName || user.email)}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="flex flex-col">
-                            <span className="text-sm font-medium">{user.displayName || 'User'}</span>
-                            <span className="text-xs text-muted-foreground">{user.email}</span>
-                          </div>
                         </div>
-                        <Link
-                          to="/account"
-                          className="flex items-center gap-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                          <Settings className="w-5 h-5" />
-                          Account Settings
-                        </Link>
-                        <button
-                          onClick={handleLogout}
-                          className="flex items-center gap-3 py-2 text-red-600 hover:text-red-700 transition-colors"
-                        >
-                          <LogOut className="w-5 h-5" />
-                          Sign Out
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <Link
-                          to="/signin"
-                          className="flex items-center gap-3 py-2 text-muted-foreground hover:text-foreground transition-colors"
-                        >
-                          <User className="w-5 h-5" />
-                          Sign In
-                        </Link>
-                        <Link
-                          to="/signup"
-                          className="flex items-center justify-center py-2.5 bg-foreground text-background rounded-lg font-medium hover:opacity-90 transition-opacity"
-                        >
-                          Create Account
-                        </Link>
-                      </>
-                    )}
-                  </div>
+                      </Link>
+                      <button onClick={handleLogout} className="flex flex-col items-center gap-1.5 group">
+                        <div className="p-2.5 rounded-full bg-red-500/10 group-hover:bg-red-500/20 transition-all duration-200">
+                          <LogOut className="w-5 h-5 text-red-600 group-hover:scale-110 transition-transform" />
+                        </div>
+                      </button>
+                    </>
+                  ) : (
+                    <Link to="/signin" className="flex flex-col items-center gap-1.5 group">
+                      <div className="p-2.5 rounded-full bg-purple-500/10 group-hover:bg-purple-500/20 transition-all duration-200">
+                        <User className="w-5 h-5 text-purple-600 group-hover:scale-110 transition-transform" />
+                      </div>
+                    </Link>
+                  )}
                 </div>
               </div>
             </motion.div>

@@ -14,6 +14,8 @@ import CartPage from "./pages/CartPage";
 import WishlistPage from "./pages/WishlistPage";
 import SearchPage from "./pages/SearchPage";
 import NewArrivalsPage from "./pages/NewArrivalsPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import OrderDetailsPage from "./pages/OrderDetailsPage";
 import NotFound from "./pages/NotFound";
 import SignInPage from "./pages/auth/SignInPage";
 import SignUpPage from "./pages/auth/SignUpPage";
@@ -23,6 +25,12 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProductManagement from "./pages/admin/ProductManagement";
 import ProductForm from "./pages/admin/ProductForm";
 import HeroManagement from "./pages/admin/HeroManagement";
+import OrderManagement from "./pages/admin/OrderManagement";
+import CategoryManagement from "./pages/admin/CategoryManagement";
+import CustomerManagement from "./pages/admin/CustomerManagement";
+import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminSetup from "./pages/admin/AdminSetup";
 
 const queryClient = new QueryClient();
 
@@ -45,19 +53,30 @@ const App = () => (
                   <Route path="/wishlist" element={<WishlistPage />} />
                   <Route path="/search" element={<SearchPage />} />
                   <Route path="/new" element={<NewArrivalsPage />} />
+                  <Route path="/checkout" element={<CheckoutPage />} />
+                  <Route path="/orders/:orderId" element={<OrderDetailsPage />} />
                   
                   {/* Auth Routes */}
                   <Route path="/signin" element={<SignInPage />} />
                   <Route path="/signup" element={<SignUpPage />} />
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
                   
+                  {/* Admin Login */}
+                  <Route path="/admin/login" element={<AdminLogin />} />
+                  <Route path="/admin/setup" element={<AdminSetup />} />
+                  
                   {/* Admin Routes */}
                   <Route path="/admin" element={<AdminLayout />}>
                     <Route index element={<AdminDashboard />} />
+                    <Route path="dashboard" element={<AdminDashboard />} />
                     <Route path="hero" element={<HeroManagement />} />
                     <Route path="products" element={<ProductManagement />} />
                     <Route path="products/new" element={<ProductForm />} />
                     <Route path="products/edit/:id" element={<ProductForm />} />
+                    <Route path="orders" element={<OrderManagement />} />
+                    <Route path="categories" element={<CategoryManagement />} />
+                    <Route path="customers" element={<CustomerManagement />} />
+                    <Route path="analytics" element={<AnalyticsDashboard />} />
                   </Route>
                   
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

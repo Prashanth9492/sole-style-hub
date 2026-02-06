@@ -11,6 +11,8 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider, appleProvider } from '@/lib/firebase';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+
 interface AuthContextType {
   user: User | null;
   loading: boolean;
@@ -32,13 +34,54 @@ export const useAuth = () => {
   return context;
 };
 
+// Sync Firebase user with MongoDB backend
+async function syncFirebaseUser(firebaseUser: User): Promise<void> {
+  try {
+    const response = await fetch(`${API_URL}/auth/firebase-sync`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        uid: firebaseUser.uid,
+        email: firebaseUser.email,
+        name: firebaseUser.displayName || firebaseUser.email?.split('@')[0],
+        phone: firebaseUser.phoneNumber || '',
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Network error' }));
+      throw new Error(error.error || 'Failed to sync user');
+    }
+
+    const data = await response.json();
+    // Store the JWT token for API requests
+    localStorage.setItem('authToken', data.token);
+  } catch (error) {
+    console.error('Error syncing Firebase user with backend:', error);
+    throw error;
+  }
+}
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        try {
+          await syncFirebaseUser(firebaseUser);
+          setUser(firebaseUser);
+        } catch (error) {
+          console.error('Failed to sync user:', error);
+          setUser(firebaseUser);
+        }
+      } else {
+        setUser(null);
+        localStorage.removeItem('authToken');
+      }
       setLoading(false);
     });
 
@@ -65,6 +108,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
+    localStorage.removeItem('authToken');
     await signOut(auth);
   };
 

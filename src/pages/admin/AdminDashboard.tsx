@@ -8,6 +8,9 @@ import {
   Users,
   TrendingUp,
   ArrowUpRight,
+  BarChart3,
+  FolderTree,
+  ClipboardList,
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
@@ -190,15 +193,15 @@ const AdminDashboard = () => {
       {/* Quick Actions */}
       <Card className="p-4 md:p-6">
         <h2 className="text-lg md:text-xl font-bold mb-3 md:mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           <Link
             to="/admin/products/new"
             className="flex items-center gap-3 p-3 md:p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group"
           >
             <Package className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
             <div>
-              <p className="font-medium text-blue-900">Add New Product</p>
-              <p className="text-sm text-blue-600">Create a new product listing</p>
+              <p className="font-medium text-blue-900">Add Product</p>
+              <p className="text-sm text-blue-600">Create listing</p>
             </div>
             <ArrowUpRight className="w-5 h-5 text-blue-600 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
           </Link>
@@ -207,22 +210,46 @@ const AdminDashboard = () => {
             to="/admin/orders"
             className="flex items-center gap-3 p-3 md:p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors group"
           >
-            <ShoppingCart className="w-6 h-6 md:w-8 md:h-8 text-green-600" />
+            <ClipboardList className="w-6 h-6 md:w-8 md:h-8 text-green-600" />
             <div>
-              <p className="font-medium text-green-900">Manage Orders</p>
-              <p className="text-sm text-green-600">View and process orders</p>
+              <p className="font-medium text-green-900">Orders</p>
+              <p className="text-sm text-green-600">Manage orders</p>
             </div>
             <ArrowUpRight className="w-5 h-5 text-green-600 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
+
+          <Link
+            to="/admin/categories"
+            className="flex items-center gap-3 p-3 md:p-4 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors group"
+          >
+            <FolderTree className="w-6 h-6 md:w-8 md:h-8 text-orange-600" />
+            <div>
+              <p className="font-medium text-orange-900">Categories</p>
+              <p className="text-sm text-orange-600">Manage categories</p>
+            </div>
+            <ArrowUpRight className="w-5 h-5 text-orange-600 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
+
+          <Link
+            to="/admin/customers"
+            className="flex items-center gap-3 p-3 md:p-4 bg-cyan-50 hover:bg-cyan-100 rounded-lg transition-colors group"
+          >
+            <Users className="w-6 h-6 md:w-8 md:h-8 text-cyan-600" />
+            <div>
+              <p className="font-medium text-cyan-900">Customers</p>
+              <p className="text-sm text-cyan-600">View customers</p>
+            </div>
+            <ArrowUpRight className="w-5 h-5 text-cyan-600 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
           </Link>
 
           <Link
             to="/admin/analytics"
             className="flex items-center gap-3 p-3 md:p-4 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors group"
           >
-            <TrendingUp className="w-6 h-6 md:w-8 md:h-8 text-purple-600" />
+            <BarChart3 className="w-6 h-6 md:w-8 md:h-8 text-purple-600" />
             <div>
-              <p className="font-medium text-purple-900">View Analytics</p>
-              <p className="text-sm text-purple-600">Check store performance</p>
+              <p className="font-medium text-purple-900">Analytics</p>
+              <p className="text-sm text-purple-600">View insights</p>
             </div>
             <ArrowUpRight className="w-5 h-5 text-purple-600 ml-auto opacity-0 group-hover:opacity-100 transition-opacity" />
           </Link>

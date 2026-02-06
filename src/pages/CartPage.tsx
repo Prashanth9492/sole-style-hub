@@ -1,12 +1,15 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Trash2, Minus, Plus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 const CartPage = () => {
   const { items, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (items.length === 0) {
     return (
@@ -180,7 +183,16 @@ const CartPage = () => {
                     </span>
                   </div>
 
-                  <button className="w-full btn-primary mb-4">
+                  <button 
+                    className="w-full btn-primary mb-4"
+                    onClick={() => {
+                      if (!user) {
+                        navigate('/signin?redirect=/checkout');
+                      } else {
+                        navigate('/checkout');
+                      }
+                    }}
+                  >
                     Proceed to Checkout
                   </button>
 

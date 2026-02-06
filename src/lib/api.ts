@@ -19,43 +19,94 @@ class ApiService {
     this.baseUrl = baseUrl;
   }
 
+  private getAuthHeaders(): HeadersInit {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    // Get JWT token from localStorage (set by AuthContext after Firebase sync)
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return headers;
+  }
+
+  // Generic HTTP methods with authentication
+  async get(path: string): Promise<any> {
+    const headers = this.getAuthHeaders();
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: 'GET',
+      headers,
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Request failed' }));
+      throw new Error(error.error || `Failed to GET ${path}`);
+    }
+    return response.json();
+  }
+
+  async post(path: string, data?: any): Promise<any> {
+    const headers = this.getAuthHeaders();
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Request failed' }));
+      throw new Error(error.error || `Failed to POST ${path}`);
+    }
+    return response.json();
+  }
+
+  async put(path: string, data?: any): Promise<any> {
+    const headers = this.getAuthHeaders();
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Request failed' }));
+      throw new Error(error.error || `Failed to PUT ${path}`);
+    }
+    return response.json();
+  }
+
+  async delete(path: string): Promise<any> {
+    const headers = this.getAuthHeaders();
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: 'DELETE',
+      headers,
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Request failed' }));
+      throw new Error(error.error || `Failed to DELETE ${path}`);
+    }
+    return response.json();
+  }
+
   // Products
   async getProducts(): Promise<Product[]> {
-    const response = await fetch(`${this.baseUrl}/products`);
-    if (!response.ok) throw new Error('Failed to fetch products');
-    return response.json();
+    return this.get('/products');
   }
 
   async getProduct(id: string): Promise<Product> {
-    const response = await fetch(`${this.baseUrl}/products/${id}`);
-    if (!response.ok) throw new Error('Failed to fetch product');
-    return response.json();
+    return this.get(`/products/${id}`);
   }
 
   async createProduct(product: Omit<Product, '_id' | 'createdAt' | 'updatedAt'>): Promise<{ productId: string }> {
-    const response = await fetch(`${this.baseUrl}/products`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(product),
-    });
-    if (!response.ok) throw new Error('Failed to create product');
-    return response.json();
+    return this.post('/products', product);
   }
 
   async updateProduct(id: string, updates: Partial<Product>): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/products/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(updates),
-    });
-    if (!response.ok) throw new Error('Failed to update product');
+    return this.put(`/products/${id}`, updates);
   }
 
   async deleteProduct(id: string): Promise<void> {
-    const response = await fetch(`${this.baseUrl}/products/${id}`, {
-      method: 'DELETE',
-    });
-    if (!response.ok) throw new Error('Failed to delete product');
+    return this.delete(`/products/${id}`);
   }
 
   // Health check
