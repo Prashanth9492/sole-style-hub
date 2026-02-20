@@ -87,7 +87,7 @@ const NewArrivalsPage = () => {
 
           {/* Products Grid */}
           {!loading && products.length > 0 && (
-            <div className="grid grid-cols-2 gap-4 lg:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
               {products.map((product, index) => (
                 <ProductCard 
                   key={product._id || product.id} 

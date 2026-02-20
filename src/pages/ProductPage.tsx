@@ -20,6 +20,8 @@ const ProductPage = () => {
   const [selectedSize, setSelectedSize] = useState<number | null>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     if (id) {
@@ -165,6 +167,21 @@ const ProductPage = () => {
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
     : 0;
 
+  const handleMouseEnter = () => {
+    setIsZoomed(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsZoomed(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setZoomPosition({ x, y });
+  };
+
   return (
     <div className="min-h-screen">
       <Header />
@@ -199,11 +216,20 @@ const ProductPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <div className="relative aspect-square bg-secondary rounded-3xl overflow-hidden mb-4">
+              <div 
+                className="relative aspect-square bg-secondary rounded-3xl overflow-hidden mb-4 cursor-zoom-in"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onMouseMove={handleMouseMove}
+              >
                 <img
                   src={product.images[currentImageIndex]}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover transition-transform duration-200"
+                  style={{
+                    transform: isZoomed ? 'scale(1.5)' : 'scale(1)',
+                    transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`
+                  }}
                 />
                 {product.images.length > 1 && (
                   <>

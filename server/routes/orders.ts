@@ -103,7 +103,30 @@ router.get('/orders/my-orders', authenticateUser, async (req: AuthRequest, res: 
       .sort({ createdAt: -1 })
       .toArray();
 
-    res.json(orders);
+    // Populate missing product images
+    const ordersWithImages = await Promise.all(orders.map(async (order: any) => {
+      const itemsWithImages = await Promise.all(order.items.map(async (item: any) => {
+        // If product image is missing, fetch it from products collection
+        if (!item.productImage && item.productId) {
+          try {
+            const product = await db.collection('products').findOne({ _id: new ObjectId(item.productId) });
+            if (product && product.images && product.images.length > 0) {
+              item.productImage = product.images[0];
+            }
+          } catch (err) {
+            console.error('Error fetching product image:', err);
+          }
+        }
+        return item;
+      }));
+      
+      return {
+        ...order,
+        items: itemsWithImages
+      };
+    }));
+
+    res.json(ordersWithImages);
   } catch (error) {
     console.error('Error fetching user orders:', error);
     res.status(500).json({ error: 'Failed to fetch orders' });
@@ -126,7 +149,27 @@ router.get('/orders/:id', authenticateUser, async (req: AuthRequest, res: Respon
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    res.json(order);
+    // Populate missing product images
+    const itemsWithImages = await Promise.all((order as any).items.map(async (item: any) => {
+      if (!item.productImage && item.productId) {
+        try {
+          const product = await db.collection('products').findOne({ _id: new ObjectId(item.productId) });
+          if (product && product.images && product.images.length > 0) {
+            item.productImage = product.images[0];
+          }
+        } catch (err) {
+          console.error('Error fetching product image:', err);
+        }
+      }
+      return item;
+    }));
+
+    const orderWithImages = {
+      ...order,
+      items: itemsWithImages
+    };
+
+    res.json(orderWithImages);
   } catch (error) {
     console.error('Error fetching order:', error);
     res.status(500).json({ error: 'Failed to fetch order' });
@@ -163,8 +206,30 @@ router.get('/admin/orders', authenticateAdmin, async (req: Request, res: Respons
       db.collection(collectionName).countDocuments(filter)
     ]);
 
+    // Populate missing product images for all orders
+    const ordersWithImages = await Promise.all(orders.map(async (order: any) => {
+      const itemsWithImages = await Promise.all(order.items.map(async (item: any) => {
+        if (!item.productImage && item.productId) {
+          try {
+            const product = await db.collection('products').findOne({ _id: new ObjectId(item.productId) });
+            if (product && product.images && product.images.length > 0) {
+              item.productImage = product.images[0];
+            }
+          } catch (err) {
+            console.error('Error fetching product image:', err);
+          }
+        }
+        return item;
+      }));
+      
+      return {
+        ...order,
+        items: itemsWithImages
+      };
+    }));
+
     res.json({
-      orders,
+      orders: ordersWithImages,
       pagination: {
         total,
         page: Number(page),
@@ -190,7 +255,27 @@ router.get('/admin/orders/:id', authenticateAdmin, async (req: Request, res: Res
       return res.status(404).json({ error: 'Order not found' });
     }
 
-    res.json(order);
+    // Populate missing product images
+    const itemsWithImages = await Promise.all((order as any).items.map(async (item: any) => {
+      if (!item.productImage && item.productId) {
+        try {
+          const product = await db.collection('products').findOne({ _id: new ObjectId(item.productId) });
+          if (product && product.images && product.images.length > 0) {
+            item.productImage = product.images[0];
+          }
+        } catch (err) {
+          console.error('Error fetching product image:', err);
+        }
+      }
+      return item;
+    }));
+
+    const orderWithImages = {
+      ...order,
+      items: itemsWithImages
+    };
+
+    res.json(orderWithImages);
   } catch (error) {
     console.error('Error fetching order:', error);
     res.status(500).json({ error: 'Failed to fetch order' });

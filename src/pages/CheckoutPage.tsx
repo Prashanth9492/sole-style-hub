@@ -149,7 +149,7 @@ const CheckoutPage: React.FC = () => {
         items: items.map(item => ({
           productId: item.product.id,
           productName: item.product.name,
-          productImage: item.product.image,
+          productImage: item.product.images?.[0] || item.product.image || '/placeholder.svg',
           size: item.selectedSize,
           color: item.selectedColor,
           quantity: item.quantity,
