@@ -75,6 +75,20 @@ class ApiService {
     return response.json();
   }
 
+  async patch(path: string, data?: any): Promise<any> {
+    const headers = this.getAuthHeaders();
+    const response = await fetch(`${this.baseUrl}${path}`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ error: 'Request failed' }));
+      throw new Error(error.error || `Failed to PATCH ${path}`);
+    }
+    return response.json();
+  }
+
   async delete(path: string): Promise<any> {
     const headers = this.getAuthHeaders();
     const response = await fetch(`${this.baseUrl}${path}`, {

@@ -72,6 +72,7 @@ const OrderDetailsPage: React.FC = () => {
     image: string;
   } | null>(null);
   const [reviewedProducts, setReviewedProducts] = useState<Set<string>>(new Set());
+  const [isCancelling, setIsCancelling] = useState(false);
 
   useEffect(() => {
     fetchOrderDetails();
@@ -113,6 +114,203 @@ const OrderDetailsPage: React.FC = () => {
     setReviewDialogOpen(false);
     checkReviewedProducts();
     fetchOrderDetails();
+  };
+
+  const handleCancelOrder = async () => {
+    if (!confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
+      return;
+    }
+
+    try {
+      setIsCancelling(true);
+      await api.patch(`/orders/${orderId}/cancel`, {
+        reason: 'Cancelled by customer'
+      });
+
+      toast({
+        title: 'Success',
+        description: 'Order cancelled successfully',
+      });
+
+      // Refresh order details
+      fetchOrderDetails();
+    } catch (error: any) {
+      console.error('Error cancelling order:', error);
+      toast({
+        title: 'Error',
+        description: error.message || 'Failed to cancel order',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsCancelling(false);
+    }
+  };
+
+  const handleDownloadInvoice = () => {
+    // Create a printable invoice view
+    const invoiceContent = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Invoice - ${order?.orderNumber}</title>
+        <style>
+          body { 
+            font-family: Arial, sans-serif; 
+            margin: 40px;
+            color: #333;
+          }
+          .header { 
+            text-align: center; 
+            margin-bottom: 30px;
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+          }
+          .company-name {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+          }
+          .invoice-title {
+            font-size: 24px;
+            margin: 20px 0;
+          }
+          .info-section { 
+            margin: 20px 0; 
+          }
+          .info-row { 
+            display: flex; 
+            justify-content: space-between;
+            margin: 10px 0;
+          }
+          .section-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin: 20px 0 10px 0;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+          }
+          table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin: 20px 0;
+          }
+          th, td { 
+            border: 1px solid #ddd; 
+            padding: 12px; 
+            text-align: left; 
+          }
+          th { 
+            background-color: #f5f5f5; 
+            font-weight: bold;
+          }
+          .total-row { 
+            font-weight: bold; 
+            background-color: #f9f9f9;
+          }
+          .text-right { text-align: right; }
+          .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <div class="company-name">SOLE STYLE HUB</div>
+          <div>Premium Footwear & Fashion</div>
+          <div class="invoice-title">INVOICE</div>
+        </div>
+
+        <div class="info-section">
+          <div class="info-row">
+            <div>
+              <strong>Order Number:</strong> ${order?.orderNumber}<br>
+              <strong>Order Date:</strong> ${new Date(order?.createdAt || '').toLocaleDateString()}<br>
+              <strong>Payment Status:</strong> ${order?.paymentStatus}
+            </div>
+            <div style="text-align: right;">
+              <strong>Bill To:</strong><br>
+              ${order?.shippingAddress.name}<br>
+              ${order?.shippingAddress.addressLine1}<br>
+              ${order?.shippingAddress.addressLine2 ? order.shippingAddress.addressLine2 + '<br>' : ''}
+              ${order?.shippingAddress.city}, ${order?.shippingAddress.state}<br>
+              ${order?.shippingAddress.pincode}<br>
+              Phone: ${order?.shippingAddress.phone}
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Order Items</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Size</th>
+              <th>Color</th>
+              <th class="text-right">Price</th>
+              <th class="text-right">Qty</th>
+              <th class="text-right">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${order?.items.map(item => `
+              <tr>
+                <td>${item.productName}</td>
+                <td>${item.size || '-'}</td>
+                <td>${item.color || '-'}</td>
+                <td class="text-right">₹${item.price.toFixed(2)}</td>
+                <td class="text-right">${item.quantity}</td>
+                <td class="text-right">₹${item.subtotal.toFixed(2)}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <div style="margin-left: auto; width: 300px;">
+          <div class="info-row">
+            <span>Subtotal:</span>
+            <span>₹${order?.totalAmount.toFixed(2)}</span>
+          </div>
+          ${order?.discount > 0 ? `
+          <div class="info-row" style="color: green;">
+            <span>Discount:</span>
+            <span>-₹${order?.discount.toFixed(2)}</span>
+          </div>
+          ` : ''}
+          <div class="info-row">
+            <span>Shipping:</span>
+            <span>${order?.shippingCharges === 0 ? 'FREE' : '₹' + order?.shippingCharges.toFixed(2)}</span>
+          </div>
+          <div class="info-row">
+            <span>Tax (GST):</span>
+            <span>₹${order?.taxAmount.toFixed(2)}</span>
+          </div>
+          <div class="info-row total-row" style="font-size: 18px; padding-top: 10px; border-top: 2px solid #000;">
+            <span>Total:</span>
+            <span>₹${order?.finalAmount.toFixed(2)}</span>
+          </div>
+        </div>
+
+        <div class="footer">
+          <p>Thank you for shopping with Sole Style Hub!</p>
+          <p>For any queries, contact us at support@solestylehub.com</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    // Open print dialog with invoice content
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(invoiceContent);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+      }, 250);
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -413,12 +611,21 @@ const OrderDetailsPage: React.FC = () => {
 
             {/* Actions */}
             <div className="space-y-2">
-              <Button variant="outline" className="w-full">
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={handleDownloadInvoice}
+              >
                 Download Invoice
               </Button>
               {order.orderStatus !== 'CANCELLED' && order.orderStatus !== 'DELIVERED' && (
-                <Button variant="destructive" className="w-full">
-                  Cancel Order
+                <Button 
+                  variant="destructive" 
+                  className="w-full"
+                  onClick={handleCancelOrder}
+                  disabled={isCancelling}
+                >
+                  {isCancelling ? 'Cancelling...' : 'Cancel Order'}
                 </Button>
               )}
             </div>
