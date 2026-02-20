@@ -112,6 +112,13 @@ export default function OrderManagement() {
   const submitStatusUpdate = async () => {
     if (!selectedOrder) return;
 
+    // Prevent updating cancelled orders
+    if (selectedOrder.orderStatus === 'Cancelled') {
+      alert('Cannot update status of cancelled orders');
+      setShowUpdateDialog(false);
+      return;
+    }
+
     try {
       const token = localStorage.getItem('adminToken');
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
@@ -129,14 +136,16 @@ export default function OrderManagement() {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || errorData.error || 'Failed to update order status');
       }
 
       setShowUpdateDialog(false);
       fetchOrders();
-    } catch (error) {
+      alert('Order status updated successfully');
+    } catch (error: any) {
       console.error('Error updating order status:', error);
-      alert('Failed to update order status');
+      alert(error.message || 'Failed to update order status');
     }
   };
 
@@ -261,7 +270,12 @@ export default function OrderManagement() {
                         <Button variant="outline" size="sm" onClick={() => handleViewDetails(order)}>
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button size="sm" onClick={() => handleUpdateStatus(order)}>
+                        <Button 
+                          size="sm" 
+                          onClick={() => handleUpdateStatus(order)}
+                          disabled={order.orderStatus === 'Cancelled' || order.orderStatus === 'Delivered'}
+                          title={order.orderStatus === 'Cancelled' ? 'Cannot update cancelled orders' : order.orderStatus === 'Delivered' ? 'Order already delivered' : 'Update order status'}
+                        >
                           <Package className="h-4 w-4 mr-2" />
                           Update
                         </Button>
@@ -375,50 +389,62 @@ export default function OrderManagement() {
           <DialogHeader>
             <DialogTitle>Update Order Status</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <Label>New Status</Label>
-              <Select value={newStatus} onValueChange={setNewStatus}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Placed">Placed</SelectItem>
-                  <SelectItem value="Confirmed">Confirmed</SelectItem>
-                  <SelectItem value="Packed">Packed</SelectItem>
-                  <SelectItem value="Shipped">Shipped</SelectItem>
-                  <SelectItem value="Out for Delivery">Out for Delivery</SelectItem>
-                  <SelectItem value="Delivered">Delivered</SelectItem>
-                  <SelectItem value="Cancelled">Cancelled</SelectItem>
-                </SelectContent>
-              </Select>
+          {selectedOrder?.orderStatus === 'Cancelled' ? (
+            <div className="space-y-4">
+              <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-md">
+                <p className="font-semibold">Cannot Update Cancelled Order</p>
+                <p className="text-sm mt-1">This order has been cancelled and cannot be modified.</p>
+              </div>
+              <div className="flex justify-end">
+                <Button onClick={() => setShowUpdateDialog(false)}>Close</Button>
+              </div>
             </div>
+          ) : (
+            <div className="space-y-4">
+              <div>
+                <Label>New Status</Label>
+                <Select value={newStatus} onValueChange={setNewStatus}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Placed">Placed</SelectItem>
+                    <SelectItem value="Confirmed">Confirmed</SelectItem>
+                    <SelectItem value="Packed">Packed</SelectItem>
+                    <SelectItem value="Shipped">Shipped</SelectItem>
+                    <SelectItem value="Out for Delivery">Out for Delivery</SelectItem>
+                    <SelectItem value="Delivered">Delivered</SelectItem>
+                    <SelectItem value="Cancelled">Cancelled</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
 
-            <div>
-              <Label>Tracking Number (Optional)</Label>
-              <Input
-                value={trackingNumber}
-                onChange={(e) => setTrackingNumber(e.target.value)}
-                placeholder="Enter tracking number"
-              />
-            </div>
+              <div>
+                <Label>Tracking Number (Optional)</Label>
+                <Input
+                  value={trackingNumber}
+                  onChange={(e) => setTrackingNumber(e.target.value)}
+                  placeholder="Enter tracking number"
+                />
+              </div>
 
-            <div>
-              <Label>Comment (Optional)</Label>
-              <Textarea
-                value={statusComment}
-                onChange={(e) => setStatusComment(e.target.value)}
-                placeholder="Add a comment about this status update"
-              />
-            </div>
+              <div>
+                <Label>Comment (Optional)</Label>
+                <Textarea
+                  value={statusComment}
+                  onChange={(e) => setStatusComment(e.target.value)}
+                  placeholder="Add a comment about this status update"
+                />
+              </div>
 
-            <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => setShowUpdateDialog(false)}>
-                Cancel
-              </Button>
-              <Button onClick={submitStatusUpdate}>Update Status</Button>
+              <div className="flex gap-2 justify-end">
+                <Button variant="outline" onClick={() => setShowUpdateDialog(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={submitStatusUpdate}>Update Status</Button>
+              </div>
             </div>
-          </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>

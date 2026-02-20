@@ -293,6 +293,29 @@ router.patch('/admin/orders/:id/status', authenticateAdmin, async (req: Request,
       return res.status(400).json({ error: 'Invalid order status' });
     }
 
+    // Check if order exists and get current status
+    const currentOrder = await db.collection(collectionName).findOne({ _id: orderId }) as any;
+    
+    if (!currentOrder) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+
+    // Prevent updating status of cancelled orders
+    if (currentOrder.orderStatus === OrderStatus.CANCELLED) {
+      return res.status(400).json({ 
+        error: 'Cannot update status of cancelled order',
+        message: 'This order has been cancelled and cannot be modified'
+      });
+    }
+
+    // Prevent updating status of delivered orders (optional, can be removed if needed)
+    if (currentOrder.orderStatus === OrderStatus.DELIVERED && status !== OrderStatus.RETURNED) {
+      return res.status(400).json({ 
+        error: 'Cannot update status of delivered order',
+        message: 'Delivered orders can only be marked as returned'
+      });
+    }
+
     const updateData: any = {
       orderStatus: status,
       updatedAt: new Date()
@@ -327,10 +350,6 @@ router.patch('/admin/orders/:id/status', authenticateAdmin, async (req: Request,
       },
       { returnDocument: 'after' }
     );
-
-    if (!result) {
-      return res.status(404).json({ error: 'Order not found' });
-    }
 
     res.json({ message: 'Order status updated successfully', order: result });
   } catch (error) {
