@@ -17,6 +17,10 @@ import NewArrivalsPage from "./pages/NewArrivalsPage";
 import CheckoutPage from "./pages/CheckoutPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import AccountSettings from "./pages/AccountSettings";
+import AboutPage from "./pages/AboutPage";
+import CareersPage from "./pages/CareersPage";
+import SustainabilityPage from "./pages/SustainabilityPage";
+import PressPage from "./pages/PressPage";
 import NotFound from "./pages/NotFound";
 import SignInPage from "./pages/auth/SignInPage";
 import SignUpPage from "./pages/auth/SignUpPage";
@@ -57,6 +61,10 @@ const App = () => (
                   <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/orders/:orderId" element={<OrderDetailsPage />} />
                   <Route path="/account" element={<AccountSettings />} />
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/careers" element={<CareersPage />} />
+                  <Route path="/sustainability" element={<SustainabilityPage />} />
+                  <Route path="/press" element={<PressPage />} />
                   <Route path="/signin" element={<SignInPage />} />
                   <Route path="/signup" element={<SignUpPage />} />
                   <Route path="/forgot-password" element={<ForgotPasswordPage />} />
