@@ -532,7 +532,7 @@ export const HeroSection = () => {
         {/* Bottom Navigation Dots & Stats */}
         <div className="absolute bottom-8 left-0 right-0 flex flex-col md:flex-row items-center justify-between gap-6 px-6 md:px-12">
           {/* Slide Indicators */}
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             {shoes.map((shoe, index) => (
               <button
                 key={shoe.id}
@@ -562,7 +562,7 @@ export const HeroSection = () => {
             <span className="ml-4 text-sm text-white/50 font-medium">
               {String(currentIndex + 1).padStart(2, '0')} / {String(shoes.length).padStart(2, '0')}
             </span>
-          </div>
+          </div> */}
 
           {/* Quick Stats */}
           {/* <div className="hidden md:flex items-center gap-8 text-white/60">

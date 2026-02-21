@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import logo from '@/assets/image.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
@@ -132,9 +133,10 @@ export const Header = () => {
         <div className="container-premium section-padding">
           <div className="flex items-center justify-between h-16 lg:h-20 gap-4">
             {/* Logo */}
-            <Link to="/" className="flex items-center flex-shrink-0">
-              <span className="text-xl lg:text-2xl font-bold tracking-tight">STRIDE</span>
-            </Link>
+           
+              <img src={logo} alt="STRIDE Logo" className="h-24 w-30" />
+           
+            
 
             {/* Center Section - Navigation or Search */}
             <div className="hidden lg:flex items-center flex-1 justify-center">

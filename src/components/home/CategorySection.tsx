@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Heart, ArrowRight } from 'lucide-react';
-import menCategory from '@/assets/categories/men-category.jpg';
-import womenCategory from '@/assets/categories/women-category.jpg';
-import kidsCategory from '@/assets/categories/kids-category.jpg';
+import menCategory from '@/assets/categories/men-category.png';
+import womenCategory from '@/assets/categories/women-category.png';
+import kidsCategory from '@/assets/categories/kids-category.png';
 import { useState } from 'react';
 
 const categories = [
