@@ -11,8 +11,8 @@ export interface Product {
   stock: number;
   images: string[];
   description: string;
-  rating: number;
-  reviews: number;
+  rating?: number;
+  reviews?: number;
   inStock: boolean;
   isNew?: boolean;
   isBestseller?: boolean;

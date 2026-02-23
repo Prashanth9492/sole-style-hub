@@ -59,6 +59,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
       });
 
       const uploadedUrls = await Promise.all(uploadPromises);
+      console.log('📸 Uploaded image URLs:', uploadedUrls);
       setImages([...images, ...uploadedUrls]);
 
       toast({
@@ -144,7 +145,7 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
     setIsSubmitting(true);
 
     try {
-      await api.post('/reviews', {
+      const reviewData = {
         productId,
         orderId,
         rating,
@@ -152,7 +153,11 @@ const ReviewDialog: React.FC<ReviewDialogProps> = ({
         comment,
         images,
         videos
-      });
+      };
+      console.log('📤 Submitting review with data:', reviewData);
+      console.log('📸 Images being submitted:', images);
+      
+      await api.post('/reviews', reviewData);
 
       toast({
         title: 'Success',

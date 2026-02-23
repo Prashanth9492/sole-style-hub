@@ -84,13 +84,13 @@ const SearchPage = () => {
         const price = product.discountPrice || product.price;
         switch (priceRange) {
           case 'under-50':
-            return price < 50;
+            return price < 4000;
           case '50-100':
-            return price >= 50 && price < 100;
+            return price >= 4000 && price < 8000;
           case '100-150':
-            return price >= 100 && price < 150;
+            return price >= 8000 && price < 12000;
           case 'over-150':
-            return price >= 150;
+            return price >= 12000;
           default:
             return true;
         }
@@ -173,10 +173,10 @@ const SearchPage = () => {
                   className="w-full px-4 py-2 bg-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-foreground"
                 >
                   <option value="all">All Prices</option>
-                  <option value="under-50">Under $50</option>
-                  <option value="50-100">$50 - $100</option>
-                  <option value="100-150">$100 - $150</option>
-                  <option value="over-150">Over $150</option>
+                  <option value="under-50">Under ₹4,000</option>
+                  <option value="50-100">₹4,000 - ₹8,000</option>
+                  <option value="100-150">₹8,000 - ₹12,000</option>
+                  <option value="over-150">Over ₹12,000</option>
                 </select>
               </div>
 

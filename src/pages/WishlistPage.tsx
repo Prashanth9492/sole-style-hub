@@ -132,13 +132,13 @@ const WishlistPage = () => {
                           <div className="mt-2 flex items-center gap-2">
                             {product.discountPrice ? (
                               <>
-                                <span className="font-semibold">${product.discountPrice}</span>
+                                <span className="font-semibold">₹{product.discountPrice}</span>
                                 <span className="text-sm text-muted-foreground line-through">
-                                  ${product.price}
+                                  ₹{product.price}
                                 </span>
                               </>
                             ) : (
-                              <span className="font-semibold">${product.price}</span>
+                              <span className="font-semibold">₹{product.price}</span>
                             )}
                           </div>
 

@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, ShoppingBag, Truck, RefreshCw, Star, ChevronLeft, ChevronRight, Check } from 'lucide-react';
+import { Heart, ShoppingBag, Truck, RefreshCw, Star, ChevronLeft, ChevronRight, Check, Play, ShieldCheck, ImageIcon } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ProductCard } from '@/components/product/ProductCard';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { toast } from 'sonner';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,12 +23,56 @@ const ProductPage = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [reviewStats, setReviewStats] = useState<any>(null);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [selectedMediaPreview, setSelectedMediaPreview] = useState<{type: 'image' | 'video', url: string} | null>(null);
 
   useEffect(() => {
     if (id) {
       fetchProduct(id);
+      fetchReviews(id);
     }
   }, [id]);
+
+  const fetchReviews = async (productId: string) => {
+    try {
+      setReviewsLoading(true);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${apiUrl}/reviews/product/${productId}`);
+      if (response.ok) {
+        const data = await response.json();
+        console.log('===== REVIEWS DEBUG =====');
+        console.log('Total reviews:', data.reviews?.length || 0);
+        data.reviews?.forEach((review: any, idx: number) => {
+          console.log(`Review ${idx + 1}:`, {
+            id: review._id,
+            userName: review.userName,
+            rating: review.rating,
+            hasImages: !!review.images,
+            imageCount: review.images?.length || 0,
+            images: review.images,
+            imageDetails: review.images?.map((img: any, i: number) => ({
+              index: i,
+              value: img,
+              type: typeof img,
+              length: img?.length,
+              isValidString: typeof img === 'string' && img.trim().length > 0
+            })),
+            hasVideos: !!review.videos,
+            videoCount: review.videos?.length || 0
+          });
+        });
+        console.log('=========================');
+        setReviews(data.reviews || []);
+        setReviewStats(data.stats || null);
+      }
+    } catch (error) {
+      console.error('Error fetching reviews:', error);
+    } finally {
+      setReviewsLoading(false);
+    }
+  };
 
   const fetchProduct = async (productId: string) => {
     try {
@@ -57,13 +102,47 @@ const ProductPage = () => {
         };
         setProduct(mappedProduct);
         
-        // Fetch related products
-        const relatedResponse = await fetch(`${apiUrl}/products?category=${data.category}`);
+        // Fetch related products with intelligent matching
+        // Priority: 1) Same brand + subcategory, 2) Same brand, 3) Same subcategory, 4) Same category
+        const relatedResponse = await fetch(`${apiUrl}/products`);
         if (relatedResponse.ok) {
-          const relatedData = await relatedResponse.json();
-          const mappedRelated = relatedData
-            .filter((p: any) => (p._id || p.id) !== productId)
-            .slice(0, 4)
+          const allProducts = await relatedResponse.json();
+          
+          // Filter and score products for relevance
+          const scoredProducts = allProducts
+            .filter((p: any) => (p._id || p.id) !== productId) // Exclude current product
+            .map((p: any) => {
+              let score = 0;
+              
+              // Same brand + same subcategory = highest priority (50 points)
+              if (p.brand?.toLowerCase() === data.brand?.toLowerCase() && 
+                  p.subCategory?.toLowerCase() === data.subCategory?.toLowerCase()) {
+                score += 50;
+              }
+              
+              // Same brand only (30 points)
+              if (p.brand?.toLowerCase() === data.brand?.toLowerCase()) {
+                score += 30;
+              }
+              
+              // Same subcategory (20 points)
+              if (p.subCategory?.toLowerCase() === data.subCategory?.toLowerCase()) {
+                score += 20;
+              }
+              
+              // Same category (10 points)
+              if (p.category?.toLowerCase() === data.category?.toLowerCase()) {
+                score += 10;
+              }
+              
+              return {
+                ...p,
+                relevanceScore: score
+              };
+            })
+            .filter((p: any) => p.relevanceScore > 0) // Only show products with some relevance
+            .sort((a: any, b: any) => b.relevanceScore - a.relevanceScore) // Sort by relevance
+            .slice(0, 4) // Take top 4
             .map((p: any) => ({
               id: p._id || p.id,
               name: p.name,
@@ -83,7 +162,8 @@ const ProductPage = () => {
               isNew: p.isNew,
               isBestseller: p.isBestseller,
             }));
-          setRelatedProducts(mappedRelated);
+          
+          setRelatedProducts(scoredProducts);
         }
       } else {
         // Fallback to static data if API product not found
@@ -91,9 +171,28 @@ const ProductPage = () => {
         const staticProduct = staticProducts.find(p => p.id === productId || p.id === parseInt(productId));
         if (staticProduct) {
           setProduct(staticProduct);
-          // Get related products from static data
+          // Get related products from static data with intelligent matching
           const related = staticProducts
-            .filter(p => p.category === staticProduct.category && p.id !== staticProduct.id)
+            .filter(p => p.id !== staticProduct.id)
+            .map(p => {
+              let score = 0;
+              if (p.brand?.toLowerCase() === staticProduct.brand?.toLowerCase() && 
+                  p.subCategory?.toLowerCase() === staticProduct.subCategory?.toLowerCase()) {
+                score += 50;
+              }
+              if (p.brand?.toLowerCase() === staticProduct.brand?.toLowerCase()) {
+                score += 30;
+              }
+              if (p.subCategory?.toLowerCase() === staticProduct.subCategory?.toLowerCase()) {
+                score += 20;
+              }
+              if (p.category?.toLowerCase() === staticProduct.category?.toLowerCase()) {
+                score += 10;
+              }
+              return { ...p, relevanceScore: score };
+            })
+            .filter(p => p.relevanceScore > 0)
+            .sort((a, b) => b.relevanceScore - a.relevanceScore)
             .slice(0, 4);
           setRelatedProducts(related);
         }
@@ -106,9 +205,28 @@ const ProductPage = () => {
         const staticProduct = staticProducts.find(p => p.id === productId || p.id === parseInt(productId));
         if (staticProduct) {
           setProduct(staticProduct);
-          // Get related products from static data
+          // Get related products from static data with intelligent matching
           const related = staticProducts
-            .filter(p => p.category === staticProduct.category && p.id !== staticProduct.id)
+            .filter(p => p.id !== staticProduct.id)
+            .map(p => {
+              let score = 0;
+              if (p.brand?.toLowerCase() === staticProduct.brand?.toLowerCase() && 
+                  p.subCategory?.toLowerCase() === staticProduct.subCategory?.toLowerCase()) {
+                score += 50;
+              }
+              if (p.brand?.toLowerCase() === staticProduct.brand?.toLowerCase()) {
+                score += 30;
+              }
+              if (p.subCategory?.toLowerCase() === staticProduct.subCategory?.toLowerCase()) {
+                score += 20;
+              }
+              if (p.category?.toLowerCase() === staticProduct.category?.toLowerCase()) {
+                score += 10;
+              }
+              return { ...p, relevanceScore: score };
+            })
+            .filter(p => p.relevanceScore > 0)
+            .sort((a, b) => b.relevanceScore - a.relevanceScore)
             .slice(0, 4);
           setRelatedProducts(related);
         }
@@ -296,7 +414,7 @@ const ProductPage = () => {
                     <Star
                       key={i}
                       className={`w-4 h-4 ${
-                        i < Math.floor(product.rating)
+                        i < Math.floor(reviewStats?.averageRating || product.rating)
                           ? 'fill-foreground stroke-foreground'
                           : 'stroke-muted-foreground'
                       }`}
@@ -304,7 +422,7 @@ const ProductPage = () => {
                   ))}
                 </div>
                 <span className="text-sm text-muted-foreground">
-                  {product.rating} ({product.reviews} reviews)
+                  {reviewStats?.averageRating ? reviewStats.averageRating.toFixed(1) : product.rating} ({reviewStats?.totalReviews || product.reviews} reviews)
                 </span>
               </div>
 
@@ -312,16 +430,16 @@ const ProductPage = () => {
               <div className="flex items-center gap-4 mb-8">
                 {product.discountPrice ? (
                   <>
-                    <span className="text-3xl font-bold">${product.discountPrice}</span>
+                    <span className="text-3xl font-bold">₹{product.discountPrice}</span>
                     <span className="text-xl text-muted-foreground line-through">
-                      ${product.price}
+                      ₹{product.price}
                     </span>
                     <span className="px-3 py-1 bg-destructive/10 text-destructive rounded-full text-sm font-medium">
-                      Save ${product.price - product.discountPrice}
+                      Save ₹{product.price - product.discountPrice}
                     </span>
                   </>
                 ) : (
-                  <span className="text-3xl font-bold">${product.price}</span>
+                  <span className="text-3xl font-bold">₹{product.price}</span>
                 )}
               </div>
 
@@ -430,7 +548,7 @@ const ProductPage = () => {
                   </div>
                   <div>
                     <p className="font-medium">Free Shipping</p>
-                    <p className="text-sm text-muted-foreground">On orders over $100</p>
+                    <p className="text-sm text-muted-foreground">On orders over ₹8,000</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -455,7 +573,14 @@ const ProductPage = () => {
           {/* Related Products */}
           {relatedProducts.length > 0 && (
             <section className="mt-20 pt-16 border-t border-border">
-              <h2 className="heading-section mb-8">You May Also Like</h2>
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                  Similar Products You'll Love
+                </h2>
+                <p className="text-muted-foreground">
+                  Handpicked {product?.brand || 'products'} that match your style
+                </p>
+              </div>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
                 {relatedProducts.map((product, index) => (
                   <ProductCard key={product.id} product={product} index={index} />
@@ -463,8 +588,291 @@ const ProductPage = () => {
               </div>
             </section>
           )}
+
+          {/* Customer Reviews Section */}
+          <section className="mt-16 pt-16 border-t border-border">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                Customer Reviews & Photos
+              </h2>
+              <p className="text-muted-foreground">Real reviews from verified customers</p>
+            </div>
+            
+            {/* Review Stats */}
+            {reviewStats && (
+              <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 mb-10 shadow-lg border border-purple-100 dark:border-gray-700">
+                <div className="max-w-5xl mx-auto grid md:grid-cols-[300px_1fr] gap-8 items-center">
+                  {/* Average Rating */}
+                  <div className="text-center">
+                    <div className="inline-flex flex-col items-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-md">
+                      <span className="text-6xl font-black bg-gradient-to-br from-yellow-500 to-orange-500 bg-clip-text text-transparent mb-3">
+                        {reviewStats.averageRating ? reviewStats.averageRating.toFixed(1) : '0.0'}
+                      </span>
+                      <div className="flex gap-1 mb-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            className={`w-5 h-5 ${
+                              star <= Math.round(reviewStats.averageRating || 0)
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-gray-300'
+                            }`}
+                          />
+                        ))}
+                      </div>
+                      <p className="text-xs font-medium text-gray-600 dark:text-gray-300">
+                        {reviewStats.totalReviews} {reviewStats.totalReviews === 1 ? 'review' : 'reviews'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Rating Distribution */}
+                  <div className="space-y-3 max-w-lg">
+                    {[5, 4, 3, 2, 1].map((rating) => {
+                      const count = reviewStats[`${['oneStar', 'twoStars', 'threeStars', 'fourStars', 'fiveStars'][rating - 1]}`] || 0;
+                      const percentage = reviewStats.totalReviews > 0 ? (count / reviewStats.totalReviews) * 100 : 0;
+                      return (
+                        <div key={rating} className="flex items-center gap-3">
+                          <span className="text-sm font-semibold w-8 text-gray-700 dark:text-gray-300">{rating}⭐</span>
+                          <div className="flex-1 max-w-sm h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
+                            <div
+                              className="h-full bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 rounded-full transition-all duration-700 ease-out"
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                          <span className="text-sm font-medium text-gray-600 dark:text-gray-400 w-10 text-right">{count}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Reviews List */}
+            {reviewsLoading ? (
+              <div className="flex flex-col items-center justify-center py-12">
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-3 border-purple-600"></div>
+                  <div className="absolute inset-0 animate-ping rounded-full h-12 w-12 border-2 border-purple-300 opacity-20"></div>
+                </div>
+                <p className="mt-4 text-sm text-muted-foreground">Loading reviews...</p>
+              </div>
+            ) : reviews.length > 0 ? (
+              <div className="space-y-5">
+                {reviews.map((review, idx) => (
+                  <motion.div
+                    key={review._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.08 }}
+                    className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-700"
+                  >
+                    {/* Review Header */}
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-start gap-4">
+                        <div className="relative">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center font-bold text-white shadow-lg">
+                            {review.userName?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                          {review.isVerifiedPurchase && (
+                            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center shadow-md">
+                              <ShieldCheck className="w-3 h-3 text-white" />
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h4 className="font-bold text-gray-900 dark:text-white">{review.userName}</h4>
+                            {review.isVerifiedPurchase && (
+                              <span className="px-2 py-0.5 bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-full text-xs font-semibold">
+                                Verified
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex gap-0.5 mb-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star
+                                key={star}
+                                className={`w-4 h-4 ${
+                                  star <= review.rating
+                                    ? 'fill-yellow-400 text-yellow-400'
+                                    : 'text-gray-300'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                        {new Date(review.createdAt).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </span>
+                    </div>
+
+                    {/* Review Title */}
+                    {review.title && (
+                      <h5 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">{review.title}</h5>
+                    )}
+
+                    {/* Review Comment */}
+                    <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">{review.comment}</p>
+
+                    {/* Review Images */}
+                    {review.images && Array.isArray(review.images) && review.images.length > 0 && (
+                      <div className="mb-4">
+                        {(() => {
+                          console.log('🖼️ Processing images for review:', review._id);
+                          console.log('Raw images array:', review.images);
+                          
+                          // Process and validate images
+                          const validImages = review.images
+                            .map((img: any) => {
+                              // Handle different data types
+                              if (typeof img === 'string') {
+                                const trimmed = img.trim();
+                                console.log('Image URL:', trimmed, 'Valid:', trimmed.length > 0);
+                                return trimmed;
+                              }
+                              console.warn('Invalid image type:', typeof img, img);
+                              return null;
+                            })
+                            .filter((img: string | null) => img && img.length > 10); // Must be at least 10 chars for a valid URL
+                          
+                          console.log('Valid images found:', validImages.length, validImages);
+                          
+                          if (validImages.length === 0) {
+                            return (
+                              <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg text-center">
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                  Images are not available for this review
+                                </p>
+                              </div>
+                            );
+                          }
+                          
+                          return (
+                            <>
+                              <div className="flex items-center gap-2 mb-3 text-sm font-semibold text-purple-600 dark:text-purple-400">
+                                <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                                  <ImageIcon className="w-4 h-4" />
+                                </div>
+                                <span>{validImages.length} {validImages.length === 1 ? 'Photo' : 'Photos'}</span>
+                              </div>
+                              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                                {validImages.map((image: string, index: number) => (
+                                  <button
+                                    key={index}
+                                    onClick={() => setSelectedMediaPreview({ type: 'image', url: image })}
+                                    className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer shadow-sm hover:shadow-lg transition-all bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800"
+                                  >
+                                    <img
+                                      src={image}
+                                      alt={`Review photo ${index + 1}`}
+                                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                      loading="lazy"
+                                      onLoad={() => console.log('✅ Image loaded successfully:', image)}
+                                      onError={(e) => {
+                                        console.error('❌ Failed to load image:', image);
+                                        e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"%3E%3Crect fill="%23f0f0f0" width="200" height="200"/%3E%3Ctext x="50%25" y="50%25" font-family="Arial" font-size="14" fill="%23999" text-anchor="middle" dominant-baseline="middle"%3EImage unavailable%3C/text%3E%3C/svg%3E';
+                                      }}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-center pb-2">
+                                      <ImageIcon className="w-5 h-5 text-white drop-shadow-lg" />
+                                    </div>
+                                  </button>
+                                ))}
+                              </div>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    )}
+
+                    {/* Review Videos */}
+                    {review.videos && review.videos.length > 0 && (
+                      <div>
+                        <div className="flex items-center gap-2 mb-3 text-sm font-semibold text-blue-600 dark:text-blue-400">
+                          <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                            <Play className="w-4 h-4" />
+                          </div>
+                          <span>Video Review</span>
+                        </div>
+                        <div className="grid gap-3">
+                          {review.videos.map((video: string, index: number) => (
+                            <button
+                              key={index}
+                              onClick={() => setSelectedMediaPreview({ type: 'video', url: video })}
+                              className="relative aspect-video rounded-xl overflow-hidden group cursor-pointer bg-black shadow-md hover:shadow-xl transition-shadow"
+                            >
+                              <video
+                                src={video}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  console.error('Video failed to load:', video);
+                                }}
+                              />
+                              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+                                <div className="relative">
+                                  <div className="absolute inset-0 bg-white/30 rounded-full blur-xl animate-pulse"></div>
+                                  <div className="relative w-16 h-16 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                                    <Play className="w-8 h-8 text-purple-600 ml-1" fill="currentColor" />
+                                  </div>
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16 bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 mb-4 shadow-lg">
+                  <Star className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">No Reviews Yet</h3>
+                <p className="text-muted-foreground">Be the first to share your experience!</p>
+              </div>
+            )}
+          </section>
         </div>
       </main>
+
+      {/* Media Preview Dialog */}
+      <Dialog open={!!selectedMediaPreview} onOpenChange={() => setSelectedMediaPreview(null)}>
+        <DialogContent className="max-w-5xl max-h-[92vh] p-0 bg-black/95 backdrop-blur-md border border-purple-500/30">
+          <div className="relative w-full h-full flex items-center justify-center rounded-lg overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-transparent to-blue-900/10"></div>
+            {selectedMediaPreview?.type === 'image' ? (
+              <motion.img
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                src={selectedMediaPreview.url}
+                alt="Customer photo preview"
+                className="relative max-w-full max-h-[88vh] object-contain rounded-lg"
+              />
+            ) : selectedMediaPreview?.type === 'video' ? (
+              <motion.video
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.3 }}
+                src={selectedMediaPreview.url}
+                controls
+                autoPlay
+                className="relative max-w-full max-h-[88vh] rounded-lg"
+              />
+            ) : null}
+          </div>
+        </DialogContent>
+      </Dialog>
+
       <Footer />
     </div>
   );

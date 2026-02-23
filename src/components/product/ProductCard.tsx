@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Heart, ShoppingBag } from 'lucide-react';
+import { Heart, ShoppingBag, Star } from 'lucide-react';
 import { Product } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
 import { toast } from 'sonner';
+import { api } from '@/lib/api';
 
 interface ProductCardProps {
   product: Product;
@@ -14,6 +15,11 @@ interface ProductCardProps {
 
 export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [reviewImages, setReviewImages] = useState<string[]>([]);
+  const [reviewStats, setReviewStats] = useState({ 
+    rating: product.rating || 0, 
+    reviews: product.reviews || 0 
+  });
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id);
@@ -21,6 +27,35 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
   const discount = product.discountPrice
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
     : 0;
+
+  // Fetch review images and stats
+  useEffect(() => {
+    const fetchReviewData = async () => {
+      try {
+        const response = await api.get(`/reviews/product/${product.id}?limit=5`);
+        if (response.stats) {
+          setReviewStats({
+            rating: response.stats.averageRating || product.rating || 0,
+            reviews: response.stats.totalReviews || product.reviews || 0
+          });
+        }
+        
+        // Extract images from reviews
+        const images: string[] = [];
+        response.reviews?.forEach((review: any) => {
+          if (review.images && review.images.length > 0) {
+            images.push(...review.images.slice(0, 1)); // Take first image from each review
+          }
+        });
+        setReviewImages(images.slice(0, 3)); // Show max 3 review images
+      } catch (error) {
+        // Silently fail and use static data
+        console.debug('Could not fetch review data:', error);
+      }
+    };
+
+    fetchReviewData();
+  }, [product.id, product.rating, product.reviews]);
 
   const handleQuickAdd = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -39,7 +74,7 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
     toast.success(`Added ${product.name} to cart!`);
   };
 
-  const productId = product._id || product.id;
+  const productId = product.id;
   
   return (
     <motion.div
@@ -115,18 +150,75 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               {product.brand}
             </p>
             <h3 className="heading-product text-foreground">{product.name}</h3>
-            <div className="mt-2 flex items-center gap-2">
-              {product.discountPrice ? (
-                <>
-                  <span className="font-semibold">${product.discountPrice}</span>
-                  <span className="text-sm text-muted-foreground line-through">
-                    ${product.price}
+            
+            {/* Price and Rating on Same Row */}
+            <div className="mt-2 flex items-center justify-between gap-2">
+              {/* Price */}
+              <div className="flex items-center gap-2">
+                {product.discountPrice ? (
+                  <>
+                    <span className="font-semibold">₹{product.discountPrice}</span>
+                    <span className="text-sm text-muted-foreground line-through">
+                      ₹{product.price}
+                    </span>
+                  </>
+                ) : (
+                  <span className="font-semibold">₹{product.price}</span>
+                )}
+              </div>
+
+              {/* Rating */}
+              <div className="flex items-center gap-2">
+                {/* Desktop: Show all 5 stars */}
+                <div className="hidden md:flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className={`w-3.5 h-3.5 ${
+                        star <= Math.round(reviewStats.rating || 0)
+                          ? 'fill-yellow-400 text-yellow-400'
+                          : 'text-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+                
+                {/* Mobile: Show single star with rating */}
+                <div className="flex md:hidden items-center gap-1.5">
+                  <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  <span className="text-sm font-medium text-foreground">
+                    {(reviewStats.rating || 0).toFixed(1)}
                   </span>
-                </>
-              ) : (
-                <span className="font-semibold">${product.price}</span>
-              )}
+                </div>
+                
+                <span className="text-xs text-muted-foreground">
+                  ({reviewStats.reviews || 0})
+                </span>
+              </div>
             </div>
+
+            {/* Review Images Preview */}
+            {reviewImages.length > 0 && (
+              <div className="mt-3 flex items-center gap-1.5">
+                {reviewImages.map((image, idx) => (
+                  <div
+                    key={idx}
+                    className="w-10 h-10 rounded-md overflow-hidden border border-border"
+                  >
+                    <img
+                      src={image}
+                      alt={`Review ${idx + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+                {(reviewStats.reviews || 0) > reviewImages.length && (
+                  <span className="text-xs text-muted-foreground ml-1">
+                    +{(reviewStats.reviews || 0) - reviewImages.length} reviews
+                  </span>
+                )}
+              </div>
+            )}
 
             {/* Color Options */}
             <div className="mt-3 flex items-center gap-1.5">

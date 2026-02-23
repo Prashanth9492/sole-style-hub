@@ -73,7 +73,7 @@ export const StyleShowcase = () => {
                 <div className="flex flex-col justify-between py-1">
                   <div>
                     <h4 className="font-bold text-gray-900 dark:text-white text-sm">Classic Leather</h4>
-                    <p className="text-lg font-bold text-gray-900 dark:text-white mt-1">$240.00</p>
+                    <p className="text-lg font-bold text-gray-900 dark:text-white mt-1">₹19,999</p>
                   </div>
                   <Link 
                     to="/products"

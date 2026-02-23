@@ -137,7 +137,7 @@ const AdminDashboard = () => {
                     <tr key={product._id} className="border-b border-gray-100 hover:bg-gray-50">
                       <td className="py-3 px-4 text-sm font-medium">{product.name}</td>
                       <td className="py-3 px-4 text-sm capitalize">{product.category}</td>
-                      <td className="py-3 px-4 text-sm font-medium">${product.price}</td>
+                      <td className="py-3 px-4 text-sm font-medium">₹{product.price}</td>
                       <td className="py-3 px-4">
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${

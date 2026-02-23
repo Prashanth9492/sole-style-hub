@@ -24,7 +24,7 @@ const adminNavLinks = [
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Categories', href: '/admin/categories', icon: Tag },
   { name: 'Customers', href: '/admin/customers', icon: Users },
-  { name: 'Media', href: '/admin/media', icon: ImageIcon },
+  // { name: 'Media', href: '/admin/media', icon: ImageIcon },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ];

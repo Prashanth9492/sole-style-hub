@@ -128,11 +128,11 @@ const CartPage = () => {
                         {/* Price */}
                         <div className="text-right">
                           <p className="font-semibold">
-                            ${((item.product.discountPrice || item.product.price) * item.quantity).toFixed(2)}
+                            ₹{((item.product.discountPrice || item.product.price) * item.quantity).toFixed(2)}
                           </p>
                           {item.product.discountPrice && (
                             <p className="text-sm text-muted-foreground line-through">
-                              ${(item.product.price * item.quantity).toFixed(2)}
+                              ₹{(item.product.price * item.quantity).toFixed(2)}
                             </p>
                           )}
                         </div>
@@ -163,15 +163,15 @@ const CartPage = () => {
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span>${totalPrice.toFixed(2)}</span>
+                    <span>₹{totalPrice.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Shipping</span>
-                    <span>{totalPrice >= 100 ? 'Free' : '$10.00'}</span>
+                    <span>{totalPrice >= 8000 ? 'Free' : '₹100.00'}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">Tax</span>
-                    <span>${(totalPrice * 0.1).toFixed(2)}</span>
+                    <span>₹{(totalPrice * 0.18).toFixed(2)}</span>
                   </div>
                 </div>
 
@@ -179,7 +179,7 @@ const CartPage = () => {
                   <div className="flex justify-between mb-6">
                     <span className="font-semibold">Total</span>
                     <span className="text-xl font-bold">
-                      ${(totalPrice + (totalPrice >= 100 ? 0 : 10) + totalPrice * 0.1).toFixed(2)}
+                      ₹{(totalPrice + (totalPrice >= 8000 ? 0 : 100) + totalPrice * 0.18).toFixed(2)}
                     </span>
                   </div>
 
@@ -197,7 +197,7 @@ const CartPage = () => {
                   </button>
 
                   <p className="text-xs text-center text-muted-foreground">
-                    Free shipping on orders over $100
+                    Free shipping on orders over ₹8,000
                   </p>
                 </div>
 

@@ -79,7 +79,7 @@ export const FeaturedProducts = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
             <h2 className="heading-section mb-2">Featured Collection</h2>
-            <p className="text-body">Our most loved styles this season</p>
+            <p className="text-body">Our most lovedxcfgvbhnjmk,d styles this season</p>
           </motion.div>
 
           <motion.div

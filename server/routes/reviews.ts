@@ -13,6 +13,20 @@ router.post('/reviews', authenticateUser, async (req: AuthRequest, res: Response
     const db = await getDatabase();
     const { productId, orderId, rating, title, comment, images, videos } = req.body;
 
+    console.log('📥 Received review submission:', {
+      productId,
+      orderId,
+      rating,
+      title,
+      comment: comment?.substring(0, 50),
+      images: images,
+      imagesType: typeof images,
+      imagesIsArray: Array.isArray(images),
+      imagesLength: images?.length,
+      videos: videos,
+      videosLength: videos?.length
+    });
+
     if (!productId || !orderId || !rating || !comment) {
       return res.status(400).json({ error: 'Product ID, Order ID, rating, and comment are required' });
     }
@@ -64,15 +78,24 @@ router.post('/reviews', authenticateUser, async (req: AuthRequest, res: Response
       rating: Number(rating),
       title: title || '',
       comment,
-      images: images || [],
-      videos: videos || [],
+      images: Array.isArray(images) ? images.filter((img: string) => img && typeof img === 'string' && img.trim()) : [],
+      videos: Array.isArray(videos) ? videos.filter((vid: string) => vid && typeof vid === 'string' && vid.trim()) : [],
       isVerifiedPurchase: true,
       helpfulCount: 0,
       createdAt: new Date(),
       updatedAt: new Date()
     };
 
+    console.log('💾 Saving review to database:', {
+      images: review.images,
+      imagesCount: review.images?.length,
+      videos: review.videos,
+      videosCount: review.videos?.length
+    });
+
     const result = await db.collection(collectionName).insertOne(review);
+
+    console.log('✅ Review saved successfully with ID:', result.insertedId);
 
     // Update product average rating
     await updateProductRating(db, productId);
@@ -128,6 +151,17 @@ router.get('/reviews/product/:productId', async (req: Request, res: Response) =>
         }
       ]).toArray()
     ]);
+
+    console.log(`📤 Fetching ${reviews.length} reviews for product ${productIdStr}`);
+    reviews.forEach((review: any, idx: number) => {
+      console.log(`Review ${idx + 1}:`, {
+        id: review._id,
+        images: review.images,
+        imagesType: typeof review.images,
+        imagesIsArray: Array.isArray(review.images),
+        imagesLength: review.images?.length
+      });
+    });
 
     res.json({
       reviews,

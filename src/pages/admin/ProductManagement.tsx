@@ -200,11 +200,11 @@ const ProductManagement = () => {
                     <div>
                       {product.discountPrice ? (
                         <>
-                          <p className="font-medium">${product.discountPrice}</p>
-                          <p className="text-sm text-gray-500 line-through">${product.price}</p>
+                          <p className="font-medium">₹{product.discountPrice}</p>
+                          <p className="text-sm text-gray-500 line-through">₹{product.price}</p>
                         </>
                       ) : (
-                        <p className="font-medium">${product.price}</p>
+                        <p className="font-medium">₹{product.price}</p>
                       )}
                     </div>
                   </td>

@@ -276,7 +276,7 @@ router.put('/admin/admins/:id', authenticateAdmin, async (req: AuthRequest, res:
     }
 
     const db = await getDatabase();
-    const adminId = new ObjectId(req.params.id);
+    const adminId = new ObjectId(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
     const { name, role, permissions, isActive } = req.body;
 
     const updateData: any = { updatedAt: new Date() };
@@ -311,7 +311,7 @@ router.delete('/admin/admins/:id', authenticateAdmin, async (req: AuthRequest, r
     }
 
     const db = await getDatabase();
-    const adminId = new ObjectId(req.params.id);
+    const adminId = new ObjectId(Array.isArray(req.params.id) ? req.params.id[0] : req.params.id);
 
     // Prevent deleting yourself
     if (adminId.toString() === req.user!.userId) {

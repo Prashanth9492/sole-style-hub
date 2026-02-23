@@ -48,14 +48,15 @@ export default function AnalyticsDashboard() {
   const fetchAnalytics = async () => {
     try {
       const token = localStorage.getItem('adminToken');
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
       const headers = { Authorization: `Bearer ${token}` };
 
       const [overviewRes, revenueRes, salesRes, categoryRes, productsRes] = await Promise.all([
-        fetch('/api/admin/analytics/overview', { headers }),
-        fetch('/api/admin/analytics/revenue', { headers }),
-        fetch('/api/admin/analytics/sales-over-time?period=30days', { headers }),
-        fetch('/api/admin/analytics/orders-by-category', { headers }),
-        fetch('/api/admin/analytics/top-products?limit=5', { headers })
+        fetch(`${API_URL}/admin/analytics/overview`, { headers }),
+        fetch(`${API_URL}/admin/analytics/revenue`, { headers }),
+        fetch(`${API_URL}/admin/analytics/sales-over-time?period=30days`, { headers }),
+        fetch(`${API_URL}/admin/analytics/orders-by-category`, { headers }),
+        fetch(`${API_URL}/admin/analytics/top-products?limit=5`, { headers })
       ]);
 
       const [overviewData, revenueData, salesData, categoryData, productsData] = await Promise.all([

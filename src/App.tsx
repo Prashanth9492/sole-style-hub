@@ -34,6 +34,8 @@ import OrderManagement from "./pages/admin/OrderManagement";
 import CategoryManagement from "./pages/admin/CategoryManagement";
 import CustomerManagement from "./pages/admin/CustomerManagement";
 import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
+import MediaManagement from "./pages/admin/MediaManagement";
+import AdminSettings from "./pages/admin/AdminSettings";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AdminSetup from "./pages/admin/AdminSetup";
 
@@ -81,7 +83,9 @@ const App = () => (
                     <Route path="orders" element={<OrderManagement />} />
                     <Route path="categories" element={<CategoryManagement />} />
                     <Route path="customers" element={<CustomerManagement />} />
+                    <Route path="media" element={<MediaManagement />} />
                     <Route path="analytics" element={<AnalyticsDashboard />} />
+                    <Route path="settings" element={<AdminSettings />} />
                   </Route>
                   
                   <Route path="*" element={<NotFound />} />

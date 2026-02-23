@@ -156,13 +156,13 @@ export default function OrderManagement() {
   );
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Order Management</h1>
-          <p className="text-muted-foreground">Manage and track customer orders</p>
+          <h1 className="text-2xl md:text-3xl font-bold">Order Management</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Manage and track customer orders</p>
         </div>
-        <Button onClick={fetchOrders}>
+        <Button onClick={fetchOrders} className="w-full sm:w-auto">
           <RefreshCw className="mr-2 h-4 w-4" />
           Refresh
         </Button>
@@ -170,17 +170,18 @@ export default function OrderManagement() {
 
       {/* Filters */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex gap-4">
+        <CardContent className="pt-4 md:pt-6">
+          <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
             <div className="flex-1">
               <Input
-                placeholder="Search by order number, customer name, or email..."
+                placeholder="Search orders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[200px]">
+              <SelectTrigger className="w-full sm:w-[200px]">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
@@ -209,14 +210,14 @@ export default function OrderManagement() {
           ) : filteredOrders.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">No orders found</div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {filteredOrders.map((order) => (
-                <div key={order._id} className="border rounded-lg p-4 hover:bg-accent/50 transition">
-                  <div className="flex items-start justify-between gap-4">
+                <div key={order._id} className="border rounded-lg p-3 md:p-4 hover:bg-accent/50 transition">
+                  <div className="flex flex-col lg:flex-row lg:items-start gap-3 md:gap-4">
                     {/* Product Images */}
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-shrink-0">
                       {order.items.slice(0, 3).map((item, idx) => (
-                        <div key={idx} className="relative w-16 h-16 rounded overflow-hidden border bg-gray-100">
+                        <div key={idx} className="relative w-14 h-14 md:w-16 md:h-16 rounded overflow-hidden border bg-gray-100">
                           {item.productImage ? (
                             <img 
                               src={item.productImage} 
@@ -235,49 +236,52 @@ export default function OrderManagement() {
                         </div>
                       ))}
                       {order.items.length > 3 && (
-                        <div className="w-16 h-16 rounded border flex items-center justify-center bg-muted text-sm font-medium">
+                        <div className="w-14 h-14 md:w-16 md:h-16 rounded border flex items-center justify-center bg-muted text-xs md:text-sm font-medium">
                           +{order.items.length - 3}
                         </div>
                       )}
                     </div>
 
                     {/* Order Details */}
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center gap-3">
-                        <h3 className="font-semibold">{order.orderNumber}</h3>
-                        <Badge className={statusColors[order.orderStatus]}>
-                          {order.orderStatus}
-                        </Badge>
-                        <Badge className={paymentStatusColors[order.paymentStatus]}>
-                          {order.paymentStatus}
-                        </Badge>
+                    <div className="flex-1 space-y-2 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <h3 className="font-semibold text-sm md:text-base truncate">{order.orderNumber}</h3>
+                        <div className="flex flex-wrap gap-2">
+                          <Badge className={`${statusColors[order.orderStatus]} text-xs`}>
+                            {order.orderStatus}
+                          </Badge>
+                          <Badge className={`${paymentStatusColors[order.paymentStatus]} text-xs`}>
+                            {order.paymentStatus}
+                          </Badge>
+                        </div>
                       </div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs md:text-sm text-muted-foreground truncate">
                         {order.userName} • {order.userEmail}
                       </p>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-xs md:text-sm text-muted-foreground">
                         {format(new Date(order.createdAt), 'PPp')}
                       </p>
                     </div>
 
                     {/* Price and Actions */}
-                    <div className="flex items-center gap-4">
-                      <div className="text-right">
-                        <p className="font-semibold text-lg">₹{order.finalAmount.toFixed(2)}</p>
-                        <p className="text-sm text-muted-foreground">{order.items.length} items</p>
+                    <div className="flex flex-row sm:flex-col lg:flex-row items-center justify-between lg:justify-end gap-3 lg:gap-4 pt-2 lg:pt-0 border-t lg:border-t-0">
+                      <div className="text-left sm:text-right">
+                        <p className="font-semibold text-base md:text-lg">₹{order.finalAmount.toFixed(2)}</p>
+                        <p className="text-xs md:text-sm text-muted-foreground">{order.items.length} items</p>
                       </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={() => handleViewDetails(order)}>
-                          <Eye className="h-4 w-4" />
+                      <div className="flex gap-2 flex-shrink-0">
+                        <Button variant="outline" size="sm" onClick={() => handleViewDetails(order)} className="h-8 w-8 p-0 md:h-9 md:w-9">
+                          <Eye className="h-3 w-3 md:h-4 md:w-4" />
                         </Button>
                         <Button 
-                          size="sm" 
+                          size="sm"
                           onClick={() => handleUpdateStatus(order)}
                           disabled={order.orderStatus === 'Cancelled' || order.orderStatus === 'Delivered'}
                           title={order.orderStatus === 'Cancelled' ? 'Cannot update cancelled orders' : order.orderStatus === 'Delivered' ? 'Order already delivered' : 'Update order status'}
+                          className="h-8 px-2 md:h-9 md:px-3 text-xs md:text-sm"
                         >
-                          <Package className="h-4 w-4 mr-2" />
-                          Update
+                          <Package className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
+                          <span className="hidden md:inline">Update</span>
                         </Button>
                       </div>
                     </div>
@@ -289,21 +293,25 @@ export default function OrderManagement() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center gap-2 mt-6">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-2 mt-4 md:mt-6">
               <Button
                 variant="outline"
+                size="sm"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
+                className="w-full sm:w-auto"
               >
                 Previous
               </Button>
-              <span className="flex items-center px-4">
+              <span className="flex items-center px-3 md:px-4 text-sm md:text-base">
                 Page {page} of {totalPages}
               </span>
               <Button
                 variant="outline"
+                size="sm"
                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
+                className="w-full sm:w-auto"
               >
                 Next
               </Button>
@@ -314,24 +322,24 @@ export default function OrderManagement() {
 
       {/* Order Details Dialog */}
       <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
-        <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-3xl max-h-[85vh] sm:max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Order Details</DialogTitle>
+            <DialogTitle className="text-lg md:text-xl">Order Details</DialogTitle>
           </DialogHeader>
           {selectedOrder && (
             <div className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-muted-foreground">Order Number</Label>
-                  <p className="font-semibold">{selectedOrder.orderNumber}</p>
+                  <Label className="text-xs md:text-sm text-muted-foreground">Order Number</Label>
+                  <p className="font-semibold text-sm md:text-base">{selectedOrder.orderNumber}</p>
                 </div>
                 <div>
-                  <Label className="text-muted-foreground">Status</Label>
-                  <div className="flex gap-2 mt-1">
-                    <Badge className={statusColors[selectedOrder.orderStatus]}>
+                  <Label className="text-xs md:text-sm text-muted-foreground">Status</Label>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    <Badge className={`${statusColors[selectedOrder.orderStatus]} text-xs`}>
                       {selectedOrder.orderStatus}
                     </Badge>
-                    <Badge className={paymentStatusColors[selectedOrder.paymentStatus]}>
+                    <Badge className={`${paymentStatusColors[selectedOrder.paymentStatus]} text-xs`}>
                       {selectedOrder.paymentStatus}
                     </Badge>
                   </div>
@@ -339,41 +347,41 @@ export default function OrderManagement() {
               </div>
 
               <div>
-                <Label className="text-muted-foreground">Customer</Label>
-                <p>{selectedOrder.userName}</p>
-                <p className="text-sm text-muted-foreground">{selectedOrder.userEmail}</p>
+                <Label className="text-xs md:text-sm text-muted-foreground">Customer</Label>
+                <p className="text-sm md:text-base">{selectedOrder.userName}</p>
+                <p className="text-xs md:text-sm text-muted-foreground break-all">{selectedOrder.userEmail}</p>
               </div>
 
               <div>
-                <Label className="text-muted-foreground">Shipping Address</Label>
-                <p>{selectedOrder.shippingAddress.name}</p>
-                <p>{selectedOrder.shippingAddress.addressLine1}</p>
+                <Label className="text-xs md:text-sm text-muted-foreground">Shipping Address</Label>
+                <p className="text-sm md:text-base">{selectedOrder.shippingAddress.name}</p>
+                <p className="text-sm md:text-base">{selectedOrder.shippingAddress.addressLine1}</p>
                 {selectedOrder.shippingAddress.addressLine2 && (
-                  <p>{selectedOrder.shippingAddress.addressLine2}</p>
+                  <p className="text-sm md:text-base">{selectedOrder.shippingAddress.addressLine2}</p>
                 )}
-                <p>{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.pincode}</p>
-                <p>{selectedOrder.shippingAddress.phone}</p>
+                <p className="text-sm md:text-base">{selectedOrder.shippingAddress.city}, {selectedOrder.shippingAddress.state} {selectedOrder.shippingAddress.pincode}</p>
+                <p className="text-sm md:text-base">{selectedOrder.shippingAddress.phone}</p>
               </div>
 
               <div>
-                <Label className="text-muted-foreground">Order Items</Label>
+                <Label className="text-xs md:text-sm text-muted-foreground">Order Items</Label>
                 <div className="space-y-2 mt-2">
                   {selectedOrder.items.map((item, idx) => (
-                    <div key={idx} className="flex justify-between border-b pb-2">
-                      <div>
-                        <p className="font-medium">{item.productName}</p>
-                        <p className="text-sm text-muted-foreground">
+                    <div key={idx} className="flex justify-between items-start border-b pb-2 gap-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm md:text-base truncate">{item.productName}</p>
+                        <p className="text-xs md:text-sm text-muted-foreground">
                           Qty: {item.quantity} × ₹{item.price}
                         </p>
                       </div>
-                      <p className="font-semibold">₹{item.subtotal.toFixed(2)}</p>
+                      <p className="font-semibold text-sm md:text-base flex-shrink-0">₹{item.subtotal.toFixed(2)}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
               <div className="border-t pt-4">
-                <div className="flex justify-between text-lg font-bold">
+                <div className="flex justify-between text-base md:text-lg font-bold">
                   <span>Total Amount</span>
                   <span>₹{selectedOrder.finalAmount.toFixed(2)}</span>
                 </div>
@@ -385,26 +393,26 @@ export default function OrderManagement() {
 
       {/* Update Status Dialog */}
       <Dialog open={showUpdateDialog} onOpenChange={setShowUpdateDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Update Order Status</DialogTitle>
+            <DialogTitle className="text-lg md:text-xl">Update Order Status</DialogTitle>
           </DialogHeader>
           {selectedOrder?.orderStatus === 'Cancelled' ? (
             <div className="space-y-4">
-              <div className="bg-red-50 border border-red-200 text-red-800 p-4 rounded-md">
-                <p className="font-semibold">Cannot Update Cancelled Order</p>
-                <p className="text-sm mt-1">This order has been cancelled and cannot be modified.</p>
+              <div className="bg-red-50 border border-red-200 text-red-800 p-3 md:p-4 rounded-md">
+                <p className="font-semibold text-sm md:text-base">Cannot Update Cancelled Order</p>
+                <p className="text-xs md:text-sm mt-1">This order has been cancelled and cannot be modified.</p>
               </div>
               <div className="flex justify-end">
-                <Button onClick={() => setShowUpdateDialog(false)}>Close</Button>
+                <Button onClick={() => setShowUpdateDialog(false)} className="w-full sm:w-auto">Close</Button>
               </div>
             </div>
           ) : (
             <div className="space-y-4">
               <div>
-                <Label>New Status</Label>
+                <Label className="text-sm">New Status</Label>
                 <Select value={newStatus} onValueChange={setNewStatus}>
-                  <SelectTrigger>
+                  <SelectTrigger className="mt-1">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -420,28 +428,30 @@ export default function OrderManagement() {
               </div>
 
               <div>
-                <Label>Tracking Number (Optional)</Label>
+                <Label className="text-sm">Tracking Number (Optional)</Label>
                 <Input
                   value={trackingNumber}
                   onChange={(e) => setTrackingNumber(e.target.value)}
                   placeholder="Enter tracking number"
+                  className="mt-1"
                 />
               </div>
 
               <div>
-                <Label>Comment (Optional)</Label>
+                <Label className="text-sm">Comment (Optional)</Label>
                 <Textarea
                   value={statusComment}
                   onChange={(e) => setStatusComment(e.target.value)}
                   placeholder="Add a comment about this status update"
+                  className="mt-1"
                 />
               </div>
 
-              <div className="flex gap-2 justify-end">
-                <Button variant="outline" onClick={() => setShowUpdateDialog(false)}>
+              <div className="flex flex-col-reverse sm:flex-row gap-2 justify-end">
+                <Button variant="outline" onClick={() => setShowUpdateDialog(false)} className="w-full sm:w-auto">
                   Cancel
                 </Button>
-                <Button onClick={submitStatusUpdate}>Update Status</Button>
+                <Button onClick={submitStatusUpdate} className="w-full sm:w-auto">Update Status</Button>
               </div>
             </div>
           )}

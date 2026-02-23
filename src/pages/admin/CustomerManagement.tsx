@@ -123,22 +123,22 @@ export default function CustomerManagement() {
   };
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 md:space-y-6 p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Customer Management</h1>
-          <p className="text-muted-foreground">Manage customer accounts and view their activity</p>
+          <h1 className="text-2xl md:text-3xl font-bold">Customer Management</h1>
+          <p className="text-sm md:text-base text-muted-foreground">Manage customer accounts and view their activity</p>
         </div>
       </div>
 
       {/* Search */}
       <Card>
-        <CardContent className="pt-6">
-          <div className="flex gap-4">
+        <CardContent className="pt-4 md:pt-6">
+          <div className="flex gap-3 md:gap-4">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-2.5 md:top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search by name, email, or phone..."
+                placeholder="Search customers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -151,8 +151,8 @@ export default function CustomerManagement() {
       {/* Customers List */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+            <Users className="h-4 w-4 md:h-5 md:w-5" />
             Customers
           </CardTitle>
         </CardHeader>
@@ -162,49 +162,54 @@ export default function CustomerManagement() {
           ) : customers.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">No customers found</div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               {customers.map((customer) => (
                 <div
                   key={customer._id}
-                  className="border rounded-lg p-4 hover:bg-accent/50 transition"
+                  className="border rounded-lg p-3 md:p-4 hover:bg-accent/50 transition"
                 >
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-3">
-                        <h3 className="font-semibold">{customer.name}</h3>
+                  <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 md:gap-4">
+                    <div className="space-y-1.5 md:space-y-1 flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+                        <h3 className="font-semibold text-sm md:text-base truncate">{customer.name}</h3>
                         {customer.isBlocked && (
-                          <Badge variant="destructive">Blocked</Badge>
+                          <Badge variant="destructive" className="text-xs w-fit">Blocked</Badge>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground">{customer.email}</p>
-                      <p className="text-sm text-muted-foreground">{customer.phone}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground truncate">{customer.email}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">{customer.phone}</p>
                       <p className="text-xs text-muted-foreground">
                         Joined: {format(new Date(customer.createdAt), 'PP')}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-row gap-2 justify-end lg:justify-start flex-shrink-0">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleViewDetails(customer)}
+                        className="flex-1 sm:flex-initial text-xs md:text-sm h-8 md:h-9"
                       >
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Details
+                        <Eye className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
+                        <span className="hidden sm:inline">View Details</span>
+                        <span className="sm:hidden">View</span>
                       </Button>
                       <Button
                         variant={customer.isBlocked ? 'default' : 'destructive'}
                         size="sm"
                         onClick={() => handleBlockToggle(customer)}
+                        className="flex-1 sm:flex-initial text-xs md:text-sm h-8 md:h-9"
                       >
                         {customer.isBlocked ? (
                           <>
-                            <CheckCircle className="h-4 w-4 mr-2" />
-                            Unblock
+                            <CheckCircle className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
+                            <span className="hidden sm:inline">Unblock</span>
+                            <span className="sm:hidden">Unblock</span>
                           </>
                         ) : (
                           <>
-                            <Ban className="h-4 w-4 mr-2" />
-                            Block
+                            <Ban className="h-3 w-3 md:h-4 md:w-4 md:mr-2" />
+                            <span className="hidden sm:inline">Block</span>
+                            <span className="sm:hidden">Block</span>
                           </>
                         )}
                       </Button>
@@ -217,21 +222,25 @@ export default function CustomerManagement() {
 
           {/* Pagination */}
           {totalPages > 1 && (
-            <div className="flex justify-center gap-2 mt-6">
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-2 mt-4 md:mt-6">
               <Button
                 variant="outline"
+                size="sm"
                 onClick={() => setPage(p => Math.max(1, p - 1))}
                 disabled={page === 1}
+                className="w-full sm:w-auto"
               >
                 Previous
               </Button>
-              <span className="flex items-center px-4">
+              <span className="flex items-center px-3 md:px-4 text-sm md:text-base">
                 Page {page} of {totalPages}
               </span>
               <Button
                 variant="outline"
+                size="sm"
                 onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages}
+                className="w-full sm:w-auto"
               >
                 Next
               </Button>
@@ -242,34 +251,34 @@ export default function CustomerManagement() {
 
       {/* Customer Details Dialog */}
       <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[85vh] sm:max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Customer Details</DialogTitle>
+            <DialogTitle className="text-lg md:text-xl">Customer Details</DialogTitle>
           </DialogHeader>
           {selectedCustomer && (
-            <div className="space-y-6">
+            <div className="space-y-4 md:space-y-6">
               {/* Customer Info */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Customer Information</CardTitle>
+                  <CardTitle className="text-base md:text-lg">Customer Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">Name</p>
-                      <p className="font-semibold">{selectedCustomer.name}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">Name</p>
+                      <p className="font-semibold text-sm md:text-base">{selectedCustomer.name}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Email</p>
-                      <p className="font-semibold">{selectedCustomer.email}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">Email</p>
+                      <p className="font-semibold text-sm md:text-base break-all">{selectedCustomer.email}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Phone</p>
-                      <p className="font-semibold">{selectedCustomer.phone}</p>
+                      <p className="text-xs md:text-sm text-muted-foreground">Phone</p>
+                      <p className="font-semibold text-sm md:text-base">{selectedCustomer.phone}</p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Status</p>
-                      <Badge variant={selectedCustomer.isBlocked ? 'destructive' : 'default'}>
+                      <p className="text-xs md:text-sm text-muted-foreground">Status</p>
+                      <Badge variant={selectedCustomer.isBlocked ? 'destructive' : 'default'} className="text-xs w-fit">
                         {selectedCustomer.isBlocked ? 'Blocked' : 'Active'}
                       </Badge>
                     </div>
@@ -280,24 +289,24 @@ export default function CustomerManagement() {
               {/* Addresses */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Saved Addresses</CardTitle>
+                  <CardTitle className="text-base md:text-lg">Saved Addresses</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {selectedCustomer.addresses?.length > 0 ? (
-                    <div className="space-y-3">
+                    <div className="space-y-2 md:space-y-3">
                       {selectedCustomer.addresses.map((address: any, idx: number) => (
-                        <div key={idx} className="border rounded p-3">
-                          <p className="font-semibold">{address.name}</p>
-                          <p className="text-sm">{address.addressLine1}</p>
-                          {address.addressLine2 && <p className="text-sm">{address.addressLine2}</p>}
-                          <p className="text-sm">{address.city}, {address.state} {address.pincode}</p>
-                          <p className="text-sm text-muted-foreground">{address.phone}</p>
-                          {address.isDefault && <Badge className="mt-1">Default</Badge>}
+                        <div key={idx} className="border rounded p-2 md:p-3">
+                          <p className="font-semibold text-sm md:text-base">{address.name}</p>
+                          <p className="text-xs md:text-sm">{address.addressLine1}</p>
+                          {address.addressLine2 && <p className="text-xs md:text-sm">{address.addressLine2}</p>}
+                          <p className="text-xs md:text-sm">{address.city}, {address.state} {address.pincode}</p>
+                          <p className="text-xs md:text-sm text-muted-foreground">{address.phone}</p>
+                          {address.isDefault && <Badge className="mt-1 text-xs">Default</Badge>}
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-muted-foreground">No saved addresses</p>
+                    <p className="text-sm text-muted-foreground">No saved addresses</p>
                   )}
                 </CardContent>
               </Card>
@@ -305,30 +314,30 @@ export default function CustomerManagement() {
               {/* Order History */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Order History ({customerOrders.length})</CardTitle>
+                  <CardTitle className="text-base md:text-lg">Order History ({customerOrders.length})</CardTitle>
                 </CardHeader>
                 <CardContent>
                   {customerOrders.length > 0 ? (
-                    <div className="space-y-3">
+                    <div className="space-y-2 md:space-y-3">
                       {customerOrders.map((order: any) => (
-                        <div key={order._id} className="border rounded p-3">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="font-semibold">{order.orderNumber}</p>
-                              <p className="text-sm text-muted-foreground">
+                        <div key={order._id} className="border rounded p-2 md:p-3">
+                          <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
+                            <div className="flex-1 min-w-0">
+                              <p className="font-semibold text-sm md:text-base truncate">{order.orderNumber}</p>
+                              <p className="text-xs md:text-sm text-muted-foreground">
                                 {format(new Date(order.createdAt), 'PPp')}
                               </p>
                             </div>
-                            <div className="text-right">
-                              <p className="font-semibold">₹{order.finalAmount.toFixed(2)}</p>
-                              <Badge>{order.orderStatus}</Badge>
+                            <div className="text-left sm:text-right flex-shrink-0">
+                              <p className="font-semibold text-sm md:text-base">₹{order.finalAmount.toFixed(2)}</p>
+                              <Badge className="text-xs mt-1">{order.orderStatus}</Badge>
                             </div>
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-muted-foreground">No orders yet</p>
+                    <p className="text-sm text-muted-foreground">No orders yet</p>
                   )}
                 </CardContent>
               </Card>

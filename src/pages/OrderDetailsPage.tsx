@@ -315,33 +315,36 @@ const OrderDetailsPage: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     const colors: Record<string, string> = {
-      PLACED: 'bg-blue-500',
-      CONFIRMED: 'bg-green-500',
-      PROCESSING: 'bg-yellow-500',
-      SHIPPED: 'bg-purple-500',
-      DELIVERED: 'bg-green-600',
-      CANCELLED: 'bg-red-500',
-      RETURNED: 'bg-gray-500',
+      'Placed': 'bg-blue-500',
+      'Confirmed': 'bg-green-500',
+      'Packed': 'bg-yellow-500',
+      'Shipped': 'bg-purple-500',
+      'Out for Delivery': 'bg-purple-600',
+      'Delivered': 'bg-green-600',
+      'Cancelled': 'bg-red-500',
+      'Returned': 'bg-gray-500',
     };
     return colors[status] || 'bg-gray-400';
   };
 
   const getPaymentStatusBadge = (status: string) => {
     const variants: Record<string, 'default' | 'secondary' | 'destructive'> = {
-      PENDING: 'secondary',
-      PAID: 'default',
-      FAILED: 'destructive',
+      'Pending': 'secondary',
+      'Paid': 'default',
+      'Failed': 'destructive',
     };
     return variants[status] || 'secondary';
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'DELIVERED':
+      case 'Delivered':
         return <CheckCircle className="w-5 h-5" />;
-      case 'SHIPPED':
+      case 'Shipped':
+      case 'Out for Delivery':
         return <Truck className="w-5 h-5" />;
-      case 'PROCESSING':
+      case 'Packed':
+      case 'Confirmed':
         return <Package className="w-5 h-5" />;
       default:
         return <Clock className="w-5 h-5" />;
@@ -493,7 +496,7 @@ const OrderDetailsPage: React.FC = () => {
                           <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                           
                           {/* Review Button */}
-                          {order.orderStatus === 'DELIVERED' && (
+                          {order.orderStatus === 'Delivered' && (
                             <div className="mt-2">
                               {reviewedProducts.has(item.productId) ? (
                                 <Badge variant="secondary" className="bg-green-100 text-green-800">
@@ -618,7 +621,7 @@ const OrderDetailsPage: React.FC = () => {
               >
                 Download Invoice
               </Button>
-              {order.orderStatus !== 'CANCELLED' && order.orderStatus !== 'DELIVERED' && (
+              {order.orderStatus !== 'Cancelled' && order.orderStatus !== 'Delivered' && (
                 <Button 
                   variant="destructive" 
                   className="w-full"
@@ -636,8 +639,8 @@ const OrderDetailsPage: React.FC = () => {
       {/* Review Dialog */}
       {selectedProduct && (
         <ReviewDialog
-          open={reviewDialogOpen}
-          onOpenChange={setReviewDialogOpen}
+          isOpen={reviewDialogOpen}
+          onClose={() => setReviewDialogOpen(false)}
           orderId={orderId!}
           productId={selectedProduct.id}
           productName={selectedProduct.name}
