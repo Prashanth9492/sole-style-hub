@@ -26,7 +26,7 @@ const subcategoryDescriptions: Record<string, Record<string, { title: string; de
       description: "Men's casual shoes strike the perfect balance between comfort and style for everyday wear. Designed for versatility, these shoes effortlessly transition from weekend outings to relaxed office environments. With a wide range of styles from loafers to canvas sneakers, casual footwear offers the freedom to express your personal style while keeping your feet comfortable throughout the day."
     },
     'flip-flops': {
-      title: "Men's Flip Flops & Slippers",
+      title: "Men's Slides & Slippers",
       description: "Men's flip flops and slippers provide the ultimate in relaxation and easy-going style. Perfect for beach days, poolside lounging, or simply unwinding at home, these shoes prioritize comfort without compromising on design. From sporty athletic slides to cushioned flip flops, this footwear category ensures your feet stay cool and comfortable during leisure time."
     },
     formal: {
@@ -59,10 +59,6 @@ const subcategoryDescriptions: Record<string, Record<string, { title: string; de
       title: "Women's Flip Flops & Slippers",
       description: "Women's flip flops and slippers are the perfect companions for relaxation and casual comfort. Ideal for beach vacations, spa days, or cozy evenings at home, these shoes prioritize ease without sacrificing style. With options ranging from embellished designs to minimalist classics, they offer a quick and comfortable solution for those moments when you want to unwind in style."
     },
-    formal: {
-      title: "Women's Formal Shoes",
-      description: "Women's formal shoes are the finishing touch that elevates professional and elegant ensembles. From classic pumps to sophisticated heels, these shoes exude confidence and grace for important meetings, special events, and formal occasions. Choosing the perfect pair means finding the balance between timeless elegance and modern trends, ensuring you look polished and feel empowered in any formal setting."
-    },
     sandals: {
       title: "Women's Sandals",
       description: "Women's sandals bring a breath of fresh air to warm-weather wardrobes with their open designs and stylish appeal. Perfect for showcasing pedicured toes while keeping feet cool, sandals range from casual flat designs to dressy heeled options. Whether you're strolling through summer festivals or dining al fresco, the right pair of sandals combines comfort with feminine charm."
@@ -81,17 +77,9 @@ const subcategoryDescriptions: Record<string, Record<string, { title: string; de
       title: "Kids' Boots",
       description: "Kids' boots are designed to keep little feet warm, dry, and protected during outdoor adventures. Built to withstand active play in various weather conditions, these durable shoes feature easy-on designs that encourage independence. From waterproof rain boots to cozy winter styles, kids' boots combine practical functionality with fun colors and patterns that children love to wear."
     },
-    casual: {
-      title: "Kids' Casual Shoes",
-      description: "Kids' casual shoes are the go-to choice for everyday activities, offering comfort and durability for growing feet. Designed to keep up with energetic lifestyles, these shoes feature flexible soles and breathable materials that support healthy foot development. With styles that appeal to children's tastes and easy closures for independent dressing, casual shoes make daily routines simpler for both kids and parents."
-    },
     'flip-flops': {
-      title: "Kids' Flip Flops & Slippers",
+      title: "Kids' Slides & Slippers",
       description: "Kids' flip flops and slippers provide easy-wearing comfort for leisure time and warm weather fun. Perfect for pool days, beach outings, or relaxing at home, these lightweight shoes are simple to slip on and off. Designed with non-slip soles and child-friendly materials, they offer safe and comfortable options for kids to enjoy their downtime in carefree style."
-    },
-    formal: {
-      title: "Kids' Formal Shoes",
-      description: "Kids' formal shoes help young ones look their best for special occasions and important events. From weddings to school ceremonies, these polished shoes add a sophisticated touch to dressy outfits. Designed with both style and comfort in mind, formal footwear for children ensures they can participate in events with confidence while still feeling comfortable enough to enjoy the celebration."
     },
     sandals: {
       title: "Kids' Sandals",
@@ -162,10 +150,28 @@ const CategoryPage = () => {
     }
   };
 
+  const getCategoryDescription = (cat: string) => {
+    switch (cat) {
+      case 'men':
+        return 'Premium footwear for the modern gentleman';
+      case 'women':
+        return 'Elegant designs for every occasion';
+      case 'kids':
+        return 'Durable comfort for active adventures';
+      default:
+        return '';
+    }
+  };
+
   const categoryInfo = {
     id: category,
     name: category ? category.charAt(0).toUpperCase() + category.slice(1) : '',
-    subCategories: ['boots', 'casual', 'flip-flops', 'formal', 'sandals', 'sneakers', 'sports']
+    description: getCategoryDescription(category || ''),
+    subCategories: category === 'women' 
+      ? ['boots', 'casual', 'flip-flops', 'sandals', 'sneakers', 'sports']
+      : category === 'kids'
+      ? ['boots', 'flip-flops', 'sandals', 'sneakers', 'sports']
+      : ['boots', 'casual', 'flip-flops', 'formal', 'sandals', 'sneakers', 'sports']
   };
 
   // Handle URL subcategory parameter or query parameter for footwear type
@@ -243,7 +249,7 @@ const CategoryPage = () => {
                 <>
                   <li className="text-muted-foreground">/</li>
                   <li className="font-medium capitalize">
-                    {subcategory === 'flip-flops' ? 'Flip Flops & Slippers' : subcategory.replace('-', ' ')}
+                    {subcategory === 'flip-flops' ? 'Slides & Slippers' : subcategory.replace('-', ' ')}
                   </li>
                 </>
               )}
@@ -262,7 +268,7 @@ const CategoryPage = () => {
                   {categoryInfo.name}'s
                 </p>
                 <h1 className="text-4xl lg:text-5xl font-serif mb-3" style={{ fontWeight: 300, lineHeight: '0.7' }}>
-                  {subcategory === 'flip-flops' ? 'Flip Flops & Slippers' : subcategory.charAt(0).toUpperCase() + subcategory.slice(1).replace('-', ' ')}
+                  {subcategory === 'flip-flops' ? 'Slides & Slippers' : subcategory.charAt(0).toUpperCase() + subcategory.slice(1).replace('-', ' ')}
                 </h1>
                 <div className="max-w-4xl mx-auto">
                   <p className="text-sm lg:text-base text-muted-foreground leading-relaxed mb-2" style={{ lineHeight: '1.5', color: '#666' }}>

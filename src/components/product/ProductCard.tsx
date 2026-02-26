@@ -101,12 +101,8 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               {discount > 0 && <span className="badge-sale">-{discount}%</span>}
             </div>
 
-            {/* Quick Actions */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isHovered ? 1 : 0 }}
-              className="absolute top-4 right-4"
-            >
+            {/* Quick Actions - Wishlist Button */}
+            <div className="absolute top-4 right-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
               <button
                 onClick={(e) => {
                   e.preventDefault();
@@ -118,7 +114,7 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
                       : `Added ${product.name} to wishlist!`
                   );
                 }}
-                className="p-2 bg-background/90 backdrop-blur-sm rounded-full hover:bg-background transition-colors"
+                className="p-2 bg-background/90 backdrop-blur-sm rounded-full hover:bg-background transition-colors shadow-md"
               >
                 <Heart
                   className={`w-5 h-5 transition-colors ${
@@ -126,22 +122,18 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
                   }`}
                 />
               </button>
-            </motion.div>
+            </div>
 
             {/* Add to Cart Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-              className="absolute bottom-4 left-4 right-4"
-            >
+            <div className="absolute bottom-4 left-4 right-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-300">
               <button
                 onClick={handleQuickAdd}
-                className="w-full py-3 bg-background/95 backdrop-blur-sm rounded-full font-medium text-sm flex items-center justify-center gap-2 hover:bg-background transition-colors"
+                className="w-full py-3 bg-background/95 backdrop-blur-sm rounded-full font-medium text-sm flex items-center justify-center gap-2 hover:bg-background transition-colors shadow-lg"
               >
                 <ShoppingBag className="w-4 h-4" />
                 Quick Add
               </button>
-            </motion.div>
+            </div>
           </div>
 
           {/* Product Info */}

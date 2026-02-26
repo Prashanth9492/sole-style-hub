@@ -44,7 +44,7 @@ import { Button } from '@/components/ui/button';
 const footwearTypes = [
   { name: 'Boots', slug: 'boots', icon: '👢' },
   { name: 'Casual Shoes', slug: 'casual', icon: '👟' },
-  { name: 'Flip Flops & Slippers', slug: 'flip-flops', icon: '🩴' },
+  { name: 'Slides & Slippers', slug: 'flip-flops', icon: '🩴' },
   { name: 'Formal Shoes', slug: 'formal', icon: '👞' },
   { name: 'Sandals', slug: 'sandals', icon: '👡' },
   { name: 'Sneakers', slug: 'sneakers', icon: '👟' },
@@ -231,7 +231,13 @@ export const Header = () => {
                                 className="absolute top-full left-0 mt-2 w-56 bg-background border border-border rounded-xl shadow-xl overflow-hidden z-50"
                               >
                                 <div className="py-2">
-                                  {footwearTypes.map((type, index) => (
+                                  {footwearTypes
+                                    .filter(type => {
+                                      if (link.name === 'Women' && type.slug === 'formal') return false;
+                                      if (link.name === 'Kids' && (type.slug === 'formal' || type.slug === 'casual')) return false;
+                                      return true;
+                                    })
+                                    .map((type, index) => (
                                     <Link
                                       key={type.slug}
                                       to={`/category/${link.name.toLowerCase()}/${type.slug}`}
@@ -502,7 +508,13 @@ export const Header = () => {
                             transition={{ delay: index * 0.05 + 0.1 }}
                             className="mt-2 ml-4 space-y-1 bg-gradient-to-br from-white/50 to-gray-50/50 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-2 border border-border/30"
                           >
-                            {footwearTypes.map((type, typeIndex) => (
+                            {footwearTypes
+                              .filter(type => {
+                                if (link.name === 'Women' && type.slug === 'formal') return false;
+                                if (link.name === 'Kids' && (type.slug === 'formal' || type.slug === 'casual')) return false;
+                                return true;
+                              })
+                              .map((type, typeIndex) => (
                               <Link
                                 key={type.slug}
                                 to={`/category/${link.name.toLowerCase()}/${type.slug}`}
