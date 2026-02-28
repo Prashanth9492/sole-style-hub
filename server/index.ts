@@ -60,9 +60,14 @@ app.use('/api', analyticsRouter);
 app.use('/api', paymentRouter);
 app.use('/api', reviewsRouter);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📡 API available at http://localhost:${PORT}/api`);
-  console.log(`☁️  Cloudinary configured for image uploads`);
-});
+// Export for Vercel serverless
+export default app;
+
+// Start server (only for local development)
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`📡 API available at http://localhost:${PORT}/api`);
+    console.log(`☁️  Cloudinary configured for image uploads`);
+  });
+}

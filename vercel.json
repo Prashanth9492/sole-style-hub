@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server/index.ts",
+      "use": "@vercel/node"
+    },
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "server/index.ts"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "MONGODB_URI": "@mongodb-uri",
+    "CLOUDINARY_CLOUD_NAME": "@cloudinary-cloud-name",
+    "CLOUDINARY_API_KEY": "@cloudinary-api-key",
+    "CLOUDINARY_API_SECRET": "@cloudinary-api-secret",
+    "RAZORPAY_KEY_ID": "@razorpay-key-id",
+    "RAZORPAY_KEY_SECRET": "@razorpay-key-secret"
+  }
+}
