@@ -270,19 +270,30 @@ const CategoryPage = () => {
                 <h1 className="text-4xl lg:text-5xl font-serif mb-3" style={{ fontWeight: 300, lineHeight: '0.7' }}>
                   {subcategory === 'flip-flops' ? 'Slides & Slippers' : subcategory.charAt(0).toUpperCase() + subcategory.slice(1).replace('-', ' ')}
                 </h1>
-                <div className="max-w-4xl mx-auto">
-                  <p className="text-sm lg:text-base text-muted-foreground leading-relaxed mb-2" style={{ lineHeight: '1.5', color: '#666' }}>
-                    {subcategoryDescriptions[category][subcategory].description}
-                  </p>
-                  {/* <button className="text-sm font-medium underline hover:no-underline transition-all">
-                    Read More
-                  </button> */}
+                {/* Decorative Line */}
+                <div className="flex items-center justify-center gap-2 mt-6">
+                  <div className="flex-1 h-[1px] bg-black max-w-[200px]" />
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-black rotate-45" />
+                    <div className="w-2 h-2 bg-black rotate-45" />
+                    <div className="w-2 h-2 bg-black rotate-45" />
+                  </div>
+                  <div className="flex-1 h-[1px] bg-black max-w-[200px]" />
                 </div>
               </>
             ) : (
               <>
                 <h1 className="heading-section mb-2">{categoryInfo.name}'s Footwear</h1>
-                <p className="text-body">{categoryInfo.description}</p>
+                {/* Decorative Line */}
+                <div className="flex items-center justify-center gap-2 mt-4">
+                  <div className="flex-1 h-[1px] bg-black max-w-[200px]" />
+                  <div className="flex gap-1">
+                    <div className="w-2 h-2 bg-black rotate-45" />
+                    <div className="w-2 h-2 bg-black rotate-45" />
+                    <div className="w-2 h-2 bg-black rotate-45" />
+                  </div>
+                  <div className="flex-1 h-[1px] bg-black max-w-[200px]" />
+                </div>
               </>
             )}
           </motion.div>

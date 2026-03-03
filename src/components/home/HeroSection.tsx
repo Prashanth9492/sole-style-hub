@@ -207,7 +207,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-white via-gray-50 to-slate-100">
       {/* Dynamic Background Gradient */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -216,7 +216,7 @@ export const HeroSection = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8 }}
-          className="absolute inset-0 bg-gradient-radial from-gray-100/30 via-white/20 to-transparent"
+          className="absolute inset-0 bg-gradient-radial from-amber-50/30 via-white/20 to-transparent"
         />
       </AnimatePresence>
 
@@ -283,44 +283,64 @@ export const HeroSection = () => {
                   transition={{ delay: 0.2 }}
                 >
                   <div 
-                    className="w-12 h-[2px] rounded-full bg-black"
+                    className="w-12 h-[2px] rounded-full bg-gradient-to-r from-amber-600 to-black"
                   />
-                  <span className="text-xs font-semibold tracking-[0.3em] uppercase text-gray-500">
+                  <span className="text-xs font-semibold tracking-[0.3em] uppercase bg-clip-text text-transparent bg-gradient-to-r from-gray-600 via-amber-600 to-gray-600">
                     Premium Collection
                   </span>
                 </motion.div>
 
-                {/* Product Name with Gradient */}
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-black mb-4 tracking-tight leading-[0.9]">
-                  <span className="block">{currentShoe.name.split(' ')[0]}</span>
-                  <span 
-                    className="block bg-clip-text text-transparent bg-gradient-to-r from-gray-600 via-gray-800 to-black"
+                {/* Product Name with Animation */}
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black mb-4 tracking-tight leading-[0.9] overflow-hidden">
+                  <motion.span 
+                    className="block bg-clip-text text-transparent bg-gradient-to-r from-black via-gray-900 to-amber-900"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.6, ease: "easeOut" }}
+                  >
+                    {currentShoe.name.split(' ')[0]}
+                  </motion.span>
+                  <motion.span 
+                    className="block bg-clip-text text-transparent bg-gradient-to-r from-amber-600 via-orange-600 to-amber-700 drop-shadow-lg"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.6, ease: "easeOut" }}
                   >
                     {currentShoe.name.split(' ').slice(1).join(' ') || currentShoe.name}
-                  </span>
+                  </motion.span>
                 </h1>
 
                 {/* Animated Underline */}
                 <motion.div 
-                  className="w-24 h-1 rounded-full mb-8 mx-auto lg:mx-0 bg-black"
-                  initial={{ scaleX: 0 }}
+                  className="w-24 h-1 rounded-full mb-8 mx-auto lg:mx-0 bg-gradient-to-r from-amber-500 via-amber-600 to-black shadow-lg shadow-amber-500/20"
+                  initial={{ scaleX: 0, originX: 0 }}
                   animate={{ scaleX: 1 }}
-                  transition={{ delay: 0.3, duration: 0.6 }}
+                  transition={{ delay: 0.7, duration: 0.8, ease: "easeInOut" }}
                 />
 
-                {/* Description with Icon */}
-                <div className="flex items-start gap-4 max-w-lg mx-auto lg:mx-0 mb-10">
-                  <div 
-                    className="hidden md:flex w-10 h-10 rounded-xl items-center justify-center flex-shrink-0 mt-1 bg-gray-100 border border-gray-200"
+                {/* Description with Animation */}
+                <motion.div 
+                  className="flex items-start gap-4 max-w-lg mx-auto lg:mx-0 mb-10"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9, duration: 0.6, ease: "easeOut" }}
+                >
+                  <motion.div 
+                    className="hidden md:flex w-10 h-10 rounded-xl items-center justify-center flex-shrink-0 mt-1 bg-gradient-to-br from-amber-100 to-orange-100 border border-amber-200/50 shadow-lg shadow-amber-500/10"
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ delay: 1, duration: 0.5, ease: "easeOut" }}
                   >
-                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-amber-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
-                  </div>
-                  <p className="text-base md:text-lg text-gray-600 leading-relaxed">
-                    {currentShoe.description}
+                  </motion.div>
+                  <p className="text-base md:text-lg leading-relaxed">
+                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-700 via-gray-800 to-gray-700">
+                      {currentShoe.description}
+                    </span>
                   </p>
-                </div>
+                </motion.div>
 
                 {/* Feature Pills */}
                 {/* <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-10">
@@ -337,38 +357,71 @@ export const HeroSection = () => {
                   ))}
                 </div> */}
 
-                {/* CTA Buttons */}
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-10">
+                {/* CTA Buttons with Animation */}
+                <motion.div 
+                  className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-10"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.1, duration: 0.6, ease: "easeOut" }}
+                >
                   <Link to="/category/men">
                     <motion.button
-                      className="group relative px-10 py-5 bg-black text-white rounded-full font-bold text-base overflow-hidden shadow-2xl shadow-black/30"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.97 }}
+                      className="group relative px-10 py-5 bg-gradient-to-b from-gray-300 via-gray-200 to-gray-300 text-gray-700 rounded-full font-bold text-base overflow-visible"
+                      style={{
+                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                      }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.2, duration: 0.5 }}
+                      whileHover={{ 
+                        y: -2,
+                        boxShadow: '0 12px 20px rgba(0, 0, 0, 0.35), 0 5px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                      }}
+                      whileTap={{ 
+                        y: 1,
+                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -1px 0 rgba(0, 0, 0, 0.15)'
+                      }}
                     >
-                      <span className="relative z-10 flex items-center gap-2">
-                        Shop Now
-                        <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      {/* Glossy highlight overlay */}
+                      <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+                        <div className="absolute top-0 left-0 right-0 h-[45%] bg-gradient-to-b from-white/60 via-white/30 to-transparent rounded-full" />
+                        <div className="absolute top-[5%] left-[15%] right-[15%] h-[25%] bg-gradient-to-b from-white/80 via-white/40 to-transparent rounded-full blur-sm" />
+                      </div>
+                      <span className="relative z-10 flex items-center gap-2 drop-shadow-sm">
+                        <span className="bg-clip-text text-transparent bg-gradient-to-b from-gray-700 via-gray-800 to-gray-900 font-extrabold">Shop Now</span>
+                        <ChevronRight className="w-5 h-5 text-gray-700 group-hover:translate-x-1 transition-transform" />
                       </span>
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900"
-                        initial={{ x: '100%' }}
-                        whileHover={{ x: 0 }}
-                        transition={{ duration: 0.3 }}
-                      />
                     </motion.button>
                   </Link>
 
                   <Link to="/new">
                     <motion.button
-                      className="group px-10 py-5 rounded-full font-semibold text-black border-2 border-black bg-white hover:bg-black hover:text-white transition-all duration-300 flex items-center gap-2"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.97 }}
+                      className="group relative px-10 py-5 rounded-full font-semibold flex items-center gap-2 bg-gradient-to-b from-gray-200 via-gray-100 to-gray-200 text-gray-700 overflow-visible"
+                      style={{
+                        boxShadow: '0 6px 12px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.08)'
+                      }}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 1.4, duration: 0.5 }}
+                      whileHover={{ 
+                        y: -2,
+                        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                      }}
+                      whileTap={{ 
+                        y: 1,
+                        boxShadow: '0 3px 6px rgba(0, 0, 0, 0.2), 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.12)'
+                      }}
                     >
-                      Explore More
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      {/* Glossy highlight overlay */}
+                      <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+                        <div className="absolute top-0 left-0 right-0 h-[45%] bg-gradient-to-b from-white/50 via-white/25 to-transparent rounded-full" />
+                        <div className="absolute top-[5%] left-[15%] right-[15%] h-[25%] bg-gradient-to-b from-white/70 via-white/30 to-transparent rounded-full blur-sm" />
+                      </div>
+                      <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-b from-gray-600 via-gray-700 to-gray-800 font-semibold drop-shadow-sm">Explore More</span>
+                      <ArrowRight className="relative z-10 w-4 h-4 text-gray-600 group-hover:translate-x-1 transition-transform" />
                     </motion.button>
                   </Link>
-                </div>
+                </motion.div>
 
                 {/* Stats Row */}
                 {/* <motion.div 
@@ -439,12 +492,12 @@ export const HeroSection = () => {
 
             {/* Rotating Decorative Circle */}
             <motion.div
-              className="absolute w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px] border border-black/10 rounded-full"
+              className="absolute w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px] border border-slate-200/60 rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
             >
               <div
-                className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-black"
+                className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 shadow-lg shadow-amber-500/50"
               />
             </motion.div>
 
@@ -504,19 +557,45 @@ export const HeroSection = () => {
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 lg:left-auto lg:right-0 lg:translate-x-0 lg:bottom-1/2 lg:translate-y-1/2 flex lg:flex-col gap-4">
               <motion.button
                 onClick={prevSlide}
-                className="p-3 md:p-4 rounded-full bg-white border-2 border-black text-black backdrop-blur-sm hover:bg-black hover:text-white transition-all"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                className="relative p-3 md:p-4 rounded-full bg-gradient-to-b from-gray-300 via-gray-200 to-gray-300 text-gray-700 backdrop-blur-sm transition-all overflow-visible"
+                style={{
+                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.08)'
+                }}
+                whileHover={{ 
+                  y: -2,
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                }}
+                whileTap={{ 
+                  y: 1,
+                  boxShadow: '0 3px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.12)'
+                }}
               >
-                <ArrowLeft className="w-5 h-5" />
+                {/* Glossy highlight */}
+                <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+                  <div className="absolute top-0 left-0 right-0 h-[40%] bg-gradient-to-b from-white/50 via-white/25 to-transparent rounded-full" />
+                </div>
+                <ArrowLeft className="w-5 h-5 relative z-10" />
               </motion.button>
               <motion.button
                 onClick={nextSlide}
-                className="p-3 md:p-4 rounded-full bg-white border-2 border-black text-black backdrop-blur-sm hover:bg-black hover:text-white transition-all"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                className="relative p-3 md:p-4 rounded-full bg-gradient-to-b from-gray-300 via-gray-200 to-gray-300 text-gray-700 backdrop-blur-sm transition-all overflow-visible"
+                style={{
+                  boxShadow: '0 6px 12px rgba(0, 0, 0, 0.25), 0 2px 4px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.7), inset 0 -1px 0 rgba(0, 0, 0, 0.08)'
+                }}
+                whileHover={{ 
+                  y: -2,
+                  boxShadow: '0 8px 16px rgba(0, 0, 0, 0.3), 0 3px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -1px 0 rgba(0, 0, 0, 0.1)'
+                }}
+                whileTap={{ 
+                  y: 1,
+                  boxShadow: '0 3px 6px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 0 rgba(0, 0, 0, 0.12)'
+                }}
               >
-                <ArrowRight className="w-5 h-5" />
+                {/* Glossy highlight */}
+                <div className="absolute inset-0 rounded-full overflow-hidden pointer-events-none">
+                  <div className="absolute top-0 left-0 right-0 h-[40%] bg-gradient-to-b from-white/50 via-white/25 to-transparent rounded-full" />
+                </div>
+                <ArrowRight className="w-5 h-5 relative z-10" />
               </motion.button>
             </div>
           </div>
@@ -579,10 +658,10 @@ export const HeroSection = () => {
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-black/30 flex justify-center pt-2"
+          className="w-6 h-10 rounded-full border-2 border-slate-300 flex justify-center pt-2"
         >
           <motion.div
-            className="w-1 h-2 bg-black/60 rounded-full"
+            className="w-1 h-2 bg-gradient-to-b from-amber-600 to-orange-600 rounded-full shadow-lg shadow-amber-500/50"
             animate={{ opacity: [0.4, 1, 0.4], y: [0, 4, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />

@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Mail, Lock, Loader2 } from 'lucide-react';
+import { Header } from '@/components/layout/Header';
 
 const SignInPage = () => {
   const [email, setEmail] = useState('');
@@ -103,19 +104,61 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 px-4 py-12">
-      <Card className="w-full max-w-md shadow-xl">
-        <CardHeader className="space-y-1 text-center">
-          <Link to="/" className="inline-block mb-4">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Sole Style
-            </h1>
-          </Link>
-          <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-          <CardDescription>
-            Sign in to your account to continue
-          </CardDescription>
-        </CardHeader>
+    <>
+      <Header />
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:to-gray-800 px-4 py-12">
+        {/* Decorative Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Shoe Silhouettes - Top Left */}
+          <div className="absolute -top-20 -left-20 w-64 h-64 opacity-5">
+            <svg viewBox="0 0 200 200" className="w-full h-full text-black dark:text-white">
+              <path fill="currentColor" d="M180 120c0 5-2 8-6 10-8 4-20 6-35 8-15 2-35 3-55 3s-40-1-55-3c-15-2-27-4-35-8-4-2-6-5-6-10 0-8 5-15 12-20 7-6 17-10 28-13 11-3 24-5 38-6 14-1 28-1 38 0 10 1 20 2 28 5 8 2 15 5 21 9 6 4 10 9 12 15 2 4 3 7 3 10zm-15-35c-10-8-25-13-42-15-17-2-35-2-52 0-17 2-32 7-42 15-5 4-8 9-9 14 0 2 0 3 1 5 2 4 6 7 12 10 11 5 26 8 43 10 17 2 35 2 52 0 17-2 32-5 43-10 6-3 10-6 12-10 1-2 1-3 1-5-1-5-4-10-9-14z"/>
+            </svg>
+          </div>
+          
+          {/* Shoe Silhouettes - Top Right */}
+          <div className="absolute -top-10 right-10 w-48 h-48 opacity-5 rotate-45">
+            <svg viewBox="0 0 200 200" className="w-full h-full text-black dark:text-white">
+              <path fill="currentColor" d="M160 100c5 15 8 30 8 45 0 8-2 14-6 18-4 4-10 6-18 6H56c-8 0-14-2-18-6-4-4-6-10-6-18 0-15 3-30 8-45l5-15c3-8 7-15 13-20 6-5 13-8 22-8h40c9 0 16 3 22 8 6 5 10 12 13 20l5 15zm-15 5l-4-12c-2-6-5-11-9-14-4-3-9-5-15-5h-34c-6 0-11 2-15 5-4 3-7 8-9 14l-4 12c-4 13-6 26-6 38 0 5 1 8 3 10 2 2 5 3 10 3h76c5 0 8-1 10-3 2-2 3-5 3-10 0-12-2-25-6-38z"/>
+            </svg>
+          </div>
+
+          {/* Shoe Silhouettes - Bottom Left */}
+          <div className="absolute -bottom-10 left-20 w-56 h-56 opacity-5 -rotate-12">
+            <svg viewBox="0 0 200 200" className="w-full h-full text-black dark:text-white">
+              <path fill="currentColor" d="M170 130c0 6-3 11-8 14-5 3-12 5-20 7-16 3-36 4-58 4s-42-1-58-4c-8-2-15-4-20-7-5-3-8-8-8-14 0-10 6-19 16-26 10-7 24-12 40-15 16-3 34-4 52-4s36 1 52 4c16 3 30 8 40 15 10 7 16 16 16 26zm-20 0c0-6-4-11-10-15-7-4-16-7-27-9-11-2-24-3-38-3s-27 1-38 3c-11 2-20 5-27 9-6 4-10 9-10 15s4 11 10 15c7 4 16 7 27 9 11 2 24 3 38 3s27-1 38-3c11-2 20-5 27-9 6-4 10-9 10-15z"/>
+            </svg>
+          </div>
+
+          {/* Shoe Silhouettes - Bottom Right */}
+          <div className="absolute -bottom-16 -right-16 w-72 h-72 opacity-5 rotate-90">
+            <svg viewBox="0 0 200 200" className="w-full h-full text-black dark:text-white">
+              <path fill="currentColor" d="M175 115c0 7-3 13-9 17-6 4-14 7-24 9-20 4-44 5-67 5s-47-1-67-5c-10-2-18-5-24-9-6-4-9-10-9-17 0-12 7-22 19-30 12-8 28-14 46-18 18-4 39-6 60-6s42 2 60 6c18 4 34 10 46 18 12 8 19 18 19 30zm-25 0c0-8-5-14-13-19-8-5-19-9-33-11-14-3-30-4-47-4s-33 1-47 4c-14 2-25 6-33 11-8 5-13 11-13 19s5 14 13 19c8 5 19 9 33 11 14 3 30 4 47 4s33-1 47-4c14-2 25-6 33-11 8-5 13-11 13-19z"/>
+            </svg>
+          </div>
+
+          {/* Subtle Grid Pattern */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:100px_100px] dark:bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)]" />
+
+          {/* Floating Decorative Elements */}
+          <div className="absolute top-1/4 left-10 w-4 h-4 bg-amber-500/20 rounded-full animate-pulse" />
+          <div className="absolute top-1/3 right-20 w-3 h-3 bg-blue-500/20 rounded-full animate-pulse delay-75" />
+          <div className="absolute bottom-1/4 left-1/4 w-5 h-5 bg-purple-500/20 rounded-full animate-pulse delay-150" />
+          <div className="absolute bottom-1/3 right-1/3 w-3 h-3 bg-amber-600/20 rounded-full animate-pulse delay-300" />
+        </div>
+
+        <Card className="w-full max-w-md shadow-xl relative z-10 backdrop-blur-sm bg-white/95 dark:bg-gray-900/95">
+          <CardHeader className="space-y-1 text-center">
+            <Link to="/" className="inline-block mb-4">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Sole Style
+              </h1>
+            </Link>
+            <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
+            <CardDescription>
+              Sign in to your account to continue
+            </CardDescription>
+          </CardHeader>
         
         <CardContent className="space-y-4">
           {/* Social Sign In Buttons */}
@@ -259,6 +302,7 @@ const SignInPage = () => {
         </CardFooter>
       </Card>
     </div>
+    </>
   );
 };
 
