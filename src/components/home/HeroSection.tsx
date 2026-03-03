@@ -207,7 +207,7 @@ export const HeroSection = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-gray-950 via-gray-900 to-black">
+    <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-white via-gray-50 to-gray-100">
       {/* Dynamic Background Gradient */}
       <AnimatePresence mode="wait">
         <motion.div
@@ -216,7 +216,7 @@ export const HeroSection = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8 }}
-          className={`absolute inset-0 bg-gradient-radial ${currentShoe.gradient}`}
+          className="absolute inset-0 bg-gradient-radial from-gray-100/30 via-white/20 to-transparent"
         />
       </AnimatePresence>
 
@@ -226,7 +226,7 @@ export const HeroSection = () => {
         <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full"
           style={{
-            background: `radial-gradient(circle, ${currentShoe.accentColor}15 0%, transparent 70%)`,
+            background: 'radial-gradient(circle, rgba(0,0,0,0.03) 0%, transparent 70%)',
           }}
           animate={{
             scale: [1, 1.1, 1],
@@ -236,13 +236,13 @@ export const HeroSection = () => {
         />
 
         {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:80px_80px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
 
         {/* Floating Particles */}
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-white/30 rounded-full"
+            className="absolute w-1 h-1 bg-black/20 rounded-full"
             style={{
               left: `${10 + Math.random() * 80}%`,
               top: `${10 + Math.random() * 80}%`,
@@ -250,7 +250,7 @@ export const HeroSection = () => {
             animate={{
               y: [-30, 30, -30],
               x: [-10, 10, -10],
-              opacity: [0.2, 0.6, 0.2],
+              opacity: [0.1, 0.3, 0.1],
             }}
             transition={{
               duration: 4 + Math.random() * 3,
@@ -258,7 +258,7 @@ export const HeroSection = () => {
               delay: Math.random() * 2,
             }}
           />
-        ))}
+        ))}  
       </div>
 
       {/* Main Content Container */}
@@ -283,22 +283,18 @@ export const HeroSection = () => {
                   transition={{ delay: 0.2 }}
                 >
                   <div 
-                    className="w-12 h-[2px] rounded-full"
-                    style={{ backgroundColor: currentShoe.accentColor }}
+                    className="w-12 h-[2px] rounded-full bg-black"
                   />
-                  <span className="text-xs font-semibold tracking-[0.3em] uppercase text-white/40">
+                  <span className="text-xs font-semibold tracking-[0.3em] uppercase text-gray-500">
                     Premium Collection
                   </span>
                 </motion.div>
 
                 {/* Product Name with Gradient */}
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white mb-4 tracking-tight leading-[0.9]">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-black mb-4 tracking-tight leading-[0.9]">
                   <span className="block">{currentShoe.name.split(' ')[0]}</span>
                   <span 
-                    className="block bg-clip-text text-transparent bg-gradient-to-r"
-                    style={{ 
-                      backgroundImage: `linear-gradient(135deg, ${currentShoe.accentColor}, ${currentShoe.accentColor}80, white)` 
-                    }}
+                    className="block bg-clip-text text-transparent bg-gradient-to-r from-gray-600 via-gray-800 to-black"
                   >
                     {currentShoe.name.split(' ').slice(1).join(' ') || currentShoe.name}
                   </span>
@@ -306,8 +302,7 @@ export const HeroSection = () => {
 
                 {/* Animated Underline */}
                 <motion.div 
-                  className="w-24 h-1 rounded-full mb-8 mx-auto lg:mx-0"
-                  style={{ backgroundColor: currentShoe.accentColor }}
+                  className="w-24 h-1 rounded-full mb-8 mx-auto lg:mx-0 bg-black"
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ delay: 0.3, duration: 0.6 }}
@@ -316,14 +311,13 @@ export const HeroSection = () => {
                 {/* Description with Icon */}
                 <div className="flex items-start gap-4 max-w-lg mx-auto lg:mx-0 mb-10">
                   <div 
-                    className="hidden md:flex w-10 h-10 rounded-xl items-center justify-center flex-shrink-0 mt-1"
-                    style={{ backgroundColor: `${currentShoe.accentColor}20` }}
+                    className="hidden md:flex w-10 h-10 rounded-xl items-center justify-center flex-shrink-0 mt-1 bg-gray-100 border border-gray-200"
                   >
-                    <svg className="w-5 h-5" style={{ color: currentShoe.accentColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
                   </div>
-                  <p className="text-base md:text-lg text-white/60 leading-relaxed">
+                  <p className="text-base md:text-lg text-gray-600 leading-relaxed">
                     {currentShoe.description}
                   </p>
                 </div>
@@ -347,7 +341,7 @@ export const HeroSection = () => {
                 <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 mb-10">
                   <Link to="/category/men">
                     <motion.button
-                      className="group relative px-10 py-5 bg-white text-gray-900 rounded-full font-bold text-base overflow-hidden shadow-2xl shadow-white/20"
+                      className="group relative px-10 py-5 bg-black text-white rounded-full font-bold text-base overflow-hidden shadow-2xl shadow-black/30"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                     >
@@ -356,7 +350,7 @@ export const HeroSection = () => {
                         <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                       </span>
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-gray-100 to-white"
+                        className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900"
                         initial={{ x: '100%' }}
                         whileHover={{ x: 0 }}
                         transition={{ duration: 0.3 }}
@@ -366,7 +360,7 @@ export const HeroSection = () => {
 
                   <Link to="/new">
                     <motion.button
-                      className="group px-10 py-5 rounded-full font-semibold text-white border border-white/20 bg-white/5 backdrop-blur-sm hover:bg-white/10 hover:border-white/40 transition-all duration-300 flex items-center gap-2"
+                      className="group px-10 py-5 rounded-full font-semibold text-black border-2 border-black bg-white hover:bg-black hover:text-white transition-all duration-300 flex items-center gap-2"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.97 }}
                     >
@@ -413,12 +407,12 @@ export const HeroSection = () => {
             <motion.div
               className="absolute w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px] rounded-full"
               style={{
-                background: `conic-gradient(from 180deg, ${currentShoe.accentColor}25, transparent, ${currentShoe.accentColor}15, transparent, ${currentShoe.accentColor}20)`,
+                background: 'conic-gradient(from 180deg, rgba(0,0,0,0.08), transparent, rgba(0,0,0,0.05), transparent, rgba(0,0,0,0.06))',
                 filter: 'blur(60px)',
               }}
               initial={{ opacity: 0, scale: 0.5 }}
               animate={{
-                opacity: [0.4, 0.7, 0.4],
+                opacity: [0.3, 0.5, 0.3],
                 scale: [0.95, 1.05, 0.95],
                 rotate: [0, 180, 360],
               }}
@@ -433,25 +427,24 @@ export const HeroSection = () => {
             <motion.div
               className="absolute w-[300px] h-[300px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] rounded-full"
               style={{
-                background: `radial-gradient(circle, ${currentShoe.accentColor}35 0%, ${currentShoe.accentColor}15 30%, transparent 60%)`,
+                background: 'radial-gradient(circle, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.04) 30%, transparent 60%)',
                 filter: 'blur(40px)',
               }}
               animate={{
                 scale: [1, 1.08, 1],
-                opacity: [0.5, 0.8, 0.5],
+                opacity: [0.4, 0.6, 0.4],
               }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             />
 
             {/* Rotating Decorative Circle */}
             <motion.div
-              className="absolute w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px] border border-white/5 rounded-full"
+              className="absolute w-[350px] h-[350px] md:w-[450px] md:h-[450px] lg:w-[550px] lg:h-[550px] border border-black/10 rounded-full"
               animate={{ rotate: 360 }}
               transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
             >
               <div
-                className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full"
-                style={{ backgroundColor: currentShoe.accentColor }}
+                className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-black"
               />
             </motion.div>
 
@@ -478,7 +471,7 @@ export const HeroSection = () => {
                   exit="exit"
                   className="absolute bottom-[-80px] left-1/2 -translate-x-1/2 w-[90%] h-[50px] md:h-[70px]"
                   style={{
-                    background: `radial-gradient(ellipse at center, ${currentShoe.accentColor}60 0%, ${currentShoe.accentColor}25 35%, transparent 70%)`,
+                    background: 'radial-gradient(ellipse at center, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.1) 35%, transparent 70%)',
                     filter: 'blur(25px)',
                     borderRadius: '50%',
                   }}
@@ -489,7 +482,7 @@ export const HeroSection = () => {
                   alt={currentShoe.name}
                   className="relative w-[380px] md:w-[500px] lg:w-[650px]"
                   style={{
-                    filter: `drop-shadow(0 50px 100px ${currentShoe.accentColor}60) drop-shadow(0 25px 50px rgba(0,0,0,0.5))`,
+                    filter: 'drop-shadow(0 50px 100px rgba(0,0,0,0.2)) drop-shadow(0 25px 50px rgba(0,0,0,0.15))',
                     transformStyle: 'preserve-3d',
                   }}
                   animate={{
@@ -511,7 +504,7 @@ export const HeroSection = () => {
             <div className="absolute bottom-0 left-1/2 -translate-x-1/2 lg:left-auto lg:right-0 lg:translate-x-0 lg:bottom-1/2 lg:translate-y-1/2 flex lg:flex-col gap-4">
               <motion.button
                 onClick={prevSlide}
-                className="p-3 md:p-4 rounded-full bg-white/5 border border-white/10 text-white backdrop-blur-sm hover:bg-white/10 transition-all"
+                className="p-3 md:p-4 rounded-full bg-white border-2 border-black text-black backdrop-blur-sm hover:bg-black hover:text-white transition-all"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -519,7 +512,7 @@ export const HeroSection = () => {
               </motion.button>
               <motion.button
                 onClick={nextSlide}
-                className="p-3 md:p-4 rounded-full bg-white/5 border border-white/10 text-white backdrop-blur-sm hover:bg-white/10 transition-all"
+                className="p-3 md:p-4 rounded-full bg-white border-2 border-black text-black backdrop-blur-sm hover:bg-black hover:text-white transition-all"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
               >
@@ -586,10 +579,10 @@ export const HeroSection = () => {
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-white/20 flex justify-center pt-2"
+          className="w-6 h-10 rounded-full border-2 border-black/30 flex justify-center pt-2"
         >
           <motion.div
-            className="w-1 h-2 bg-white/60 rounded-full"
+            className="w-1 h-2 bg-black/60 rounded-full"
             animate={{ opacity: [0.4, 1, 0.4], y: [0, 4, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
