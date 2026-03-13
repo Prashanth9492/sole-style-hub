@@ -92,7 +92,7 @@ export default function AdminLogin() {
             
             <div className="text-center">
               <Link to="/admin/setup" className="text-sm text-blue-600 hover:underline">
-                Need to create an admin account?
+                {/* Need to create an admin account? */}
               </Link>
             </div>
           </form>
