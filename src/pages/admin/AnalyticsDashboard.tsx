@@ -48,7 +48,7 @@ export default function AnalyticsDashboard() {
   const fetchAnalytics = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       const headers = { Authorization: `Bearer ${token}` };
 
       const [overviewRes, revenueRes, salesRes, categoryRes, productsRes] = await Promise.all([

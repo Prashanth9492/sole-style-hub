@@ -48,7 +48,7 @@ export default function MediaManagement() {
     try {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       
       const response = await fetch(`${API_URL}/cloudinary/media`, {
         headers: {
@@ -88,7 +88,7 @@ export default function MediaManagement() {
       formData.append('file', selectedFile);
 
       const token = localStorage.getItem('adminToken');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
       const response = await fetch(`${API_URL}/cloudinary/upload`, {
         method: 'POST',
@@ -120,7 +120,7 @@ export default function MediaManagement() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
       const response = await fetch(`${API_URL}/cloudinary/delete`, {
         method: 'DELETE',

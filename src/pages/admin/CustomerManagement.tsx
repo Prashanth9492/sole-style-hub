@@ -46,7 +46,7 @@ export default function CustomerManagement() {
         params.append('search', searchQuery);
       }
 
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       const response = await fetch(`${API_URL}/admin/customers?${params}`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -72,7 +72,7 @@ export default function CustomerManagement() {
   const handleViewDetails = async (customer: Customer) => {
     try {
       const token = localStorage.getItem('adminToken');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       const response = await fetch(`${API_URL}/admin/customers/${customer._id}`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -100,7 +100,7 @@ export default function CustomerManagement() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       const response = await fetch(`${API_URL}/admin/customers/${customer._id}/block`, {
         method: 'PATCH',
         headers: {

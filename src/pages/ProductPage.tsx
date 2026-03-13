@@ -38,8 +38,8 @@ const ProductPage = () => {
   const fetchReviews = async (productId: string) => {
     try {
       setReviewsLoading(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-      const response = await fetch(`${apiUrl}/reviews/product/${productId}`);
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+      const response = await fetch(`${API_URL}/reviews/product/${productId}`);
       if (response.ok) {
         const data = await response.json();
         console.log('===== REVIEWS DEBUG =====');
@@ -77,8 +77,8 @@ const ProductPage = () => {
   const fetchProduct = async (productId: string) => {
     try {
       setLoading(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-      const response = await fetch(`${apiUrl}/products/${productId}`);
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+      const response = await fetch(`${API_URL}/products/${productId}`);
       if (response.ok) {
         const data = await response.json();
         const mappedProduct = {
@@ -104,7 +104,7 @@ const ProductPage = () => {
         
         // Fetch related products with intelligent matching
         // Priority: 1) Same brand + subcategory, 2) Same brand, 3) Same subcategory, 4) Same category
-        const relatedResponse = await fetch(`${apiUrl}/products`);
+        const relatedResponse = await fetch(`${API_URL}/products`);
         if (relatedResponse.ok) {
           const allProducts = await relatedResponse.json();
           

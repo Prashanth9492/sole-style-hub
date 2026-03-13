@@ -38,9 +38,9 @@ const NewArrivalsPage = () => {
 
   const fetchNewArrivals = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       // Use dedicated new-arrivals endpoint or fallback to sorted products
-      const response = await fetch(`${apiUrl}/products?sort=newest&limit=20`);
+      const response = await fetch(`${API_URL}/products?sort=newest&limit=20`);
       
       if (response.ok) {
         const data = await response.json();

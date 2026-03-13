@@ -20,8 +20,8 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-      const response = await fetch(`${apiUrl}/admin/login`, {
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+      const response = await fetch(`${API_URL}/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

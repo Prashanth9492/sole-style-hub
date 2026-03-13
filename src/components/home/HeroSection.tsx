@@ -75,13 +75,13 @@ export const HeroSection = () => {
   const [direction, setDirection] = useState(0);
   const [loading, setLoading] = useState(true);
   
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
   // Fetch slides from API
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const response = await fetch(`${apiUrl}/hero-slides`);
+        const response = await fetch(`${API_URL}/hero-slides`);
         if (response.ok) {
           const data = await response.json();
           // Only use API data if we got results
@@ -100,7 +100,7 @@ export const HeroSection = () => {
     };
 
     fetchSlides();
-  }, [apiUrl]);
+  }, [API_URL]);
 
   const currentShoe = shoes[currentIndex] || shoes[0];
 

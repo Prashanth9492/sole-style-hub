@@ -66,8 +66,8 @@ const ProductForm = () => {
 
   const fetchProduct = async (productId: string) => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-      const response = await fetch(`${apiUrl}/products/${productId}`);
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+      const response = await fetch(`${API_URL}/products/${productId}`);
       if (response.ok) {
         const product = await response.json();
         setFormData({
@@ -155,10 +155,10 @@ const ProductForm = () => {
 
     try {
       // API call to save product
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       const endpoint = isEditMode
-        ? `${apiUrl}/products/${id}`
-        : `${apiUrl}/products`;
+        ? `${API_URL}/products/${id}`
+        : `${API_URL}/products`;
 
       const method = isEditMode ? 'PUT' : 'POST';
 

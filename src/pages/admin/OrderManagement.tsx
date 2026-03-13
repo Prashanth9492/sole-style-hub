@@ -73,7 +73,7 @@ export default function OrderManagement() {
         params.append('status', statusFilter);
       }
 
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       const response = await fetch(`${API_URL}/admin/orders?${params}`, {
         headers: { 
           'Authorization': `Bearer ${token}`,
@@ -121,7 +121,7 @@ export default function OrderManagement() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
       const response = await fetch(`${API_URL}/admin/orders/${selectedOrder._id}/status`, {
         method: 'PATCH',
         headers: {

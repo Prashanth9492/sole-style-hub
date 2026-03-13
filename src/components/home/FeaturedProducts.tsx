@@ -14,8 +14,8 @@ export const FeaturedProducts = () => {
 
   const fetchProducts = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-      const response = await fetch(`${apiUrl}/products?isBestseller=true`);
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
+      const response = await fetch(`${API_URL}/products?isBestseller=true`);
       if (response.ok) {
         const data = await response.json();
         // Map API data to expected format

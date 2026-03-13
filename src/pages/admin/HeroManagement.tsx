@@ -64,7 +64,7 @@ const HeroManagement = () => {
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001/api";
 
   useEffect(() => {
     fetchSlides();
@@ -72,7 +72,7 @@ const HeroManagement = () => {
 
   const fetchSlides = async () => {
     try {
-      const response = await fetch(`${apiUrl}/hero-slides`);
+      const response = await fetch(`${API_URL}/hero-slides`);
       if (response.ok) {
         const data = await response.json();
         setSlides(data);
@@ -95,7 +95,7 @@ const HeroManagement = () => {
       reader.onloadend = async () => {
         const base64 = reader.result as string;
         
-        const response = await fetch(`${apiUrl}/cloudinary/upload`, {
+        const response = await fetch(`${API_URL}/cloudinary/upload`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ image: base64, folder: 'hero_slides' }),
@@ -125,8 +125,8 @@ const HeroManagement = () => {
 
     try {
       const url = editingSlide?._id 
-        ? `${apiUrl}/hero-slides/${editingSlide._id}`
-        : `${apiUrl}/hero-slides`;
+        ? `${API_URL}/hero-slides/${editingSlide._id}`
+        : `${API_URL}/hero-slides`;
       
       const method = editingSlide?._id ? 'PUT' : 'POST';
 
@@ -158,7 +158,7 @@ const HeroManagement = () => {
     if (!confirm('Are you sure you want to delete this slide?')) return;
 
     try {
-      const response = await fetch(`${apiUrl}/hero-slides/${id}`, {
+      const response = await fetch(`${API_URL}/hero-slides/${id}`, {
         method: 'DELETE',
       });
 
@@ -176,7 +176,7 @@ const HeroManagement = () => {
 
   const toggleActive = async (slide: HeroSlide) => {
     try {
-      const response = await fetch(`${apiUrl}/hero-slides/${slide._id}`, {
+      const response = await fetch(`${API_URL}/hero-slides/${slide._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...slide, isActive: !slide.isActive }),
