@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, SlidersHorizontal, X } from 'lucide-react';
+import { Search, SlidersHorizontal, X, ChevronDown } from 'lucide-react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { ProductCard } from '@/components/product/ProductCard';
@@ -110,67 +110,68 @@ const SearchPage = () => {
       <Header />
       <main className="pt-8 pb-20">
         <div className="container-premium section-padding">
-          {/* Header */}
-          <div className="mb-8">
+          {/* Header + Filters inline */}
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+            <div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center gap-3 mb-2"
+              >
+                <Search className="w-6 h-6" />
+                <h1 className="text-3xl md:text-4xl font-bold">
+                  Search Results
+                </h1>
+              </motion.div>
+              {query && (
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1 }}
+                  className="text-muted-foreground text-base"
+                >
+                  Showing results for "<span className="font-semibold text-foreground">{query}</span>"
+                  {filteredProducts.length > 0 && (
+                    <span> - {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} found</span>
+                  )}
+                </motion.p>
+              )}
+            </div>
+
+            {/* Compact Filters - top right corner */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-3 mb-4"
+              transition={{ delay: 0.2 }}
+              className="flex items-center gap-2 flex-shrink-0 flex-wrap"
             >
-              <Search className="w-6 h-6" />
-              <h1 className="text-3xl md:text-4xl font-bold">
-                Search Results
-              </h1>
-            </motion.div>
-            {query && (
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-muted-foreground text-lg"
-              >
-                Showing results for "<span className="font-semibold text-foreground">{query}</span>"
-                {filteredProducts.length > 0 && (
-                  <span> - {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} found</span>
-                )}
-              </motion.p>
-            )}
-          </div>
-
-          {/* Filters */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mb-8 p-6 bg-secondary rounded-2xl"
-          >
-            <div className="flex items-center gap-2 mb-4">
-              <SlidersHorizontal className="w-5 h-5" />
-              <h2 className="font-semibold">Filters</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Category Filter */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Category</label>
+              <div className="relative">
                 <select
                   value={selectedCategory}
                   onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-4 py-2 bg-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-foreground"
+                  className="pl-3 pr-8 py-2 rounded-xl text-xs font-medium text-gray-700 appearance-none cursor-pointer focus:outline-none"
+                  style={{
+                    background: 'linear-gradient(145deg, #f5f7fc, #e2e4e9)',
+                    boxShadow: '3px 3px 8px rgba(0,0,0,0.07), -3px -3px 8px rgba(255,255,255,0.85)',
+                  }}
                 >
                   <option value="all">All Categories</option>
                   <option value="men">Men</option>
                   <option value="women">Women</option>
                   <option value="kids">Kids</option>
                 </select>
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
               </div>
 
-              {/* Price Range Filter */}
-              <div>
-                <label className="block text-sm font-medium mb-2">Price Range</label>
+              <div className="relative">
                 <select
                   value={priceRange}
                   onChange={(e) => setPriceRange(e.target.value)}
-                  className="w-full px-4 py-2 bg-background rounded-lg border border-border focus:outline-none focus:ring-2 focus:ring-foreground"
+                  className="pl-3 pr-8 py-2 rounded-xl text-xs font-medium text-gray-700 appearance-none cursor-pointer focus:outline-none"
+                  style={{
+                    background: 'linear-gradient(145deg, #f5f7fc, #e2e4e9)',
+                    boxShadow: '3px 3px 8px rgba(0,0,0,0.07), -3px -3px 8px rgba(255,255,255,0.85)',
+                  }}
                 >
                   <option value="all">All Prices</option>
                   <option value="under-50">Under ₹4,000</option>
@@ -178,20 +179,23 @@ const SearchPage = () => {
                   <option value="100-150">₹8,000 - ₹12,000</option>
                   <option value="over-150">Over ₹12,000</option>
                 </select>
+                <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
               </div>
 
-              {/* Clear Filters */}
-              <div className="flex items-end">
+              {(selectedCategory !== 'all' || priceRange !== 'all') && (
                 <button
                   onClick={clearFilters}
-                  className="w-full px-4 py-2 bg-background hover:bg-background/80 rounded-lg border border-border transition-colors flex items-center justify-center gap-2"
+                  className="p-2 rounded-xl text-gray-500 hover:text-gray-900 transition-all active:scale-90"
+                  style={{
+                    background: 'linear-gradient(145deg, #f5f7fc, #e2e4e9)',
+                    boxShadow: '3px 3px 8px rgba(0,0,0,0.07), -3px -3px 8px rgba(255,255,255,0.85)',
+                  }}
                 >
                   <X className="w-4 h-4" />
-                  Clear Filters
                 </button>
-              </div>
-            </div>
-          </motion.div>
+              )}
+            </motion.div>
+          </div>
 
           {/* Results */}
           {loading ? (

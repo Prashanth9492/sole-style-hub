@@ -116,7 +116,7 @@ export const PromoSection = () => {
 
 
       {/* Features */}
-      <section className="py-16 border-y border-border">
+      <section className="py-16 pb-20 sm:pb-16 border-y border-border">
         <div className="container-premium section-padding">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {features.map((feature, index) => (

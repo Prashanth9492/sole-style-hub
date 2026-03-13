@@ -28,10 +28,11 @@ import {
   Camera,
   Save,
   X,
-  Truck
+  Truck,
+  LogOut
 } from 'lucide-react';
 import { format } from 'date-fns';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 
 interface Address {
   _id: string;
@@ -66,8 +67,9 @@ interface Order {
 }
 
 const AccountSettings: React.FC = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tabParam = searchParams.get('tab') || 'profile';
   
@@ -428,9 +430,27 @@ const AccountSettings: React.FC = () => {
     return (
       <>
         <Header />
-        <div className="container mx-auto px-4 py-16 text-center">
-          <h2 className="text-2xl font-bold mb-4">Please Login</h2>
-          <p className="text-gray-600">You need to be logged in to view your account settings.</p>
+        <div className="container mx-auto px-4 py-16 text-center min-h-[60vh] flex items-center justify-center">
+          <div className="max-w-md mx-auto">
+            <div className="mb-6">
+              <User className="w-16 h-16 mx-auto text-gray-400 mb-4" />
+              <h2 className="text-2xl font-bold mb-3">Please Login</h2>
+              <p className="text-gray-600 mb-8">You need to be logged in to view your account settings.</p>
+            </div>
+            <div className="space-y-3">
+              <Link to="/signin">
+                <Button className="w-full bg-black hover:bg-gray-800 text-white py-6 text-base font-semibold rounded-full">
+                  Sign In to Your Account
+                </Button>
+              </Link>
+              <p className="text-sm text-gray-500">
+                Don't have an account?{' '}
+                <Link to="/signup" className="text-black font-semibold hover:underline">
+                  Sign Up
+                </Link>
+              </p>
+            </div>
+          </div>
         </div>
         <Footer />
       </>
@@ -441,7 +461,24 @@ const AccountSettings: React.FC = () => {
     <>
       <Header />
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <h1 className="text-3xl font-bold mb-8">Account Settings</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold">Account Settings</h1>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              try {
+                await logout();
+                navigate('/');
+              } catch (error) {
+                console.error('Logout failed:', error);
+              }
+            }}
+            className="gap-2 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </Button>
+        </div>
 
         <Tabs defaultValue={tabParam} className="space-y-6">
           <TabsList className="grid w-full grid-cols-3">

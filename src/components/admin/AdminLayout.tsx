@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link, useLocation, Outlet } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useLocation, Outlet, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   LayoutDashboard,
@@ -32,6 +32,35 @@ const adminNavLinks = [
 export const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // Auth guard: redirect to login if no valid admin token
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      navigate('/admin/login', { replace: true });
+      return;
+    }
+    // Check if token is expired by decoding payload
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      if (payload.exp * 1000 < Date.now()) {
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+        navigate('/admin/login', { replace: true });
+      }
+    } catch {
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUser');
+      navigate('/admin/login', { replace: true });
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    navigate('/admin/login', { replace: true });
+  };
 
   const isActive = (path: string) => {
     if (path === '/admin') {
@@ -105,6 +134,7 @@ export const AdminLayout = () => {
             <Button
               variant="ghost"
               className="w-full justify-start gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+              onClick={handleLogout}
             >
               <LogOut className="w-4 h-4" />
               Logout
@@ -177,6 +207,7 @@ export const AdminLayout = () => {
             <Button
               variant="ghost"
               className="w-full justify-start gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+              onClick={handleLogout}
             >
               <LogOut className="w-4 h-4" />
               Logout

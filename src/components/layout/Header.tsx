@@ -7,7 +7,6 @@ import {
   ShoppingBag, 
   Heart, 
   User, 
-  Menu, 
   X, 
   ChevronDown,
   ChevronRight,
@@ -64,6 +63,7 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [searchInput, setSearchInput] = useState('');
+  const [shoeTypeGender, setShoeTypeGender] = useState<'men' | 'women' | 'kids'>('men');
   const { totalItems } = useCart();
   const { wishlistItems } = useWishlist();
   const { isSearchOpen, setIsSearchOpen, setSearchQuery } = useSearch();
@@ -267,31 +267,39 @@ export const Header = () => {
               </AnimatePresence>
             </div>
 
-            {/* Actions - Enhanced Icons with Gradient Backgrounds */}
-            <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 flex-shrink-0">
+            {/* Actions - Neumorphic Water Drop B&W */}
+            <div className="flex items-center gap-2 sm:gap-2.5 lg:gap-3 flex-shrink-0">
               {/* Search Button */}
               <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="relative p-2 md:p-2.5 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 hover:from-blue-200 hover:to-purple-200 dark:hover:from-blue-900/50 dark:hover:to-purple-900/50 transition-all duration-300 hover:shadow-lg group"
+                className="relative p-2.5 md:p-3 rounded-full transition-all duration-300 group"
+                style={{
+                  background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+                  boxShadow: '5px 5px 12px rgba(0,0,0,0.08), -5px -5px 12px rgba(255,255,255,0.9)',
+                }}
               >
-                <Search className="w-4 h-4 md:w-5 md:h-5 relative z-10 text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors" />
+                <Search className="w-4 h-4 md:w-[18px] md:h-[18px] relative z-10 text-gray-700 group-hover:text-black transition-colors" />
               </motion.button>
 
               {/* Wishlist Button */}
               <Link to="/wishlist" className="hidden sm:block">
                 <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="relative p-2 md:p-2.5 rounded-full bg-gradient-to-br from-pink-100 to-red-100 dark:from-pink-900/30 dark:to-red-900/30 hover:from-pink-200 hover:to-red-200 dark:hover:from-pink-900/50 dark:hover:to-red-900/50 transition-all duration-300 hover:shadow-lg group overflow-visible"
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="relative p-2.5 md:p-3 rounded-full transition-all duration-300 group overflow-visible"
+                  style={{
+                    background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+                    boxShadow: '5px 5px 12px rgba(0,0,0,0.08), -5px -5px 12px rgba(255,255,255,0.9)',
+                  }}
                 >
-                  <Heart className="w-4 h-4 md:w-5 md:h-5 relative z-10 text-pink-600 dark:text-pink-400 group-hover:text-pink-700 dark:group-hover:text-pink-300 group-hover:fill-pink-200 transition-all" />
+                  <Heart className="w-4 h-4 md:w-[18px] md:h-[18px] relative z-10 text-gray-700 group-hover:text-black transition-all" />
                   {wishlistItems.length > 0 && (
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="absolute -top-2 -right-2 w-6 h-6 md:w-7 md:h-7 bg-pink-500 text-white text-xs md:text-sm font-extrabold rounded-full flex items-center justify-center shadow-xl ring-2 ring-white dark:ring-gray-900 z-20"
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 md:w-[22px] md:h-[22px] bg-gray-900 text-white text-[10px] md:text-xs font-bold rounded-full flex items-center justify-center ring-2 ring-white z-20"
                     >
                       {wishlistItems.length}
                     </motion.span>
@@ -302,16 +310,20 @@ export const Header = () => {
               {/* Cart Button */}
               <Link to="/cart">
                 <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  className="relative p-2 md:p-2.5 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30 hover:from-green-200 hover:to-emerald-200 dark:hover:from-green-900/50 dark:hover:to-emerald-900/50 transition-all duration-300 hover:shadow-lg group overflow-visible"
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="relative p-2.5 md:p-3 rounded-full transition-all duration-300 group overflow-visible"
+                  style={{
+                    background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+                    boxShadow: '5px 5px 12px rgba(0,0,0,0.08), -5px -5px 12px rgba(255,255,255,0.9)',
+                  }}
                 >
-                  <ShoppingBag className="w-4 h-4 md:w-5 md:h-5 relative z-10 text-green-600 dark:text-green-400 group-hover:text-green-700 dark:group-hover:text-green-300 transition-colors" />
+                  <ShoppingBag className="w-4 h-4 md:w-[18px] md:h-[18px] relative z-10 text-gray-700 group-hover:text-black transition-colors" />
                   {totalItems > 0 && (
                     <motion.span
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      className="absolute -top-2 -right-2 w-6 h-6 md:w-7 md:h-7 bg-red-500 text-white text-xs md:text-sm font-extrabold rounded-full flex items-center justify-center shadow-xl ring-2 ring-white dark:ring-gray-900 z-20"
+                      className="absolute -top-1.5 -right-1.5 w-5 h-5 md:w-[22px] md:h-[22px] bg-gray-900 text-white text-[10px] md:text-xs font-bold rounded-full flex items-center justify-center ring-2 ring-white z-20"
                     >
                       {totalItems}
                     </motion.span>
@@ -319,20 +331,24 @@ export const Header = () => {
                 </motion.div>
               </Link>
               
-              {/* User Menu - Enhanced */}
+              {/* User Menu */}
               {!loading && (
                 user ? (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <motion.button 
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-1 rounded-full transition-all duration-300 hidden sm:flex hover:shadow-lg relative group"
+                        whileHover={{ scale: 1.08 }}
+                        whileTap={{ scale: 0.92 }}
+                        className="rounded-full transition-all duration-300 hidden sm:flex relative group overflow-visible"
+                        style={{
+                          padding: '3px',
+                          background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+                          boxShadow: '5px 5px 12px rgba(0,0,0,0.08), -5px -5px 12px rgba(255,255,255,0.9)',
+                        }}
                       >
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-full group-hover:from-purple-500/30 group-hover:to-blue-500/30 transition-all" />
-                        <Avatar className="h-8 w-8 md:h-9 md:w-9 ring-2 ring-purple-500/20 group-hover:ring-purple-500/50 transition-all relative z-10">
+                        <Avatar className="h-8 w-8 md:h-9 md:w-9 relative z-10">
                           <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
-                          <AvatarFallback className="text-xs bg-gradient-to-br from-purple-500 to-blue-500 text-white font-bold">
+                          <AvatarFallback className="text-xs bg-gray-900 text-white font-bold">
                             {getInitials(user.displayName || user.email)}
                           </AvatarFallback>
                         </Avatar>
@@ -361,296 +377,247 @@ export const Header = () => {
                   </DropdownMenu>
                 ) : (
                   <Link to="/signin" className="hidden sm:flex">
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button variant="ghost" size="sm" className="gap-2 bg-gradient-to-r from-purple-500/10 to-blue-500/10 hover:from-purple-500/20 hover:to-blue-500/20 border border-purple-500/20 hover:border-purple-500/40 transition-all">
-                        <User className="w-4 h-4" />
-                        Sign In
-                      </Button>
+                    <motion.div
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.92 }}
+                      className="p-2.5 md:p-3 rounded-full transition-all duration-300"
+                      style={{
+                        background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+                        boxShadow: '5px 5px 12px rgba(0,0,0,0.08), -5px -5px 12px rgba(255,255,255,0.9)',
+                      }}
+                    >
+                      <User className="w-4 h-4 md:w-[18px] md:h-[18px] text-gray-700" />
                     </motion.div>
                   </Link>
                 )
               )}
               
-              {/* Mobile Menu Button - Enhanced */}
+              {/* Mobile Menu Button - 2x2 Grid Style */}
               <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="p-2 md:p-2.5 rounded-full transition-all duration-300 lg:hidden hover:shadow-lg group overflow-hidden relative"
+                whileHover={{ scale: 1.08 }}
+                whileTap={{ scale: 0.92 }}
+                className="p-2.5 md:p-3 rounded-full transition-all duration-300 lg:hidden"
                 onClick={() => setIsMobileMenuOpen(true)}
+                style={{
+                  background: 'linear-gradient(145deg, #ffffff, #e6e6e6)',
+                  boxShadow: '5px 5px 12px rgba(0,0,0,0.08), -5px -5px 12px rgba(255,255,255,0.9)',
+                }}
               >
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-red-500/10 group-hover:from-orange-500/20 group-hover:to-red-500/20 transition-all" />
-                <Menu className="w-5 h-5 md:w-6 md:h-6 relative z-10 text-foreground group-hover:text-orange-600 transition-colors" />
+                <div className="w-5 h-5 md:w-[22px] md:h-[22px] grid grid-cols-2 gap-[3px]">
+                  <span className="rounded-[3px] bg-gray-700" />
+                  <span className="rounded-[3px] bg-gray-700" />
+                  <span className="rounded-[3px] bg-gray-700" />
+                  <span className="rounded-[3px] bg-gray-700" />
+                </div>
               </motion.button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu - Enhanced */}
+      {/* Mobile Menu - Visuo Neumorphic Style */}
       <AnimatePresence>
         {isMobileMenuOpen && (
           <>
-            {/* Enhanced Backdrop with gradient */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-gradient-to-br from-purple-900/30 via-blue-900/30 to-pink-900/30 backdrop-blur-md z-50 lg:hidden"
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-50 lg:hidden"
               onClick={() => setIsMobileMenuOpen(false)}
             />
-            {/* Enhanced Menu Panel */}
             <motion.div
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 bottom-0 w-80 bg-gradient-to-br from-white via-purple-50/30 to-blue-50/30 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 z-50 shadow-2xl lg:hidden flex flex-col border-l-2 border-purple-500/20"
+              transition={{ type: 'spring', damping: 28, stiffness: 220 }}
+              className="fixed top-0 right-0 bottom-0 w-[85vw] max-w-[340px] z-50 lg:hidden flex flex-col overflow-hidden"
+              style={{ background: '#eef0f5' }}
             >
-              {/* Header - Enhanced with gradient */}
-              <div className="flex items-center justify-between p-6 pb-4 flex-shrink-0 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-pink-500/5 border-b border-border/30">
-                <motion.div
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  className="flex items-center gap-3"
-                >
-                  <div className="p-2 rounded-xl bg-gradient-to-br from-purple-500/20 to-blue-500/20">
-                    <Menu className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <span className="font-bold text-lg bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                    Menu
-                  </span>
-                </motion.div>
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 pt-5 pb-3 flex-shrink-0">
+                <span className="text-lg font-bold text-gray-800 tracking-tight">Menu</span>
                 <motion.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-2 rounded-xl hover:bg-red-500/10 transition-all duration-300 group"
+                  className="p-2 rounded-xl"
+                  style={{
+                    background: 'linear-gradient(145deg, #f5f7fc, #e2e4e9)',
+                    boxShadow: '4px 4px 10px rgba(0,0,0,0.08), -4px -4px 10px rgba(255,255,255,0.9)',
+                  }}
                 >
-                  <X className="w-6 h-6 text-foreground group-hover:text-red-600 transition-colors" />
+                  <X className="w-5 h-5 text-gray-600" />
                 </motion.button>
               </div>
 
-              {/* Mobile Search - Enhanced */}
-              <div className="px-6 py-4 flex-shrink-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-gray-800/50 dark:to-gray-900/50">
+              {/* Search */}
+              <div className="px-5 pb-4 flex-shrink-0">
                 <form onSubmit={handleSearch} className="w-full">
-                  <motion.div 
-                    whileHover={{ scale: 1.02 }}
-                    className="relative group"
+                  <div
+                    className="relative rounded-2xl"
+                    style={{
+                      background: 'linear-gradient(145deg, #f5f7fc, #e2e4e9)',
+                      boxShadow: 'inset 3px 3px 6px rgba(0,0,0,0.06), inset -3px -3px 6px rgba(255,255,255,0.8)',
+                    }}
                   >
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-gradient-to-br from-blue-500/20 to-purple-500/20 group-hover:from-blue-500/30 group-hover:to-purple-500/30 transition-all">
-                      <Search className="w-4 h-4 text-blue-600" />
-                    </div>
+                    <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
                       type="text"
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.target.value)}
                       placeholder="Search for shoes..."
-                      className="w-full pl-12 pr-4 py-3 bg-white dark:bg-gray-800 border-2 border-border/50 rounded-2xl text-sm focus:outline-none focus:border-purple-500/50 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 shadow-sm"
+                      className="w-full pl-10 pr-4 py-3 bg-transparent rounded-2xl text-sm text-gray-700 placeholder-gray-400 focus:outline-none"
                     />
-                  </motion.div>
+                  </div>
                 </form>
               </div>
 
-              {/* Scrollable Navigation - Enhanced with icons and gradients */}
-              <div className="flex-1 overflow-y-auto bg-gradient-to-b from-transparent via-purple-50/20 to-blue-50/20 dark:via-gray-900/20 dark:to-gray-800/20">
-                <nav className="flex flex-col py-2">
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto px-5 pb-6">
+                {/* Browse Categories */}
+                <h3 className="text-base font-bold text-gray-800 mb-4 tracking-tight">Browse Categories</h3>
+                <div className="grid grid-cols-2 gap-3 mb-6">
                   {navLinks.map((link, index) => {
                     const IconComponent = link.icon;
-                    const gradients = [
-                      'from-blue-500/10 to-cyan-500/10',
-                      'from-purple-500/10 to-pink-500/10',
-                      'from-green-500/10 to-emerald-500/10',
-                      'from-orange-500/10 to-red-500/10',
-                      'from-yellow-500/10 to-amber-500/10',
-                    ];
-                    const iconColors = [
-                      'text-blue-600',
-                      'text-purple-600',
-                      'text-green-600',
-                      'text-orange-600',
-                      'text-yellow-600',
-                    ];
-                    
+                    const iconBgs = ['bg-blue-100', 'bg-purple-100', 'bg-pink-100', 'bg-violet-100', 'bg-orange-100'];
+                    const iconColors = ['text-blue-500', 'text-purple-500', 'text-pink-500', 'text-violet-500', 'text-orange-500'];
+
                     return (
                       <motion.div
                         key={link.name}
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        className="px-4 mb-2"
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.06 }}
                       >
                         <Link
                           to={link.href}
-                          className="group"
+                          className="flex flex-col items-center justify-center py-5 px-3 rounded-2xl transition-all active:scale-95"
+                          style={{
+                            background: 'linear-gradient(145deg, #f5f7fc, #e2e4e9)',
+                            boxShadow: '6px 6px 14px rgba(0,0,0,0.07), -6px -6px 14px rgba(255,255,255,0.85)',
+                          }}
                         >
-                          <motion.div
-                            whileHover={{ x: 5, scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={`flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r ${gradients[index % gradients.length]} hover:shadow-lg transition-all duration-300 border border-transparent hover:border-current`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div className={`p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 shadow-sm group-hover:shadow-md transition-all`}>
-                                <IconComponent className={`w-5 h-5 ${iconColors[index % iconColors.length]}`} />
-                              </div>
-                              <span className="text-base font-semibold text-foreground group-hover:text-purple-600 transition-colors">
-                                {link.name}
-                              </span>
-                            </div>
-                            <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-purple-600 group-hover:translate-x-1 transition-all" />
-                          </motion.div>
+                          <div className={`w-12 h-12 rounded-full ${iconBgs[index % iconBgs.length]} flex items-center justify-center mb-2.5`}>
+                            <IconComponent className={`w-5 h-5 ${iconColors[index % iconColors.length]}`} />
+                          </div>
+                          <span className="text-[13px] font-semibold text-gray-700">{link.name}</span>
                         </Link>
-                        
-                        {/* Subcategories - Enhanced */}
-                        {link.hasDropdown && (
-                          <motion.div 
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: 'auto' }}
-                            transition={{ delay: index * 0.05 + 0.1 }}
-                            className="mt-2 ml-4 space-y-1 bg-gradient-to-br from-white/50 to-gray-50/50 dark:from-gray-800/50 dark:to-gray-900/50 rounded-2xl p-2 border border-border/30"
-                          >
-                            {footwearTypes
-                              .filter(type => {
-                                if (link.name === 'Women' && type.slug === 'formal') return false;
-                                if (link.name === 'Kids' && (type.slug === 'formal' || type.slug === 'casual')) return false;
-                                return true;
-                              })
-                              .map((type, typeIndex) => (
-                              <Link
-                                key={type.slug}
-                                to={`/category/${link.name.toLowerCase()}/${type.slug}`}
-                                className="group"
-                              >
-                                <motion.div
-                                  initial={{ opacity: 0, x: 10 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ delay: index * 0.05 + typeIndex * 0.03 }}
-                                  whileHover={{ x: 8, scale: 1.02 }}
-                                  whileTap={{ scale: 0.98 }}
-                                  className="flex items-center justify-between px-4 py-3 rounded-xl hover:bg-white/80 dark:hover:bg-gray-800/80 transition-all duration-200 hover:shadow-md"
-                                >
-                                  <div className="flex items-center gap-3">
-                                    <span className="text-xl group-hover:scale-125 transition-transform duration-300">
-                                      {type.icon}
-                                    </span>
-                                    <span className="text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">
-                                      {type.name}
-                                    </span>
-                                  </div>
-                                  <ChevronRight className="w-4 h-4 text-muted-foreground/50 group-hover:text-purple-500 group-hover:translate-x-1 transition-all" />
-                                </motion.div>
-                              </Link>
-                            ))}
-                          </motion.div>
-                        )}
                       </motion.div>
                     );
                   })}
-                </nav>
-              </div>
-
-              {/* Bottom Section - Enhanced User Profile & Quick Navigation */}
-              <div className="flex-shrink-0 border-t border-border/50 bg-gradient-to-r from-purple-500/5 via-blue-500/5 to-pink-500/5 backdrop-blur-sm">
-                {user && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="flex items-center gap-3 px-6 py-4 border-b border-border/30 bg-gradient-to-r from-purple-50/50 to-blue-50/50 dark:from-gray-800/50 dark:to-gray-900/50"
-                  >
-                    <motion.div
-                      whileHover={{ scale: 1.1, rotate: 5 }}
-                      className="relative"
-                    >
-                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 to-blue-500/30 rounded-full blur-md" />
-                      <Avatar className="h-12 w-12 flex-shrink-0 ring-2 ring-purple-500/30 relative z-10">
-                        <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
-                        <AvatarFallback className="text-sm bg-gradient-to-br from-purple-600 to-blue-600 text-white font-semibold">
-                          {getInitials(user.displayName || user.email)}
-                        </AvatarFallback>
-                      </Avatar>
-                    </motion.div>
-                    <div className="flex flex-col min-w-0">
-                      <span className="text-sm font-bold truncate bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                        {user.displayName || 'User'}
-                      </span>
-                      <span className="text-xs text-muted-foreground truncate">{user.email}</span>
-                    </div>
-                  </motion.div>
-                )}
-                
-                {/* Navigation Icons - Enhanced Mobile */}
-                <div className="flex items-center justify-around px-4 py-6">
-                  <Link to="/wishlist" className="flex flex-col items-center gap-2 group">
-                    <motion.div 
-                      whileHover={{ scale: 1.15, rotate: 5 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-3 rounded-2xl bg-gradient-to-br from-pink-500/20 to-red-500/20 group-hover:from-pink-500/30 group-hover:to-red-500/30 transition-all duration-300 shadow-lg group-hover:shadow-xl"
-                    >
-                      <Heart className="w-6 h-6 text-pink-600 group-hover:fill-pink-500 transition-all" />
-                    </motion.div>
-                    <span className="text-[10px] font-medium text-muted-foreground group-hover:text-pink-600 transition-colors">Wishlist</span>
-                  </Link>
-                  <Link to="/account" className="flex flex-col items-center gap-2 group">
-                    <motion.div 
-                      whileHover={{ scale: 1.15, rotate: -5 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-3 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 group-hover:from-blue-500/30 group-hover:to-cyan-500/30 transition-all duration-300 shadow-lg group-hover:shadow-xl"
-                    >
-                      <User className="w-6 h-6 text-blue-600 transition-transform" />
-                    </motion.div>
-                    <span className="text-[10px] font-medium text-muted-foreground group-hover:text-blue-600 transition-colors">Account</span>
-                  </Link>
-                  <Link to="/account?tab=orders" className="flex flex-col items-center gap-2 group">
-                    <motion.div 
-                      whileHover={{ scale: 1.15, rotate: 5 }}
-                      whileTap={{ scale: 0.9 }}
-                      className="p-3 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 group-hover:from-green-500/30 group-hover:to-emerald-500/30 transition-all duration-300 shadow-lg group-hover:shadow-xl"
-                    >
-                      <Package className="w-6 h-6 text-green-600 transition-transform" />
-                    </motion.div>
-                    <span className="text-[10px] font-medium text-muted-foreground group-hover:text-green-600 transition-colors">Orders</span>
-                  </Link>
-                  {user ? (
-                    <>
-                      <Link to="/account" className="flex flex-col items-center gap-2 group">
-                        <motion.div 
-                          whileHover={{ scale: 1.15 }}
-                          whileTap={{ scale: 0.9 }}
-                          className="relative"
-                        >
-                          <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 to-blue-500/30 rounded-full blur-lg group-hover:blur-xl transition-all" />
-                          <Avatar className="h-10 w-10 ring-2 ring-purple-500/40 group-hover:ring-purple-500/60 transition-all relative z-10">
-                            <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
-                            <AvatarFallback className="text-xs bg-gradient-to-br from-purple-600 to-blue-600 text-white font-bold">
-                              {getInitials(user.displayName || user.email)}
-                            </AvatarFallback>
-                          </Avatar>
-                        </motion.div>
-                        <span className="text-[10px] font-medium text-muted-foreground group-hover:text-purple-600 transition-colors">Profile</span>
-                      </Link>
-                      <button onClick={handleLogout} className="flex flex-col items-center gap-2 group">
-                        <motion.div 
-                          whileHover={{ scale: 1.15, rotate: -10 }}
-                          whileTap={{ scale: 0.9 }}
-                          className="p-3 rounded-2xl bg-gradient-to-br from-red-500/20 to-orange-500/20 group-hover:from-red-500/30 group-hover:to-orange-500/30 transition-all duration-300 shadow-lg group-hover:shadow-xl"
-                        >
-                          <LogOut className="w-6 h-6 text-red-600 transition-transform" />
-                        </motion.div>
-                        <span className="text-[10px] font-medium text-muted-foreground group-hover:text-red-600 transition-colors">Logout</span>
-                      </button>
-                    </>
-                  ) : (
-                    <Link to="/signin" className="flex flex-col items-center gap-2 group">
-                      <motion.div 
-                        whileHover={{ scale: 1.15 }}
-                        whileTap={{ scale: 0.9 }}
-                        className="p-3 rounded-2xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 group-hover:from-purple-500/30 group-hover:to-indigo-500/30 transition-all duration-300 shadow-lg group-hover:shadow-xl"
-                      >
-                        <User className="w-6 h-6 text-purple-600 transition-transform" />
-                      </motion.div>
-                      <span className="text-[10px] font-medium text-muted-foreground group-hover:text-purple-600 transition-colors">Sign In</span>
-                    </Link>
-                  )}
                 </div>
+
+                {/* Shoe Types */}
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-base font-bold text-gray-800 tracking-tight">Shoe Types</h3>
+                  <div className="flex gap-1.5 p-1 rounded-xl" style={{ background: 'linear-gradient(145deg, #e2e4e9, #f5f7fc)', boxShadow: 'inset 2px 2px 4px rgba(0,0,0,0.06), inset -2px -2px 4px rgba(255,255,255,0.7)' }}>
+                    {(['men', 'women', 'kids'] as const).map((g) => (
+                      <button
+                        key={g}
+                        onClick={() => setShoeTypeGender(g)}
+                        className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all ${
+                          shoeTypeGender === g
+                            ? 'text-white'
+                            : 'text-gray-500'
+                        }`}
+                        style={shoeTypeGender === g ? {
+                          background: 'linear-gradient(145deg, #3b3b3b, #1a1a1a)',
+                          boxShadow: '3px 3px 8px rgba(0,0,0,0.15), -2px -2px 6px rgba(255,255,255,0.1)',
+                        } : {}}
+                      >
+                        {g.charAt(0).toUpperCase() + g.slice(1)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  {footwearTypes
+                    .filter(type => {
+                      if (shoeTypeGender === 'women' && type.slug === 'formal') return false;
+                      if (shoeTypeGender === 'kids' && (type.slug === 'formal' || type.slug === 'casual')) return false;
+                      return true;
+                    })
+                    .map((type, index) => (
+                    <motion.div
+                      key={type.slug}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.3 + index * 0.04 }}
+                    >
+                      <Link
+                        to={`/category/${shoeTypeGender}/${type.slug}`}
+                        className="flex flex-col items-center justify-center py-4 px-3 rounded-2xl transition-all active:scale-95"
+                        style={{
+                          background: 'linear-gradient(145deg, #f5f7fc, #e2e4e9)',
+                          boxShadow: '6px 6px 14px rgba(0,0,0,0.07), -6px -6px 14px rgba(255,255,255,0.85)',
+                        }}
+                      >
+                        <span className="text-2xl mb-2">{type.icon}</span>
+                        <span className="text-[12px] font-medium text-gray-600 text-center leading-tight">{type.name}</span>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Quick Links */}
+                <h3 className="text-base font-bold text-gray-800 mb-4 tracking-tight">Quick Links</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {[
+                    { icon: Heart, label: 'Wishlist', href: '/wishlist', bg: 'bg-pink-100', color: 'text-pink-500' },
+                    { icon: ShoppingBag, label: 'Cart', href: '/cart', bg: 'bg-amber-100', color: 'text-amber-500' },
+                    { icon: Package, label: 'Orders', href: '/account?tab=orders', bg: 'bg-green-100', color: 'text-green-500' },
+                    { icon: User, label: user ? 'Account' : 'Sign In', href: user ? '/account' : '/signin', bg: 'bg-blue-100', color: 'text-blue-500' },
+                  ].map((item, index) => (
+                    <motion.div
+                      key={item.label}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 + index * 0.05 }}
+                    >
+                      <Link
+                        to={item.href}
+                        className="flex flex-col items-center justify-center py-5 px-3 rounded-2xl transition-all active:scale-95 relative"
+                        style={{
+                          background: 'linear-gradient(145deg, #f5f7fc, #e2e4e9)',
+                          boxShadow: '6px 6px 14px rgba(0,0,0,0.07), -6px -6px 14px rgba(255,255,255,0.85)',
+                        }}
+                      >
+                        <div className={`w-12 h-12 rounded-full ${item.bg} flex items-center justify-center mb-2.5`}>
+                          <item.icon className={`w-5 h-5 ${item.color}`} />
+                        </div>
+                        <span className="text-[13px] font-semibold text-gray-700">{item.label}</span>
+                        {item.label === 'Cart' && totalItems > 0 && (
+                          <span className="absolute top-2 right-3 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                            {totalItems}
+                          </span>
+                        )}
+                        {item.label === 'Wishlist' && wishlistItems.length > 0 && (
+                          <span className="absolute top-2 right-3 w-5 h-5 bg-pink-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                            {wishlistItems.length}
+                          </span>
+                        )}
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Logout button */}
+                {user && (
+                  <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7 }}
+                    onClick={handleLogout}
+                    className="w-full mt-5 flex items-center justify-center gap-2 py-3.5 rounded-2xl text-red-500 text-sm font-semibold active:scale-95 transition-all"
+                    style={{
+                      background: 'linear-gradient(145deg, #f5f7fc, #e2e4e9)',
+                      boxShadow: '6px 6px 14px rgba(0,0,0,0.07), -6px -6px 14px rgba(255,255,255,0.85)',
+                    }}
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sign Out
+                  </motion.button>
+                )}
               </div>
             </motion.div>
           </>

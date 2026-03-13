@@ -124,16 +124,41 @@ export const ProductCard = ({ product, index = 0 }: ProductCardProps) => {
               </button>
             </div>
 
-            {/* Add to Cart Button */}
-            <div className="absolute bottom-4 left-4 right-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 translate-y-0 md:translate-y-4 md:group-hover:translate-y-0 transition-all duration-300">
+            {/* Mobile Quick Add - small pill inside image, centered */}
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 md:hidden z-10">
               <button
                 onClick={handleQuickAdd}
-                className="w-full py-3 bg-background/95 backdrop-blur-sm rounded-full font-medium text-sm flex items-center justify-center gap-2 hover:bg-background transition-colors shadow-lg"
+                className="flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-medium bg-white/90 backdrop-blur-sm shadow-md active:scale-95 transition-transform text-gray-700 whitespace-nowrap"
               >
-                <ShoppingBag className="w-4 h-4" />
+                <ShoppingBag className="w-3 h-3 flex-shrink-0" />
                 Quick Add
               </button>
             </div>
+
+          </div>
+
+          {/* Desktop Add to Cart Button - water drop style, hover-only */}
+          <div className="hidden md:block px-4 pb-2 -mt-6 relative z-10 opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 ease-out">
+            <button
+              onClick={handleQuickAdd}
+              className="w-full py-3.5 rounded-[2rem] font-semibold text-sm flex items-center justify-center gap-2 transition-all duration-300 active:scale-95 text-gray-600 dark:text-gray-300"
+              style={{
+                background: 'linear-gradient(145deg, #e6e6e6, #ffffff)',
+                boxShadow: '6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff, inset 0 1px 0 rgba(255,255,255,0.8)',
+                border: 'none',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(145deg, #d9d9d9, #f0f0f0)';
+                e.currentTarget.style.boxShadow = '4px 4px 8px #c8c8c8, -4px -4px 8px #ffffff, inset 0 1px 0 rgba(255,255,255,0.9)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(145deg, #e6e6e6, #ffffff)';
+                e.currentTarget.style.boxShadow = '6px 6px 12px #d1d1d1, -6px -6px 12px #ffffff, inset 0 1px 0 rgba(255,255,255,0.8)';
+              }}
+            >
+              <ShoppingBag className="w-4 h-4" />
+              Quick Add
+            </button>
           </div>
 
           {/* Product Info */}

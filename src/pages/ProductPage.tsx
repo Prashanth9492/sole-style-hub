@@ -590,57 +590,56 @@ const ProductPage = () => {
           )}
 
           {/* Customer Reviews Section */}
-          <section className="mt-16 pt-16 border-t border-border">
-            <div className="text-center mb-10">
-              <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+          <section className="mt-10 pt-10 border-t border-gray-200 dark:border-gray-800">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold mb-1 text-gray-900 dark:text-white">
                 Customer Reviews & Photos
               </h2>
-              <p className="text-muted-foreground">Real reviews from verified customers</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Real reviews from verified customers</p>
             </div>
             
             {/* Review Stats */}
             {reviewStats && (
-              <div className="bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 mb-10 shadow-lg border border-purple-100 dark:border-gray-700">
-                <div className="max-w-5xl mx-auto grid md:grid-cols-[300px_1fr] gap-8 items-center">
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 mb-6 border border-gray-200 dark:border-gray-800">
+                <div className="max-w-4xl mx-auto grid md:grid-cols-[200px_1fr] gap-6 items-center">
                   {/* Average Rating */}
                   <div className="text-center">
-                    <div className="inline-flex flex-col items-center bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-md">
-                      <span className="text-6xl font-black bg-gradient-to-br from-yellow-500 to-orange-500 bg-clip-text text-transparent mb-3">
-                        {reviewStats.averageRating ? reviewStats.averageRating.toFixed(1) : '0.0'}
-                      </span>
-                      <div className="flex gap-1 mb-2">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            className={`w-5 h-5 ${
-                              star <= Math.round(reviewStats.averageRating || 0)
-                                ? 'fill-yellow-400 text-yellow-400'
-                                : 'text-gray-300'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <p className="text-xs font-medium text-gray-600 dark:text-gray-300">
-                        {reviewStats.totalReviews} {reviewStats.totalReviews === 1 ? 'review' : 'reviews'}
-                      </p>
+                    <span className="text-5xl font-black text-gray-900 dark:text-white">
+                      {reviewStats.averageRating ? reviewStats.averageRating.toFixed(1) : '0.0'}
+                    </span>
+                    <div className="flex gap-0.5 justify-center mt-2 mb-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          className={`w-4 h-4 ${
+                            star <= Math.round(reviewStats.averageRating || 0)
+                              ? 'fill-gray-900 text-gray-900 dark:fill-white dark:text-white'
+                              : 'text-gray-300 dark:text-gray-600'
+                          }`}
+                        />
+                      ))}
                     </div>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {reviewStats.totalReviews} {reviewStats.totalReviews === 1 ? 'review' : 'reviews'}
+                    </p>
                   </div>
 
                   {/* Rating Distribution */}
-                  <div className="space-y-3 max-w-lg">
+                  <div className="space-y-2">
                     {[5, 4, 3, 2, 1].map((rating) => {
                       const count = reviewStats[`${['oneStar', 'twoStars', 'threeStars', 'fourStars', 'fiveStars'][rating - 1]}`] || 0;
                       const percentage = reviewStats.totalReviews > 0 ? (count / reviewStats.totalReviews) * 100 : 0;
                       return (
-                        <div key={rating} className="flex items-center gap-3">
-                          <span className="text-sm font-semibold w-8 text-gray-700 dark:text-gray-300">{rating}⭐</span>
-                          <div className="flex-1 max-w-sm h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden shadow-inner">
+                        <div key={rating} className="flex items-center gap-2">
+                          <span className="text-xs font-semibold w-6 text-gray-600 dark:text-gray-400 text-right">{rating}</span>
+                          <Star className="w-3 h-3 fill-gray-900 text-gray-900 dark:fill-white dark:text-white" />
+                          <div className="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                             <div
-                              className="h-full bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-500 rounded-full transition-all duration-700 ease-out"
+                              className="h-full bg-gray-900 dark:bg-white rounded-full transition-all duration-700 ease-out"
                               style={{ width: `${percentage}%` }}
                             />
                           </div>
-                          <span className="text-sm font-medium text-gray-600 dark:text-gray-400 w-10 text-right">{count}</span>
+                          <span className="text-xs font-medium text-gray-500 dark:text-gray-400 w-8 text-right">{count}</span>
                         </div>
                       );
                     })}
@@ -651,60 +650,57 @@ const ProductPage = () => {
 
             {/* Reviews List */}
             {reviewsLoading ? (
-              <div className="flex flex-col items-center justify-center py-12">
-                <div className="relative">
-                  <div className="animate-spin rounded-full h-12 w-12 border-b-3 border-purple-600"></div>
-                  <div className="absolute inset-0 animate-ping rounded-full h-12 w-12 border-2 border-purple-300 opacity-20"></div>
-                </div>
-                <p className="mt-4 text-sm text-muted-foreground">Loading reviews...</p>
+              <div className="flex flex-col items-center justify-center py-8">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-gray-300 border-t-gray-900 dark:border-gray-600 dark:border-t-white"></div>
+                <p className="mt-3 text-sm text-gray-500">Loading reviews...</p>
               </div>
             ) : reviews.length > 0 ? (
-              <div className="space-y-5">
+              <div className="space-y-3">
                 {reviews.map((review, idx) => (
                   <motion.div
                     key={review._id}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.08 }}
-                    className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-md hover:shadow-xl transition-shadow border border-gray-100 dark:border-gray-700 hover:border-purple-200 dark:hover:border-purple-700"
+                    transition={{ delay: idx * 0.05 }}
+                    className="bg-white dark:bg-gray-900 rounded-lg p-5 border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 transition-colors"
                   >
                     {/* Review Header */}
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-start gap-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-start gap-3">
                         <div className="relative">
-                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center font-bold text-white shadow-lg">
+                          <div className="w-10 h-10 rounded-full bg-gray-900 dark:bg-white flex items-center justify-center font-bold text-white dark:text-gray-900 text-sm">
                             {review.userName?.charAt(0).toUpperCase() || 'U'}
                           </div>
                           {review.isVerifiedPurchase && (
-                            <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full flex items-center justify-center shadow-md">
-                              <ShieldCheck className="w-3 h-3 text-white" />
+                            <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-gray-900 dark:bg-white rounded-full flex items-center justify-center">
+                              <ShieldCheck className="w-2.5 h-2.5 text-white dark:text-gray-900" />
                             </div>
                           )}
                         </div>
                         <div>
-                          <div className="flex items-center gap-2 mb-1">
-                            <h4 className="font-bold text-gray-900 dark:text-white">{review.userName}</h4>
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <h4 className="font-semibold text-sm text-gray-900 dark:text-white">{review.userName}</h4>
                             {review.isVerifiedPurchase && (
-                              <span className="px-2 py-0.5 bg-gradient-to-r from-green-400 to-emerald-500 text-white rounded-full text-xs font-semibold">
+                              <span className="px-1.5 py-0.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded text-[10px] font-semibold">
                                 Verified
                               </span>
                             )}
                           </div>
-                          <div className="flex gap-0.5 mb-1">
+                          <div className="flex gap-0.5">
                             {[1, 2, 3, 4, 5].map((star) => (
                               <Star
                                 key={star}
-                                className={`w-4 h-4 ${
+                                className={`w-3.5 h-3.5 ${
                                   star <= review.rating
-                                    ? 'fill-yellow-400 text-yellow-400'
-                                    : 'text-gray-300'
+                                    ? 'fill-gray-900 text-gray-900 dark:fill-white dark:text-white'
+                                    : 'text-gray-300 dark:text-gray-600'
                                 }`}
                               />
                             ))}
                           </div>
                         </div>
                       </div>
-                      <span className="text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">
+                      <span className="text-[11px] text-gray-400 dark:text-gray-500">
                         {new Date(review.createdAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
@@ -715,11 +711,11 @@ const ProductPage = () => {
 
                     {/* Review Title */}
                     {review.title && (
-                      <h5 className="font-bold text-lg mb-2 text-gray-900 dark:text-white">{review.title}</h5>
+                      <h5 className="font-semibold text-sm mb-1 text-gray-900 dark:text-white">{review.title}</h5>
                     )}
 
                     {/* Review Comment */}
-                    <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">{review.comment}</p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 leading-relaxed">{review.comment}</p>
 
                     {/* Review Images */}
                     {review.images && Array.isArray(review.images) && review.images.length > 0 && (
@@ -756,18 +752,16 @@ const ProductPage = () => {
                           
                           return (
                             <>
-                              <div className="flex items-center gap-2 mb-3 text-sm font-semibold text-purple-600 dark:text-purple-400">
-                                <div className="p-1.5 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                                  <ImageIcon className="w-4 h-4" />
-                                </div>
+                              <div className="flex items-center gap-1.5 mb-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                                <ImageIcon className="w-3.5 h-3.5" />
                                 <span>{validImages.length} {validImages.length === 1 ? 'Photo' : 'Photos'}</span>
                               </div>
-                              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                              <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-2">
                                 {validImages.map((image: string, index: number) => (
                                   <button
                                     key={index}
                                     onClick={() => setSelectedMediaPreview({ type: 'image', url: image })}
-                                    className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer shadow-sm hover:shadow-lg transition-all bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800"
+                                    className="relative aspect-square rounded-lg overflow-hidden group cursor-pointer hover:opacity-80 transition-opacity bg-gray-100 dark:bg-gray-800"
                                   >
                                     <img
                                       src={image}
@@ -795,13 +789,11 @@ const ProductPage = () => {
                     {/* Review Videos */}
                     {review.videos && review.videos.length > 0 && (
                       <div>
-                        <div className="flex items-center gap-2 mb-3 text-sm font-semibold text-blue-600 dark:text-blue-400">
-                          <div className="p-1.5 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                            <Play className="w-4 h-4" />
-                          </div>
+                        <div className="flex items-center gap-1.5 mb-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                          <Play className="w-3.5 h-3.5" />
                           <span>Video Review</span>
                         </div>
-                        <div className="grid gap-3">
+                        <div className="grid gap-2">
                           {review.videos.map((video: string, index: number) => (
                             <button
                               key={index}
@@ -832,12 +824,12 @@ const ProductPage = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 bg-gradient-to-br from-purple-50 via-blue-50 to-pink-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl">
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-400 to-blue-500 mb-4 shadow-lg">
-                  <Star className="w-10 h-10 text-white" />
+              <div className="text-center py-10 bg-gray-50 dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800">
+                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gray-900 dark:bg-white mb-3">
+                  <Star className="w-7 h-7 text-white dark:text-gray-900" />
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">No Reviews Yet</h3>
-                <p className="text-muted-foreground">Be the first to share your experience!</p>
+                <h3 className="text-lg font-semibold mb-1 text-gray-900 dark:text-white">No Reviews Yet</h3>
+                <p className="text-sm text-gray-500">Be the first to share your experience!</p>
               </div>
             )}
           </section>
