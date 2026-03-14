@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export const ScrollToTop = () => {
@@ -17,10 +17,31 @@ export const ScrollToTop = () => {
     return;
   }, []);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    const previousScrollBehavior = root.style.scrollBehavior;
+    let rafId = 0;
+
+    const scrollToPageTop = () => {
+      window.scrollTo(0, 0);
+      root.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+
+    // Force instant reset so route changes never animate from bottom to top.
+    root.style.scrollBehavior = 'auto';
+    scrollToPageTop();
+    rafId = window.requestAnimationFrame(() => {
+      scrollToPageTop();
+      root.style.scrollBehavior = previousScrollBehavior;
+    });
+
+    return () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+      }
+      root.style.scrollBehavior = previousScrollBehavior;
+    };
   }, [pathname, search]);
 
   return null;
