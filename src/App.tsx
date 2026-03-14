@@ -7,6 +7,7 @@ import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { SearchProvider } from "@/contexts/SearchContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import Index from "./pages/Index";
 import CategoryPage from "./pages/CategoryPage";
 import ProductPage from "./pages/ProductPage";
@@ -51,6 +52,7 @@ const App = () => (
               <Toaster />
               <Sonner />
               <BrowserRouter>
+                <ScrollToTop />
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/category/:category" element={<CategoryPage />} />
